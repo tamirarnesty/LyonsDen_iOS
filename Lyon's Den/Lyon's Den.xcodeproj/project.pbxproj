@@ -1,0 +1,505 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2DCB64171D1C7751006B907B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DCB64161D1C7751006B907B /* AppDelegate.swift */; };
+		2DCB64191D1C7751006B907B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DCB64181D1C7751006B907B /* ViewController.swift */; };
+		2DCB641C1D1C7751006B907B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2DCB641A1D1C7751006B907B /* Main.storyboard */; };
+		2DCB641E1D1C7751006B907B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2DCB641D1D1C7751006B907B /* Assets.xcassets */; };
+		2DCB64211D1C7751006B907B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2DCB641F1D1C7751006B907B /* LaunchScreen.storyboard */; };
+		2DCB642C1D1C7751006B907B /* Lyon_s_DenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DCB642B1D1C7751006B907B /* Lyon_s_DenTests.swift */; };
+		2DCB64371D1C7751006B907B /* Lyon_s_DenUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DCB64361D1C7751006B907B /* Lyon_s_DenUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2DCB64281D1C7751006B907B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2DCB640B1D1C7751006B907B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2DCB64121D1C7751006B907B;
+			remoteInfo = "Lyon's Den";
+		};
+		2DCB64331D1C7751006B907B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2DCB640B1D1C7751006B907B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2DCB64121D1C7751006B907B;
+			remoteInfo = "Lyon's Den";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2DCB64131D1C7751006B907B /* Lyon's Den.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Lyon's Den.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2DCB64161D1C7751006B907B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		2DCB64181D1C7751006B907B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		2DCB641B1D1C7751006B907B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2DCB641D1D1C7751006B907B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2DCB64201D1C7751006B907B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		2DCB64221D1C7751006B907B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2DCB64271D1C7751006B907B /* Lyon's DenTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Lyon's DenTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2DCB642B1D1C7751006B907B /* Lyon_s_DenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lyon_s_DenTests.swift; sourceTree = "<group>"; };
+		2DCB642D1D1C7751006B907B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2DCB64321D1C7751006B907B /* Lyon's DenUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Lyon's DenUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2DCB64361D1C7751006B907B /* Lyon_s_DenUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lyon_s_DenUITests.swift; sourceTree = "<group>"; };
+		2DCB64381D1C7751006B907B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2DCB64101D1C7751006B907B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2DCB64241D1C7751006B907B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2DCB642F1D1C7751006B907B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2DCB640A1D1C7751006B907B = {
+			isa = PBXGroup;
+			children = (
+				2DCB64151D1C7751006B907B /* Lyon's Den */,
+				2DCB642A1D1C7751006B907B /* Lyon's DenTests */,
+				2DCB64351D1C7751006B907B /* Lyon's DenUITests */,
+				2DCB64141D1C7751006B907B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2DCB64141D1C7751006B907B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2DCB64131D1C7751006B907B /* Lyon's Den.app */,
+				2DCB64271D1C7751006B907B /* Lyon's DenTests.xctest */,
+				2DCB64321D1C7751006B907B /* Lyon's DenUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2DCB64151D1C7751006B907B /* Lyon's Den */ = {
+			isa = PBXGroup;
+			children = (
+				2DCB64161D1C7751006B907B /* AppDelegate.swift */,
+				2DCB64181D1C7751006B907B /* ViewController.swift */,
+				2DCB641A1D1C7751006B907B /* Main.storyboard */,
+				2DCB641D1D1C7751006B907B /* Assets.xcassets */,
+				2DCB641F1D1C7751006B907B /* LaunchScreen.storyboard */,
+				2DCB64221D1C7751006B907B /* Info.plist */,
+			);
+			path = "Lyon's Den";
+			sourceTree = "<group>";
+		};
+		2DCB642A1D1C7751006B907B /* Lyon's DenTests */ = {
+			isa = PBXGroup;
+			children = (
+				2DCB642B1D1C7751006B907B /* Lyon_s_DenTests.swift */,
+				2DCB642D1D1C7751006B907B /* Info.plist */,
+			);
+			path = "Lyon's DenTests";
+			sourceTree = "<group>";
+		};
+		2DCB64351D1C7751006B907B /* Lyon's DenUITests */ = {
+			isa = PBXGroup;
+			children = (
+				2DCB64361D1C7751006B907B /* Lyon_s_DenUITests.swift */,
+				2DCB64381D1C7751006B907B /* Info.plist */,
+			);
+			path = "Lyon's DenUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2DCB64121D1C7751006B907B /* Lyon's Den */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2DCB643B1D1C7751006B907B /* Build configuration list for PBXNativeTarget "Lyon's Den" */;
+			buildPhases = (
+				2DCB640F1D1C7751006B907B /* Sources */,
+				2DCB64101D1C7751006B907B /* Frameworks */,
+				2DCB64111D1C7751006B907B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Lyon's Den";
+			productName = "Lyon's Den";
+			productReference = 2DCB64131D1C7751006B907B /* Lyon's Den.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2DCB64261D1C7751006B907B /* Lyon's DenTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2DCB643E1D1C7751006B907B /* Build configuration list for PBXNativeTarget "Lyon's DenTests" */;
+			buildPhases = (
+				2DCB64231D1C7751006B907B /* Sources */,
+				2DCB64241D1C7751006B907B /* Frameworks */,
+				2DCB64251D1C7751006B907B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2DCB64291D1C7751006B907B /* PBXTargetDependency */,
+			);
+			name = "Lyon's DenTests";
+			productName = "Lyon's DenTests";
+			productReference = 2DCB64271D1C7751006B907B /* Lyon's DenTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		2DCB64311D1C7751006B907B /* Lyon's DenUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2DCB64411D1C7751006B907B /* Build configuration list for PBXNativeTarget "Lyon's DenUITests" */;
+			buildPhases = (
+				2DCB642E1D1C7751006B907B /* Sources */,
+				2DCB642F1D1C7751006B907B /* Frameworks */,
+				2DCB64301D1C7751006B907B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2DCB64341D1C7751006B907B /* PBXTargetDependency */,
+			);
+			name = "Lyon's DenUITests";
+			productName = "Lyon's DenUITests";
+			productReference = 2DCB64321D1C7751006B907B /* Lyon's DenUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2DCB640B1D1C7751006B907B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = "William Lyon Mackenize CI";
+				TargetAttributes = {
+					2DCB64121D1C7751006B907B = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+					2DCB64261D1C7751006B907B = {
+						CreatedOnToolsVersion = 7.3.1;
+						TestTargetID = 2DCB64121D1C7751006B907B;
+					};
+					2DCB64311D1C7751006B907B = {
+						CreatedOnToolsVersion = 7.3.1;
+						TestTargetID = 2DCB64121D1C7751006B907B;
+					};
+				};
+			};
+			buildConfigurationList = 2DCB640E1D1C7751006B907B /* Build configuration list for PBXProject "Lyon's Den" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2DCB640A1D1C7751006B907B;
+			productRefGroup = 2DCB64141D1C7751006B907B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2DCB64121D1C7751006B907B /* Lyon's Den */,
+				2DCB64261D1C7751006B907B /* Lyon's DenTests */,
+				2DCB64311D1C7751006B907B /* Lyon's DenUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2DCB64111D1C7751006B907B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2DCB64211D1C7751006B907B /* LaunchScreen.storyboard in Resources */,
+				2DCB641E1D1C7751006B907B /* Assets.xcassets in Resources */,
+				2DCB641C1D1C7751006B907B /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2DCB64251D1C7751006B907B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2DCB64301D1C7751006B907B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2DCB640F1D1C7751006B907B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2DCB64191D1C7751006B907B /* ViewController.swift in Sources */,
+				2DCB64171D1C7751006B907B /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2DCB64231D1C7751006B907B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2DCB642C1D1C7751006B907B /* Lyon_s_DenTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2DCB642E1D1C7751006B907B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2DCB64371D1C7751006B907B /* Lyon_s_DenUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2DCB64291D1C7751006B907B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2DCB64121D1C7751006B907B /* Lyon's Den */;
+			targetProxy = 2DCB64281D1C7751006B907B /* PBXContainerItemProxy */;
+		};
+		2DCB64341D1C7751006B907B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2DCB64121D1C7751006B907B /* Lyon's Den */;
+			targetProxy = 2DCB64331D1C7751006B907B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		2DCB641A1D1C7751006B907B /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2DCB641B1D1C7751006B907B /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		2DCB641F1D1C7751006B907B /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2DCB64201D1C7751006B907B /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2DCB64391D1C7751006B907B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		2DCB643A1D1C7751006B907B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2DCB643C1D1C7751006B907B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "Lyon's Den/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "wlmac.Lyon-s-Den";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2DCB643D1D1C7751006B907B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "Lyon's Den/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "wlmac.Lyon-s-Den";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		2DCB643F1D1C7751006B907B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "Lyon's DenTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "wlmac.Lyon-s-DenTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lyon's Den.app/Lyon's Den";
+			};
+			name = Debug;
+		};
+		2DCB64401D1C7751006B907B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "Lyon's DenTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "wlmac.Lyon-s-DenTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lyon's Den.app/Lyon's Den";
+			};
+			name = Release;
+		};
+		2DCB64421D1C7751006B907B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "Lyon's DenUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "wlmac.Lyon-s-DenUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = "Lyon's Den";
+			};
+			name = Debug;
+		};
+		2DCB64431D1C7751006B907B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "Lyon's DenUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "wlmac.Lyon-s-DenUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = "Lyon's Den";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2DCB640E1D1C7751006B907B /* Build configuration list for PBXProject "Lyon's Den" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2DCB64391D1C7751006B907B /* Debug */,
+				2DCB643A1D1C7751006B907B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2DCB643B1D1C7751006B907B /* Build configuration list for PBXNativeTarget "Lyon's Den" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2DCB643C1D1C7751006B907B /* Debug */,
+				2DCB643D1D1C7751006B907B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		2DCB643E1D1C7751006B907B /* Build configuration list for PBXNativeTarget "Lyon's DenTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2DCB643F1D1C7751006B907B /* Debug */,
+				2DCB64401D1C7751006B907B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		2DCB64411D1C7751006B907B /* Build configuration list for PBXNativeTarget "Lyon's DenUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2DCB64421D1C7751006B907B /* Debug */,
+				2DCB64431D1C7751006B907B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2DCB640B1D1C7751006B907B /* Project object */;
+}
