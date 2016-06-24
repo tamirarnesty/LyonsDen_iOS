@@ -1,9 +1,9 @@
 //
 //  AppDelegate.swift
-//  Lyon's Den
+//  Den
 //
-//  Created by Inal Gotov on 2016-06-23.
-//  Copyright © 2016 William Lyon Mackenize CI. All rights reserved.
+//  Created by Tamir Arnesty on 2016-06-22.
+//  Copyright © 2016 Tamir Arnesty. All rights reserved.
 //
 
 import UIKit

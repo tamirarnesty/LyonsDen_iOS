@@ -4,7 +4,7 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Lyon's Den.xcscheme</key>
+		<key>Den.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -12,17 +12,17 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>2DCB64121D1C7751006B907B</key>
+		<key>8FEFA9121D1B110A0002E9A2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>2DCB64261D1C7751006B907B</key>
+		<key>8FEFA9261D1B110A0002E9A2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>2DCB64311D1C7751006B907B</key>
+		<key>8FEFA9311D1B110A0002E9A2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
