@@ -42,7 +42,8 @@ class HomeViewController: UIViewController, UITableViewDelegate {
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
         
-        setupGestures()
+        // For proper scrolling
+//        setupGestures()
         
         // Table fill
         for h in 0...17 {
@@ -85,47 +86,43 @@ class HomeViewController: UIViewController, UITableViewDelegate {
         performSegueWithIdentifier("AnnouncementSegue", sender: self)
     }
 
-    func setupGestures () {
-        let swipeUpGesture = UISwipeGestureRecognizer(target: self, action: #selector(swipeUp))
-        swipeUpGesture.direction = UISwipeGestureRecognizerDirection.Up
-        let swipeDownGesture = UISwipeGestureRecognizer(target: self, action: #selector(swipeDown))
-        swipeDownGesture.direction = UISwipeGestureRecognizerDirection.Down
+    // For proper scrolling, doesn't work all that well thoough :(
+//    func setupGestures () {
+//        let swipeUpGesture = UISwipeGestureRecognizer(target: self, action: #selector(swipeUp))
+//        swipeUpGesture.direction = UISwipeGestureRecognizerDirection.Up
+//        let swipeDownGesture = UISwipeGestureRecognizer(target: self, action: #selector(swipeDown))
+//        swipeDownGesture.direction = UISwipeGestureRecognizerDirection.Down
+//        
+//        tableList.addGestureRecognizer(swipeUpGesture)
+//        tableList.addGestureRecognizer(swipeDownGesture)
+//    }
+//    
+//    func swipeUp () {
+//        print ("I'm called")
+//        let offSet = tableList.contentOffset.y - self.offSet
+//        let tempHold = scrollView.contentOffset.y
+//        scrollView.contentOffset = CGPoint(x: 0, y: tempHold - offSet)
+//    }
+//    
+//    func swipeDown () {
+//        print ("I'm called too")
+//        let offSet = tableList.contentOffset.y - self.offSet
+//        let tempHold = scrollView.contentOffset.y
+//        scrollView.contentOffset = CGPoint(x: 0, y: tempHold + offSet)
+//    }
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+//        let offSet = tableList.contentOffset.y - self.offSet
+//        let tempHold = scrollView.contentOffset.y
+//        scrollView.contentOffset = CGPoint(x: 0, y: tempHold - offSet)
+//        self.offSet = tableList.contentOffset.y
         
-        tableList.addGestureRecognizer(swipeUpGesture)
-        tableList.addGestureRecognizer(swipeDownGesture)
-    }
-    
-    func swipeUp () {
-        print ("I'm called")
-        let offSet = tableList.contentOffset.y - self.offSet
-        let tempHold = scrollView.contentOffset.y
-        scrollView.contentOffset = CGPoint(x: 0, y: tempHold - offSet)
-    }
-    
-    func swipeDown () {
-        print ("I'm called too")
-        let offSet = tableList.contentOffset.y - self.offSet
-        let tempHold = scrollView.contentOffset.y
-        scrollView.contentOffset = CGPoint(x: 0, y: tempHold + offSet)
-    }
-    
-//    func scrollViewDidScroll(scrollView: UIScrollView) {
 //        if scrollView.contentOffset.y <= 1 {
 //            print ("i saw that")
 //        } else if scrollView.contentOffset.y >= 56 {
 //            print ("that saw i")
 //            print (scrollView.contentOffset.y)
 //        }
-//    }
-    
-    /*
-     func scrollViewDidScroll(scrollView: UIScrollView) {
-        let foregroundHeight = foreground.contentSize.height - CGRectGetHeight(foreground.bounds)
-        let percentageScroll = foreground.contentOffset.y / foregroundHeight
-        let backgroundHeight = background.contentSize.height - CGRectGetHeight(background.bounds)
-     
-        background.contentOffset = CGPoint(x: 0, y: backgroundHeight * percentageScroll)
-     }
-     */
+    }
 }
 
