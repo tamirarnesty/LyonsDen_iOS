@@ -23,15 +23,15 @@ class HomeViewController: UIViewController, UITableViewDelegate {
     // Didn't let me put it into announcements becuase its optional
     // To implement it, we might need a blank image to act in place of nil
     var images = [UIImage?]()
-    var offSet:CGFloat = 0.0
+    var lastTableViewOffSet:CGFloat = 0.0
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Set the size of the scrollView
         scrollView.frame = view.bounds
-        // Set the table's height to fill the screen
-        tableList.constraints[0].constant = view.bounds.height
+        // Set the table's height to fill the screen, subtract 64pt for nav. bar
+        tableList.constraints[0].constant = view.bounds.height - 64
         // Set the scrollable are size
         scrollView.contentSize = CGSizeMake(view.bounds.width, tableList.bounds.height + topViews.bounds.height)
         
@@ -46,7 +46,7 @@ class HomeViewController: UIViewController, UITableViewDelegate {
 //        setupGestures()
         
         // Table fill
-        for h in 0...17 {
+        for h in 0...37 {
             announcements [0].append("Title\(h + 1)")
             announcements [1].append("Description\(h + 1)")
             if (h == 2 || h == 5) {
@@ -112,17 +112,18 @@ class HomeViewController: UIViewController, UITableViewDelegate {
 //    }
     
     func scrollViewDidScroll(scrollView: UIScrollView) {
-//        let offSet = tableList.contentOffset.y - self.offSet
-//        let tempHold = scrollView.contentOffset.y
-//        scrollView.contentOffset = CGPoint(x: 0, y: tempHold - offSet)
-//        self.offSet = tableList.contentOffset.y
-        
-//        if scrollView.contentOffset.y <= 1 {
-//            print ("i saw that")
-//        } else if scrollView.contentOffset.y >= 56 {
-//            print ("that saw i")
-//            print (scrollView.contentOffset.y)
-//        }
+//        print ("last off set = \(lastTableViewOffSet)")
+//        
+//        let topViewsOffSet = self.scrollView.contentOffset.y
+//        let tableViewOffSet = scrollView.contentOffset.y
+//        lastTableViewOffSet = tableViewOffSet - lastTableViewOffSet
+//        self.scrollView.contentOffset = CGPointMake(0, topViewsOffSet - lastTableViewOffSet)
+//
+//        print ("top offset   = \(topViewsOffSet)")
+//        print ("table offset = \(tableViewOffSet)")
+//        print ("last off set = \(lastTableViewOffSet)")
+//        print ()
+//        let max = 0
     }
 }
 

@@ -12,6 +12,7 @@ import UIKit
 
 class ContactViewController: UIViewController {
     @IBOutlet weak var menuButton: UIBarButtonItem!
+    @IBOutlet var navBar: UINavigationItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
