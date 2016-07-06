@@ -86,7 +86,10 @@ class HomeViewController: UIViewController, UITableViewDelegate {
         performSegueWithIdentifier("AnnouncementSegue", sender: self)
     }
 
+    
+    
     // For proper scrolling, doesn't work all that well thoough :(
+    
 //    func setupGestures () {
 //        let swipeUpGesture = UISwipeGestureRecognizer(target: self, action: #selector(swipeUp))
 //        swipeUpGesture.direction = UISwipeGestureRecognizerDirection.Up

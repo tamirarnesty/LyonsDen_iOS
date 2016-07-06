@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D22EA021D2D7427001B3A11 /* TeacherTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D22EA011D2D7427001B3A11 /* TeacherTable.swift */; };
+		2D22EA051D2D787D001B3A11 /* AnnouncementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D22EA041D2D787D001B3A11 /* AnnouncementViewController.swift */; };
+		2D22EA071D2D8390001B3A11 /* MusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D22EA061D2D8390001B3A11 /* MusicViewController.swift */; };
 		2D8AC7CD1D25D7D900367326 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8AC7CC1D25D7D900367326 /* AppDelegate.swift */; };
 		2D8AC7CF1D25D7D900367326 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8AC7CE1D25D7D900367326 /* HomeViewController.swift */; };
 		2D8AC7D21D25D7D900367326 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D8AC7D01D25D7D900367326 /* Main.storyboard */; };
@@ -19,10 +22,12 @@
 		2D8AC82D1D25EEEB00367326 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8AC82C1D25EEEB00367326 /* InfoViewController.swift */; };
 		2D8AC8301D25F5EF00367326 /* CellTitleDesc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8AC82F1D25F5EF00367326 /* CellTitleDesc.swift */; };
 		2D8AC8321D25F5FF00367326 /* CellTitleDescImg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8AC8311D25F5FF00367326 /* CellTitleDescImg.swift */; };
-		2D8AC8341D25F87000367326 /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8AC8331D25F87000367326 /* Table.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2D22EA011D2D7427001B3A11 /* TeacherTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeacherTable.swift; sourceTree = "<group>"; };
+		2D22EA041D2D787D001B3A11 /* AnnouncementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnnouncementViewController.swift; sourceTree = "<group>"; };
+		2D22EA061D2D8390001B3A11 /* MusicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicViewController.swift; sourceTree = "<group>"; };
 		2D8AC7C91D25D7D900367326 /* LyonsDen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LyonsDen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D8AC7CC1D25D7D900367326 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2D8AC7CE1D25D7D900367326 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -39,7 +44,6 @@
 		2D8AC82C1D25EEEB00367326 /* InfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		2D8AC82F1D25F5EF00367326 /* CellTitleDesc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellTitleDesc.swift; sourceTree = "<group>"; };
 		2D8AC8311D25F5FF00367326 /* CellTitleDescImg.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellTitleDescImg.swift; sourceTree = "<group>"; };
-		2D8AC8331D25F87000367326 /* Table.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Table.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +57,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2D22EA031D2D7438001B3A11 /* ContactViews */ = {
+			isa = PBXGroup;
+			children = (
+				2D22EA011D2D7427001B3A11 /* TeacherTable.swift */,
+				2D22EA041D2D787D001B3A11 /* AnnouncementViewController.swift */,
+				2D22EA061D2D8390001B3A11 /* MusicViewController.swift */,
+			);
+			name = ContactViews;
+			sourceTree = "<group>";
+		};
 		2D8AC7C01D25D7D900367326 = {
 			isa = PBXGroup;
 			children = (
@@ -79,7 +93,7 @@
 				2D8AC7E01D25D96800367326 /* CalendarViewController.swift */,
 				2D8AC82A1D25E86900367326 /* ContactViewController.swift */,
 				2D8AC82C1D25EEEB00367326 /* InfoViewController.swift */,
-				2D8AC8331D25F87000367326 /* Table.swift */,
+				2D22EA031D2D7438001B3A11 /* ContactViews */,
 				2D8AC82E1D25F5B500367326 /* TableViewCells */,
 				2D8AC7D01D25D7D900367326 /* Main.storyboard */,
 				2D8AC7D31D25D7D900367326 /* Assets.xcassets */,
@@ -180,13 +194,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D22EA071D2D8390001B3A11 /* MusicViewController.swift in Sources */,
 				2D8AC7E11D25D96800367326 /* CalendarViewController.swift in Sources */,
 				2D8AC7CF1D25D7D900367326 /* HomeViewController.swift in Sources */,
 				2D8AC8241D25E23000367326 /* SWRevealViewController.m in Sources */,
 				2D8AC82D1D25EEEB00367326 /* InfoViewController.swift in Sources */,
+				2D22EA051D2D787D001B3A11 /* AnnouncementViewController.swift in Sources */,
 				2D8AC7DF1D25D8D700367326 /* ListViewController.swift in Sources */,
+				2D22EA021D2D7427001B3A11 /* TeacherTable.swift in Sources */,
 				2D8AC7CD1D25D7D900367326 /* AppDelegate.swift in Sources */,
-				2D8AC8341D25F87000367326 /* Table.swift in Sources */,
 				2D8AC82B1D25E86900367326 /* ContactViewController.swift in Sources */,
 				2D8AC8301D25F5EF00367326 /* CellTitleDesc.swift in Sources */,
 				2D8AC8321D25F5FF00367326 /* CellTitleDescImg.swift in Sources */,
