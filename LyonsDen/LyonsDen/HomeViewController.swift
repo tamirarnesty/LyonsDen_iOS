@@ -8,8 +8,6 @@
 //  Copyright © 2016 William Lyon Mackenize CI. All rights reserved.
 //
 
-// It does indeed
-
 import UIKit
 
 class HomeViewController: UIViewController, UITableViewDelegate {
@@ -42,10 +40,10 @@ class HomeViewController: UIViewController, UITableViewDelegate {
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
         
-        // For proper scrolling
+        // For proper scrolling, didnt work :(
 //        setupGestures()
         
-        // Table fill
+        // Temporary, Table fill
         for h in 0...37 {
             announcements [0].append("Title\(h + 1)")
             announcements [1].append("Description\(h + 1)")
@@ -80,9 +78,9 @@ class HomeViewController: UIViewController, UITableViewDelegate {
 
     // Set each item to segue into InfoViewController
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        InfoViewController.title = announcements[0][indexPath.row]
-        InfoViewController.info = announcements[1][indexPath.row]
-        InfoViewController.image = images[indexPath.row]
+        // Prepare InfoViewController
+        InfoViewController.setupViewController(announcements[0][indexPath.row], info: announcements[1][indexPath.row], image: images[indexPath.row])
+        // Segue into InfoViewController
         performSegueWithIdentifier("AnnouncementSegue", sender: self)
     }
 
