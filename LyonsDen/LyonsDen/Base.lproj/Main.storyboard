@@ -520,7 +520,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Home" id="vgG-Ro-zFG">
-                        <barButtonItem key="leftBarButtonItem" image="splash" id="NKd-QX-hoS">
+                        <barButtonItem key="leftBarButtonItem" image="menu" id="NKd-QX-hoS">
                             <color key="tintColor" red="1" green="0.81176470588235294" blue="0.3411764705882353" alpha="1" colorSpace="calibratedRGB"/>
                         </barButtonItem>
                     </navigationItem>
@@ -862,7 +862,7 @@
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Calendar" id="DF1-UW-Dih">
-                        <barButtonItem key="leftBarButtonItem" image="splash" id="eXh-Bj-IMa">
+                        <barButtonItem key="leftBarButtonItem" image="menu" id="eXh-Bj-IMa">
                             <color key="tintColor" red="1" green="0.81176470590000005" blue="0.3411764706" alpha="1" colorSpace="calibratedRGB"/>
                         </barButtonItem>
                     </navigationItem>
@@ -989,7 +989,7 @@
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Contact" id="ebn-wQ-qLA">
-                        <barButtonItem key="leftBarButtonItem" image="splash" id="NDO-cd-aWm">
+                        <barButtonItem key="leftBarButtonItem" image="menu" id="NDO-cd-aWm">
                             <color key="tintColor" red="1" green="0.81176470590000005" blue="0.3411764706" alpha="1" colorSpace="calibratedRGB"/>
                         </barButtonItem>
                     </navigationItem>
