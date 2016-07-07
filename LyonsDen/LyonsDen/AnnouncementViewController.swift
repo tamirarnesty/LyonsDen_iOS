@@ -35,6 +35,17 @@ class AnnouncementViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
+    @IBAction func approved(sender: UIButton) {
+        // If ((username && password) == valid)
+        titleTextField.allowsEditingTextAttributes = false
+        infoTextView.allowsEditingTextAttributes = false
+        teacherUserName.text = ""
+        teacherUserName.allowsEditingTextAttributes = false
+        teacherPass.text = ""
+        teacherPass.allowsEditingTextAttributes = false
+        // Enable 'Post-it' button
+    }
+    
     
     // To make screen move up, when editing the lower textfields
     // Code credit to: Boris in http://stackoverflow.com/a/31124676
