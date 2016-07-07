@@ -19,13 +19,13 @@ class InfoViewController: UIViewController {
     // The text for the title label
     static var title:String = "This is an announcement"
     // The text for the description label
-    static var info:String = "This is what the announcement is about"
+    static var info:String? = "This is what the announcement is about"
     // The image for the announcement
     static var image: UIImage?
     // Title label
     @IBOutlet var titleLabel: UILabel!
-    // Description label
-    @IBOutlet var infoLabel: UILabel!
+    // Description label Text View
+    @IBOutlet var infoView: UITextView!
     // Announcemnet image
     @IBOutlet var imageView: UIImageView!
     
@@ -33,8 +33,7 @@ class InfoViewController: UIViewController {
         super.viewDidLoad()
         
         titleLabel.text = InfoViewController.title  // Set title text
-        infoLabel.text = InfoViewController.info    // Set description text
-        infoLabel.sizeToFit()                       // Resize the description label
+        infoView.text = InfoViewController.info    // Set description text
         if let img = InfoViewController.image {     // If an announcemnt image is present
             imageView.image = img       // Set the image
             // Move the title label to the side, if not already moved (Removes the additional constraint)
@@ -45,6 +44,12 @@ class InfoViewController: UIViewController {
             // Move the title label to the left side (Add an additional constraint)
             self.view.addConstraint(NSLayoutConstraint(item: titleLabel.superview!, attribute: NSLayoutAttribute.Leading, relatedBy: NSLayoutRelation.Equal, toItem: titleLabel, attribute: NSLayoutAttribute.Leading, multiplier: 1, constant: -8))
         }
+    }
+    
+    static func setupViewController (title:String, info:String?, image:UIImage?) {
+        InfoViewController.title = title
+        InfoViewController.info = info
+        InfoViewController.image = image
     }
     
     override func didReceiveMemoryWarning() {
