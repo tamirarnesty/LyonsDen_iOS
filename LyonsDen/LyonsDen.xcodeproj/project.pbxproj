@@ -15,12 +15,18 @@
 		2D8AC7CF1D25D7D900367326 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8AC7CE1D25D7D900367326 /* HomeViewController.swift */; };
 		2D8AC7D21D25D7D900367326 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D8AC7D01D25D7D900367326 /* Main.storyboard */; };
 		2D8AC7D41D25D7D900367326 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D8AC7D31D25D7D900367326 /* Assets.xcassets */; };
-		2D8AC7D71D25D7D900367326 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D8AC7D51D25D7D900367326 /* LaunchScreen.storyboard */; };
 		2D8AC7DF1D25D8D700367326 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8AC7DE1D25D8D700367326 /* ListViewController.swift */; };
 		2D8AC7E11D25D96800367326 /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8AC7E01D25D96800367326 /* CalendarViewController.swift */; };
 		2D8AC8241D25E23000367326 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8AC8231D25E23000367326 /* SWRevealViewController.m */; };
 		2D8AC82B1D25E86900367326 /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8AC82A1D25E86900367326 /* ContactViewController.swift */; };
 		2D8AC82D1D25EEEB00367326 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8AC82C1D25EEEB00367326 /* InfoViewController.swift */; };
+		8F7324B51D2F25A10097036D /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7324B31D2F25A10097036D /* LogInViewController.swift */; };
+		8F7324B61D2F25A10097036D /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7324B41D2F25A10097036D /* SplashScreen.swift */; };
+		8F7324BA1D2F25BB0097036D /* HapnaMono-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8F7324B71D2F25BB0097036D /* HapnaMono-Light.otf */; };
+		8F7324BB1D2F25BB0097036D /* Reckoner_Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8F7324B81D2F25BB0097036D /* Reckoner_Bold.ttf */; };
+		8F7324BC1D2F25BB0097036D /* Reckoner.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8F7324B91D2F25BB0097036D /* Reckoner.ttf */; };
+		8F7324C21D2F37020097036D /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F7324C11D2F37020097036D /* Launch Screen.storyboard */; };
+		8F7324C41D31C1CE0097036D /* LogInScreenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7324C31D31C1CE0097036D /* LogInScreenController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,7 +39,6 @@
 		2D8AC7CE1D25D7D900367326 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		2D8AC7D11D25D7D900367326 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2D8AC7D31D25D7D900367326 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		2D8AC7D61D25D7D900367326 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2D8AC7D81D25D7D900367326 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2D8AC7DE1D25D8D700367326 /* ListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		2D8AC7E01D25D96800367326 /* CalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
@@ -42,6 +47,13 @@
 		2D8AC8231D25E23000367326 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
 		2D8AC82A1D25E86900367326 /* ContactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
 		2D8AC82C1D25EEEB00367326 /* InfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
+		8F7324B31D2F25A10097036D /* LogInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
+		8F7324B41D2F25A10097036D /* SplashScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashScreen.swift; sourceTree = "<group>"; };
+		8F7324B71D2F25BB0097036D /* HapnaMono-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HapnaMono-Light.otf"; sourceTree = "<group>"; };
+		8F7324B81D2F25BB0097036D /* Reckoner_Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Reckoner_Bold.ttf; sourceTree = "<group>"; };
+		8F7324B91D2F25BB0097036D /* Reckoner.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Reckoner.ttf; sourceTree = "<group>"; };
+		8F7324C11D2F37020097036D /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		8F7324C31D31C1CE0097036D /* LogInScreenController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInScreenController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +96,7 @@
 		2D8AC7CB1D25D7D900367326 /* LyonsDen */ = {
 			isa = PBXGroup;
 			children = (
+				8F7324C11D2F37020097036D /* Launch Screen.storyboard */,
 				2D8AC8201D25E20B00367326 /* SWRevealViewController */,
 				2D8AC7CC1D25D7D900367326 /* AppDelegate.swift */,
 				2D8AC7CE1D25D7D900367326 /* HomeViewController.swift */,
@@ -94,8 +107,11 @@
 				2D22EA081D2ED29C001B3A11 /* MenuTable.swift */,
 				2D22EA031D2D7438001B3A11 /* ContactViews */,
 				2D8AC7D01D25D7D900367326 /* Main.storyboard */,
+				8F7324C31D31C1CE0097036D /* LogInScreenController.swift */,
+				8F7324BD1D2F25E70097036D /* Resources */,
+				8F7324B31D2F25A10097036D /* LogInViewController.swift */,
+				8F7324B41D2F25A10097036D /* SplashScreen.swift */,
 				2D8AC7D31D25D7D900367326 /* Assets.xcassets */,
-				2D8AC7D51D25D7D900367326 /* LaunchScreen.storyboard */,
 				2D8AC7D81D25D7D900367326 /* Info.plist */,
 				2D8AC8211D25E22F00367326 /* LyonsDen-Bridging-Header.h */,
 			);
@@ -109,6 +125,16 @@
 				2D8AC8231D25E23000367326 /* SWRevealViewController.m */,
 			);
 			name = SWRevealViewController;
+			sourceTree = "<group>";
+		};
+		8F7324BD1D2F25E70097036D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8F7324B71D2F25BB0097036D /* HapnaMono-Light.otf */,
+				8F7324B81D2F25BB0097036D /* Reckoner_Bold.ttf */,
+				8F7324B91D2F25BB0097036D /* Reckoner.ttf */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -170,9 +196,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2D8AC7D71D25D7D900367326 /* LaunchScreen.storyboard in Resources */,
+				8F7324BA1D2F25BB0097036D /* HapnaMono-Light.otf in Resources */,
 				2D8AC7D41D25D7D900367326 /* Assets.xcassets in Resources */,
+				8F7324BB1D2F25BB0097036D /* Reckoner_Bold.ttf in Resources */,
 				2D8AC7D21D25D7D900367326 /* Main.storyboard in Resources */,
+				8F7324BC1D2F25BB0097036D /* Reckoner.ttf in Resources */,
+				8F7324C21D2F37020097036D /* Launch Screen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,7 +219,10 @@
 				2D8AC8241D25E23000367326 /* SWRevealViewController.m in Sources */,
 				2D8AC82D1D25EEEB00367326 /* InfoViewController.swift in Sources */,
 				2D22EA051D2D787D001B3A11 /* AnnouncementViewController.swift in Sources */,
+				8F7324B61D2F25A10097036D /* SplashScreen.swift in Sources */,
 				2D8AC7DF1D25D8D700367326 /* ListViewController.swift in Sources */,
+				8F7324C41D31C1CE0097036D /* LogInScreenController.swift in Sources */,
+				8F7324B51D2F25A10097036D /* LogInViewController.swift in Sources */,
 				2D22EA021D2D7427001B3A11 /* TeacherTable.swift in Sources */,
 				2D8AC7CD1D25D7D900367326 /* AppDelegate.swift in Sources */,
 				2D8AC82B1D25E86900367326 /* ContactViewController.swift in Sources */,
@@ -206,14 +238,6 @@
 				2D8AC7D11D25D7D900367326 /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		2D8AC7D51D25D7D900367326 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2D8AC7D61D25D7D900367326 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
