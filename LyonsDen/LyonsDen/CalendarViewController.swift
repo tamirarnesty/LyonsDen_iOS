@@ -102,8 +102,8 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         if events.count > 0 {
             print (events[0].title)
         }
-        performSegueWithIdentifier("CalendarSegue", sender: nil)
-        self.calendarView.deselectDate(date)
+//        performSegueWithIdentifier("CalendarSegue", sender: nil)
+//        self.calendarView.deselectDate(date)
     }
     
     // https://calendar.google.com/calendar/ical/yusuftazim204%40gmail.com/private-f2b3e6f282204329e487a76f4478cb33/basic.ics
