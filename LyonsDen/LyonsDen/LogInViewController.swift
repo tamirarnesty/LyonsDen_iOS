@@ -1,17 +1,17 @@
 //
-//  ViewController.swift
-//  Tester
+//  LogInScreenController.swift
+//  LyonsDen
 //
-//  Created by Tamir Arnesty on 2016-06-23.
-//  Copyright © 2016 Tamir Arnesty. All rights reserved.
+//  Created by Tamir Arnesty on 2016-07-09.
+//  Copyright © 2016 William Lyon Mackenize CI. All rights reserved.
 //
 
+import Foundation
 import UIKit
 
 class LogInViewController: UIViewController, UITextFieldDelegate {
+
     
-    @IBOutlet var switcher: UISegmentedControl!
-    @IBOutlet var enterButton: UIButton!
     @IBOutlet var userNameField: UITextField!
     @IBOutlet var passwordField: UITextField!
     var password = ""
@@ -35,17 +35,14 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         return true
     }
     
+    @IBAction func buttonPressed(sender: AnyObject) {
+        self.password = passwordField.text!
+        self.username = userNameField.text!
+        performSegueWithIdentifier("LogInSuccess", sender: self)
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    @IBAction func logIn(sender: AnyObject) {
-        username = userNameField.text!
-        password = passwordField.text!
-        print(username)
-        print(password)
-    }
-    
-}
 
+}

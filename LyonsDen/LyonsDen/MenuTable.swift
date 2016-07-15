@@ -42,6 +42,10 @@ class MenuTable: UITableViewController {
             
             ListViewController.showingClubs = true
         }
+        // TEMPORARY !!!!!!!!!!!!!!!!!!!!!!
+        if indexPath.row == 2 {
+            return  // Make announcements unclickable
+        }
         performSegueWithIdentifier(titles[indexPath.row] + "Segue", sender: nil)
     }
 }

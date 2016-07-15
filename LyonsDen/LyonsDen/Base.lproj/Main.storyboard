@@ -75,7 +75,7 @@
                                 <rect key="frame" x="0.0" y="28" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zQg-3a-2CC" id="pjk-TR-gfm">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="oQl-LZ-667">
@@ -84,7 +84,7 @@
                                                 <fragment content="DEN">
                                                     <attributes>
                                                         <color key="NSColor" red="1" green="0.74228181073242527" blue="0.2342892474601318" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <font key="NSFont" size="41" name="ReckonerBold"/>
+                                                        <font key="NSFont" metaFont="system" size="41"/>
                                                     </attributes>
                                                 </fragment>
                                             </attributedString>
@@ -124,7 +124,7 @@
                                 <rect key="frame" x="0.0" y="116" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="b4l-tq-z6Y" id="8X2-cR-vvi">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="  Announcements" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZX0-h2-9MC">
@@ -573,7 +573,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Home" id="vgG-Ro-zFG">
-                        <barButtonItem key="leftBarButtonItem" image="menu" id="NKd-QX-hoS">
+                        <barButtonItem key="leftBarButtonItem" image="MenuButtonIcon" id="NKd-QX-hoS">
                             <color key="tintColor" red="1" green="0.81176470588235294" blue="0.3411764705882353" alpha="1" colorSpace="calibratedRGB"/>
                         </barButtonItem>
                     </navigationItem>
@@ -913,7 +913,7 @@
                     </tableView>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Events" id="UHk-Sl-DN1">
-                        <barButtonItem key="leftBarButtonItem" image="menu" id="IAx-wE-zdi">
+                        <barButtonItem key="leftBarButtonItem" image="MenuButtonIcon" id="IAx-wE-zdi">
                             <color key="tintColor" red="1" green="0.81176470590000005" blue="0.3411764706" alpha="1" colorSpace="calibratedRGB"/>
                         </barButtonItem>
                     </navigationItem>
@@ -941,7 +941,7 @@
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Calendar" id="DF1-UW-Dih">
-                        <barButtonItem key="leftBarButtonItem" image="menu" id="eXh-Bj-IMa">
+                        <barButtonItem key="leftBarButtonItem" image="MenuButtonIcon" id="eXh-Bj-IMa">
                             <color key="tintColor" red="1" green="0.81176470590000005" blue="0.3411764706" alpha="1" colorSpace="calibratedRGB"/>
                         </barButtonItem>
                     </navigationItem>
@@ -1068,7 +1068,7 @@
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Contact" id="ebn-wQ-qLA">
-                        <barButtonItem key="leftBarButtonItem" image="menu" id="NDO-cd-aWm">
+                        <barButtonItem key="leftBarButtonItem" image="MenuButtonIcon" id="NDO-cd-aWm">
                             <color key="tintColor" red="1" green="0.81176470590000005" blue="0.3411764706" alpha="1" colorSpace="calibratedRGB"/>
                         </barButtonItem>
                     </navigationItem>
@@ -1382,7 +1382,9 @@
                     </view>
                     <navigationItem key="navigationItem" id="mhu-dt-46A">
                         <leftBarButtonItems>
-                            <barButtonItem image="menu" id="TRf-Yh-pKU"/>
+                            <barButtonItem image="MenuButtonIcon" id="TRf-Yh-pKU">
+                                <color key="tintColor" red="0.99607843137254903" green="0.77647058823529413" blue="0.27843137254901962" alpha="1" colorSpace="calibratedRGB"/>
+                            </barButtonItem>
                             <barButtonItem title="Item" id="RIP-IS-pcK"/>
                         </leftBarButtonItems>
                     </navigationItem>
@@ -1403,32 +1405,30 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="splash" translatesAutoresizingMaskIntoConstraints="NO" id="GL5-At-CRW">
-                                <rect key="frame" x="59" y="6" width="483" height="588"/>
-                                <gestureRecognizers/>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="nja-Tg-mDj" appends="YES" id="Gdk-MN-WMF"/>
-                                </connections>
-                            </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copyright © 2016 WLMCI. All rights reserved." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="VQR-1Z-V4c">
                                 <rect key="frame" x="20" y="559" width="560" height="21"/>
                                 <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Splash" translatesAutoresizingMaskIntoConstraints="NO" id="GL5-At-CRW">
+                                <rect key="frame" x="0.0" y="20" width="600" height="580"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="nja-Tg-mDj" appends="YES" id="Gdk-MN-WMF"/>
+                                </connections>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="GL5-At-CRW" firstAttribute="top" secondItem="cKt-j6-gX0" secondAttribute="topMargin" constant="-20" id="6aM-Mg-sKf"/>
+                            <constraint firstItem="GL5-At-CRW" firstAttribute="leading" secondItem="cKt-j6-gX0" secondAttribute="leadingMargin" constant="-20" id="3YL-LV-TLD"/>
+                            <constraint firstItem="n9M-0K-BPg" firstAttribute="top" secondItem="GL5-At-CRW" secondAttribute="bottom" id="GIe-Ws-5Gk"/>
                             <constraint firstItem="n9M-0K-BPg" firstAttribute="top" secondItem="VQR-1Z-V4c" secondAttribute="bottom" constant="20" id="IYN-d8-eCj"/>
-                            <constraint firstItem="GL5-At-CRW" firstAttribute="leading" secondItem="cKt-j6-gX0" secondAttribute="leadingMargin" constant="-20" id="Qfh-sA-EuA"/>
                             <constraint firstItem="VQR-1Z-V4c" firstAttribute="centerX" secondItem="cKt-j6-gX0" secondAttribute="centerX" id="XcX-eU-T1b"/>
-                            <constraint firstItem="GL5-At-CRW" firstAttribute="centerY" secondItem="cKt-j6-gX0" secondAttribute="centerY" id="bCc-yH-wp8"/>
-                            <constraint firstItem="GL5-At-CRW" firstAttribute="centerX" secondItem="cKt-j6-gX0" secondAttribute="centerX" id="ciY-ed-l3s"/>
                             <constraint firstItem="VQR-1Z-V4c" firstAttribute="trailing" secondItem="cKt-j6-gX0" secondAttribute="trailingMargin" id="dWX-P7-Ref" userLabel="Copyright.trailing = trailingMargin - 20"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="GL5-At-CRW" secondAttribute="trailing" constant="-20" id="fuV-Y7-Mrk"/>
+                            <constraint firstItem="GL5-At-CRW" firstAttribute="top" secondItem="8c4-4I-WNv" secondAttribute="bottom" id="hMd-AV-CIs"/>
                             <constraint firstItem="VQR-1Z-V4c" firstAttribute="leading" secondItem="cKt-j6-gX0" secondAttribute="leadingMargin" id="i1K-Z5-YUZ" userLabel="Copyright.leading = leadingMargin - 20"/>
-                            <constraint firstItem="n9M-0K-BPg" firstAttribute="top" secondItem="GL5-At-CRW" secondAttribute="bottom" constant="-20" id="yc8-xB-4ZH"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="GL5-At-CRW" secondAttribute="trailing" constant="-20" id="o36-Eb-QRn"/>
                         </constraints>
                     </view>
                     <connections>
@@ -1449,10 +1449,10 @@
             </objects>
             <point key="canvasLocation" x="-627" y="664"/>
         </scene>
-        <!--Log In Screen Controller-->
+        <!--Log In View Controller-->
         <scene sceneID="ret-yq-Zny">
             <objects>
-                <viewController id="OSh-Nd-EAg" customClass="LogInScreenController" customModule="LyonsDen" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="OSh-Nd-EAg" customClass="LogInViewController" customModule="LyonsDen" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="SgG-BV-ol4"/>
                         <viewControllerLayoutGuide type="bottom" id="klX-HB-cC1"/>
@@ -1470,10 +1470,7 @@
                                 <fontDescription key="fontDescription" name="Reckoner" family="Reckoner" pointSize="24"/>
                                 <state key="normal" title="Log In"/>
                                 <connections>
-                                    <action selector="buttonPressed:" destination="OSh-Nd-EAg" eventType="touchUpInside" id="FRj-6L-fma"/>
-                                    <action selector="enterPressed:" destination="OSh-Nd-EAg" eventType="touchUpInside" id="DEg-ff-9kK"/>
-                                    <action selector="logIn:" destination="OSh-Nd-EAg" eventType="touchUpInside" id="hL3-Zn-MCo"/>
-                                    <segue destination="BYZ-38-t0r" kind="show" id="ECh-9q-6vY"/>
+                                    <action selector="buttonPressed:" destination="OSh-Nd-EAg" eventType="touchUpInside" id="84r-3k-eBR"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Username" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="r5N-xe-5jm">
@@ -1512,29 +1509,27 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="buttonPressed" destination="Zf5-3A-XrX" id="jzF-RK-l4q"/>
-                        <outlet property="enterButton" destination="Zf5-3A-XrX" id="pmr-bc-rN5"/>
                         <outlet property="passwordField" destination="ndd-W5-SH2" id="dQu-eI-v34"/>
-                        <outlet property="switcher" destination="Smf-yW-I90" id="Zmr-ka-sC3"/>
                         <outlet property="userNameField" destination="r5N-xe-5jm" id="5Ni-UH-sqN"/>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="LogInSuccess" id="SId-Ya-K7L"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6tS-eg-7HG" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="79" y="664"/>
+            <point key="canvasLocation" x="91" y="664"/>
         </scene>
     </scenes>
     <resources>
         <image name="Announce" width="75" height="38"/>
         <image name="Emergency" width="65" height="57"/>
+        <image name="MenuButtonIcon" width="30" height="30"/>
         <image name="Music" width="65" height="65"/>
+        <image name="Splash" width="1089" height="1450"/>
         <image name="Teacher" width="65" height="65"/>
-        <image name="menu" width="22" height="22"/>
-        <image name="splash" width="1089" height="1450"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="kcq-87-jqg"/>
         <segue reference="vXW-Ba-xK5"/>
+        <segue reference="EiT-gQ-RtZ"/>
         <segue reference="RZS-4r-6Wu"/>
     </inferredMetricsTieBreakers>
 </document>

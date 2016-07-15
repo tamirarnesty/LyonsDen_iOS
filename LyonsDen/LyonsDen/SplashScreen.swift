@@ -3,6 +3,7 @@
 //  Den
 //
 //  Created by Tamir Arnesty on 2016-06-24.
+//  Modified by Inal Gotov 
 //  Copyright © 2016 Tamir Arnesty. All rights reserved.
 //
 
@@ -11,25 +12,26 @@ import UIKit
 
 class SplashScreen: UIViewController {
     
-    var timer = NSTimer()
+    var timer:NSTimer?
     var time = 0
     
     @IBOutlet var splash: UIView!
     
     @IBOutlet var skip: UITapGestureRecognizer!
     @IBOutlet var copyright: UILabel!
-    @IBOutlet var lyon: UIImageView!
     
     func increaseTimer () {
         time += 1
         if (time == 3) {
-            timer.invalidate()
+            timer!.invalidate()
             self.performSegueWithIdentifier ("splash", sender: nil)
         }
     }
     
     @IBAction func skipped(sender: AnyObject) {
-        time = 3
+        timer!.invalidate()
+        timer = nil
+        self.performSegueWithIdentifier ("splash", sender: nil)
     }
     
     override func viewDidLoad() {
