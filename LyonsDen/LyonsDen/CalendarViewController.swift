@@ -16,20 +16,43 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
     var calendarView:CalendarView = CalendarView(frame: CGRectZero)
     
     @IBOutlet weak var menuButton: UIBarButtonItem!
+    var scrollView:UIScrollView?
+    var currentEvents:[EventView?] = []
+    var lastSelectedDate:NSDate?
+    let dateLabel = UILabel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Make sidemenu swipeable
         if self.revealViewController() != nil {
-            menuButton.target = self.revealViewController()
-            menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
-            self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+            menuButton.target = self.revealViewController()                                     // Set Button Target class
+            menuButton.action = #selector(SWRevealViewController.revealToggle(_:))              // Set Button Target method
+            self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())  // Create a gesture recognizer in the ViewController
         }
+        // Set the DataSource and Delegate of the calendar
         calendarView.dataSource = self
         calendarView.delegate = self
-        
+        self.loadEventsIntoCalendar()
+        // Add the calendar into the ViewController
         self.view.addSubview(calendarView)
+        
+        // Create a place holder for the calendar's height
+        let calendarHeight = (self.view.frame.size.width - 16.0 * 2) + 20.0
+        
+        
+        // Resize and position the scrollView
+        scrollView = UIScrollView(frame: CGRectMake(0, calendarHeight + 16, self.view.frame.width, self.view.frame.height - calendarHeight))
+        
+        scrollView!.backgroundColor = backgroundColor
+        
+        dateLabel.frame = CGRectMake(8, 8, scrollView!.frame.width - 16, 21)
+        dateLabel.textColor = accentColor
+        dateLabel.text = ""
+        dateLabel.textAlignment = NSTextAlignment.Center
+        scrollView!.addSubview(dateLabel)
+        
+        self.view.addSubview(scrollView!)
     }
     
     override func didReceiveMemoryWarning() {
@@ -37,21 +60,23 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        
-        calendarView.setDisplayDate(NSDate(), animated: true)
-        loadEventsIntoCalendar()
-        calendarView.reloadData()
-    }
-    
     // Resize the Calendar to fit the screen.
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
+        calendarView.reloadData()
         let width = self.view.frame.size.width - 16.0 * 2
         let height = width + 20.0
-        self.calendarView.frame = CGRect(x: 16.0, y: 72.0, width: width, height: height)
+        self.calendarView.frame = CGRect(x: 16.0, y: 60.0, width: width, height: height)
+        self.calendarView.setDisplayDate(NSDate(), animated: true)
+//        self.calendarView.selectDate(NSDate())
+        self.calendarView.reloadData()
+        
+        
+        if self.currentEvents.count > 0 {
+            self.scrollView!.contentSize.height = 37 + (self.currentEvents[0]!.frame.height + 16) * CGFloat(self.currentEvents.count)
+        } else {
+            self.scrollView!.contentSize.height = self.scrollView!.frame.height
+        }
     }
     
     // Set the start date that the calendar can view
@@ -94,16 +119,43 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
     
     // Called when a date is deselected. Required to be implemented
     func calendar(calendar: CalendarView, didDeselectDate date: NSDate) {
-        
+        print ("I eselected \(date.description)")
     }
     
     // Called when a date is selected. Required to be implemented
     func calendar(calendar: CalendarView, didSelectDate date: NSDate, withEvents events: [Event]) {
-        if events.count > 0 {
-            print (events[0].title)
+        if date == lastSelectedDate {
+            return
         }
-//        performSegueWithIdentifier("CalendarSegue", sender: nil)
-//        self.calendarView.deselectDate(date)
+        
+        if let lastDate = lastSelectedDate {
+            self.calendarView.deselectDate(lastDate)
+        }
+        lastSelectedDate = date
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            self.currentEvents.removeAll()
+            
+            if self.scrollView!.subviews.count > 0 {
+                for subview in self.scrollView!.subviews {
+                    if subview != self.dateLabel {
+                        subview.removeFromSuperview()
+                    }
+                }
+            }
+        
+            if (events.count > 0) {
+                for h in 0...events.count - 1 {
+                    self.currentEvents.append(EventView(frame: CGRectMake(8, 37 + (320 * CGFloat(h)), self.scrollView!.frame.width - 16, 316)))
+                    self.scrollView!.addSubview(self.currentEvents[h]!)
+                    self.currentEvents[h]!.titleLabel.text = events[h].title
+                    self.currentEvents[h]!.infoLabel.text = events[h].description
+                    self.currentEvents[h]!.timeLabel.text = events[h].startDate?.description
+                    self.currentEvents[h]!.locationLabel.text = events[h].location
+                }
+            }
+            self.dateLabel.text = NSString(string: date.description).substringToIndex(10)
+        }
     }
     
     // https://calendar.google.com/calendar/ical/yusuftazim204%40gmail.com/private-f2b3e6f282204329e487a76f4478cb33/basic.ics
@@ -111,8 +163,10 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         // The link from which the calendar is downloaded
         let url = NSURL (string: "https://calendar.google.com/calendar/ical/yusuftazim204%40gmail.com/private-f2b3e6f282204329e487a76f4478cb33/basic.ics")!
         
+        // The process of downloading and parsing the calendar
         let task = NSURLSession.sharedSession().dataTaskWithURL(url) { (data, response, error) in
             if let URlContent = data {  // If Data has been loaded
+                // If you got to this point then you've downloaded the calendar so...
                 
                 // Calendar File parsing starts here!!!
                 
@@ -121,18 +175,19 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
                 // An array of flags used for locating the event fields
                 // [h][0] - The flag that marks the begining of a field, [h][1] - The flag that marks the end of a field
                 let searchTitles:[[String]] = [["SUMMARY:", "TRANSP:"], ["DESCRIPTION:", "LAST-MODIFIED:"], ["DTSTART", "DTEND"], ["DTEND", "DTSTAMP"], ["LOCATION:", "SEQUENCE:"]]
-                
+                // An array that will contain the events themselves
                 var events:[Event] = [Event]()
-                
+                // An array of operation for configuring the last added event, operations are in the same order as searchTitles. 
+                // The operations automatically modify the last item in the 'events' array.
+                // The actual contents of this array are calculated at the time of access and will be different as defined in the if statement
                 var eventOperations:[(NSString) -> Void] {
-                    if events.count != 0 {
+                    if events.count != 0 {  // If there are events. then there are operations
                         return [events[events.count-1].setTitle, events[events.count-1].setDescription, events[events.count-1].setStartDate, events[events.count-1].setEndDate, events[events.count-1].setLocation]
-                    } else {
+                    } else {                // If there are no events, then there are no operations
                         return []
-                    }
+                    }                       // Simple as that.
                 }
-                
-                // The range of "webContent's" content that is currently being scanned
+                // The range of "webContent's" content that is to be scanned
                 // Must be decreased after each event is scanned
                 var range:NSRange = NSMakeRange(0, webContent.length - 1)
                 // Inside function that will be used to determine the 'difference' range between the begining and end flag ranges.
@@ -177,13 +232,13 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
                         fieldBoundaries = [NSRange]()   // Clear the fieldBoundaries for the new search
                         fieldBoundaries.append(webContent.rangeOfString(searchTitles[h][0], options: NSStringCompareOptions.LiteralSearch, range: range))   // Find the begining flag
                         fieldBoundaries.append(webContent.rangeOfString(searchTitles[h][1], options: NSStringCompareOptions.LiteralSearch, range: range))   // Find the ending flag
-                        var tempHold:String = webContent.substringWithRange(findDifference(fieldBoundaries[0], fieldBoundaries[1]))
-                        tempHold = tempHold.stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet())
-                        tempHold = tempHold.stringByReplacingOccurrencesOfString("\u{005C}", withString: "", options: .LiteralSearch, range: nil)
-                        eventOperations[h](tempHold)
+                        var tempHold:String = webContent.substringWithRange(findDifference(fieldBoundaries[0], fieldBoundaries[1]))                         // Create a new string from whatever is in between the two flags. This will be the current field of the event
+                        tempHold = tempHold.stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet())                                           // Remove all /r /n and other 'new line' characters from the event field
+                        tempHold = tempHold.stringByReplacingOccurrencesOfString("\u{005C}", withString: "", options: .LiteralSearch, range: nil)           // Replace all backslashes from the event field
+                        eventOperations[h](tempHold)                                                                                                        // Add the event field to the current event being recorded
                     }
                 } while (true)
-                
+                // Pass the recorded events to the calendar
                 self.calendarView.events = events
             }
         }
@@ -246,4 +301,23 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
     //            }
     //        }
     //    }
+    
+    
+//    currentEvents.append(EventView(frame: CGRectMake(8, 37, scrollView!.frame.width - 16, 316)))
+//    
+//    scrollView!.addSubview(currentEvents[0]!)
+//    
+//    currentEvents[0]!.titleLabel.text = "Ttiel"
+//    currentEvents[0]!.infoLabel.text = "Info"
+//    currentEvents[0]!.timeLabel.text = "2:30"
+//    currentEvents[0]!.locationLabel.text = "School"
+//    
+//    currentEvents.append(EventView(frame: CGRectMake(8, 37 + 316 + 8, scrollView!.frame.width - 16, 316)))
+//    
+//    scrollView!.addSubview(currentEvents[1]!)
+//    
+//    currentEvents[1]!.titleLabel.text = "Ttiel Kobalsdas"
+//    currentEvents[1]!.infoLabel.text = "Info"
+//    currentEvents[1]!.timeLabel.text = "2:30 bdshaio"
+//    currentEvents[1]!.locationLabel.text = "School dsa dsa"
 }

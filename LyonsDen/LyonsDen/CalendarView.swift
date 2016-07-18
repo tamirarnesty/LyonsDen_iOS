@@ -85,37 +85,42 @@ class CalendarView: UIView, UICollectionViewDataSource, UICollectionViewDelegate
     
     private var eventsByIndexPath : [NSIndexPath:[Event]] = [NSIndexPath:[Event]]() // A dictionary containing an array of Events for a given NSIndexPath
     
-    // The events for a given date ???????????????????
+    // The event bank for this calendar
     var events : [Event]? {
         didSet {
+            // Recreate the eventsByindexPath bank
             eventsByIndexPath = [NSIndexPath:[Event]]()
             
-            // If events is not nil, then continue, else return from this closure
+            // If there are events then continue
             guard let events = events else {
                 return
             }
             
-            // This holds the seconds of the difference from GMT
+            // This holds the difference in seconds between the current timezone and GMT
             let secondsFromGMTDifference = NSTimeInterval(NSTimeZone.localTimeZone().secondsFromGMT)
+            // For each event...
             for event in events {
 //                // If event is not one day then return from this closure
 //                if event.isOneDay == false {
 //                    return
 //                }
-                
+                // Declare the search/create flags
                 let flags: NSCalendarUnit = [NSCalendarUnit.Month, NSCalendarUnit.Day]
+                // Determine the start date in GMT
                 let startDate = event.startDate!.dateByAddingTimeInterval(secondsFromGMTDifference)
-                // Get the distance of the event from the start
+                // Get the distance of the event from the start of the month
                 let distanceFromStartComponent = self.gregorian.components( flags, fromDate:startOfMonthCache, toDate: startDate, options: NSCalendarOptions() )
+                // Create the indexPath of the event
                 let indexPath = NSIndexPath(forItem: distanceFromStartComponent.day, inSection: distanceFromStartComponent.month)
-                if var eventsList : [Event] = eventsByIndexPath[indexPath] { // If we have initialized a list for this IndexPath
-                    eventsList.append(event) // Simply append
-                }
-                else {
-                    eventsByIndexPath[indexPath] = [event] // Otherwise create the list with the first element
+                // If there are already events in the created indexPath then
+                if var eventsList : [Event] = eventsByIndexPath[indexPath] {
+                    eventsList.append(event) // Simply append them to the dictionary of eventsByindexPaths
+                    eventsByIndexPath[indexPath] = eventsList
+                } else {
+                    eventsByIndexPath[indexPath] = [event] // Otherwise create the dictionary entry
                 }
             }
-            self.calendarView.reloadData()
+            self.calendarView.reloadData()  // Reload the data
         }
     }
     
@@ -335,30 +340,37 @@ class CalendarView: UIView, UICollectionViewDataSource, UICollectionViewDelegate
             return
         }
         
-        guard self.calendarView.indexPathsForSelectedItems()?.contains(indexPath) == false else {
+        guard self.selectedIndexPaths.contains(indexPath) == false else {
             return
         }
         
-        self.calendarView.selectItemAtIndexPath(indexPath, animated: false, scrollPosition: .None)
+        self.calendarView.selectItemAtIndexPath(indexPath, animated: true, scrollPosition: .None)
+        self.calendarView.reloadData()
+        
         selectedIndexPaths.append(indexPath)
         selectedDates.append(date)
     }
     
+    // Modified by Inal Gotov
     func deselectDate(date : NSDate) {
+        // Continue only if the given date exists in the calendar
         guard let indexPath = self.indexPathForDate(date) else {
             return
         }
-        
-        guard self.calendarView.indexPathsForSelectedItems()?.contains(indexPath) == true else {
+        // Continue only if the given date is selected
+        guard self.selectedIndexPaths.contains(indexPath) == true else {
             return
         }
-        
-        self.calendarView.deselectItemAtIndexPath(indexPath, animated: false)
-        
+        // Deselc the date
+        self.calendarView.deselectItemAtIndexPath(indexPath, animated: true)
+        // Reload the calendar data
+        self.calendarView.reloadData()
+        // Find the index of the given date in the selectedDates and selectedIndexPaths array
         guard let index = selectedIndexPaths.indexOf(indexPath) else {
             return
         }
         
+        // Remove the date from the selectedDates and selectedIndexPaths
         selectedIndexPaths.removeAtIndex(index)
         selectedDates.removeAtIndex(index)
     }

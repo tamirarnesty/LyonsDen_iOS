@@ -25,6 +25,8 @@
 		2DC27BC61D386A1D002A5ADF /* CalendarHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC27BC11D386A1D002A5ADF /* CalendarHeaderView.swift */; };
 		2DC27BC71D386A1D002A5ADF /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC27BC21D386A1D002A5ADF /* CalendarView.swift */; };
 		2DC27BC81D386A1D002A5ADF /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC27BC31D386A1D002A5ADF /* Event.swift */; };
+		2DC48CE91D3C321C00B73361 /* EventVisual.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2DC48CE81D3C321C00B73361 /* EventVisual.xib */; };
+		2DEF28211D39A84000DA921E /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEF28201D39A84000DA921E /* EventView.swift */; };
 		8F7324B61D2F25A10097036D /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7324B41D2F25A10097036D /* SplashScreen.swift */; };
 		8F7324BA1D2F25BB0097036D /* HapnaMono-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8F7324B71D2F25BB0097036D /* HapnaMono-Light.otf */; };
 		8F7324BB1D2F25BB0097036D /* Reckoner_Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8F7324B81D2F25BB0097036D /* Reckoner_Bold.ttf */; };
@@ -56,6 +58,8 @@
 		2DC27BC11D386A1D002A5ADF /* CalendarHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarHeaderView.swift; sourceTree = "<group>"; };
 		2DC27BC21D386A1D002A5ADF /* CalendarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		2DC27BC31D386A1D002A5ADF /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		2DC48CE81D3C321C00B73361 /* EventVisual.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EventVisual.xib; sourceTree = "<group>"; };
+		2DEF28201D39A84000DA921E /* EventView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
 		8F7324B41D2F25A10097036D /* SplashScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashScreen.swift; sourceTree = "<group>"; };
 		8F7324B71D2F25BB0097036D /* HapnaMono-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HapnaMono-Light.otf"; sourceTree = "<group>"; };
 		8F7324B81D2F25BB0097036D /* Reckoner_Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Reckoner_Bold.ttf; sourceTree = "<group>"; };
@@ -143,6 +147,8 @@
 				2DC27BC11D386A1D002A5ADF /* CalendarHeaderView.swift */,
 				2DC27BC21D386A1D002A5ADF /* CalendarView.swift */,
 				2DC27BC31D386A1D002A5ADF /* Event.swift */,
+				2DC48CE81D3C321C00B73361 /* EventVisual.xib */,
+				2DEF28201D39A84000DA921E /* EventView.swift */,
 			);
 			name = Calendar;
 			sourceTree = "<group>";
@@ -216,6 +222,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2DC48CE91D3C321C00B73361 /* EventVisual.xib in Resources */,
 				8F7324BA1D2F25BB0097036D /* HapnaMono-Light.otf in Resources */,
 				2D8AC7D41D25D7D900367326 /* Assets.xcassets in Resources */,
 				8F7324BB1D2F25BB0097036D /* Reckoner_Bold.ttf in Resources */,
@@ -236,6 +243,7 @@
 				2DC27BC61D386A1D002A5ADF /* CalendarHeaderView.swift in Sources */,
 				2D22EA091D2ED29C001B3A11 /* MenuTable.swift in Sources */,
 				2DC27BC71D386A1D002A5ADF /* CalendarView.swift in Sources */,
+				2DEF28211D39A84000DA921E /* EventView.swift in Sources */,
 				2D22EA071D2D8390001B3A11 /* MusicViewController.swift in Sources */,
 				2DC27BC51D386A1D002A5ADF /* CalendarFlowLayout.swift in Sources */,
 				2D8AC7E11D25D96800367326 /* CalendarViewController.swift in Sources */,
