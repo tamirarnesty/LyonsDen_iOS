@@ -11,6 +11,7 @@
 		2D22EA051D2D787D001B3A11 /* AnnouncementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D22EA041D2D787D001B3A11 /* AnnouncementViewController.swift */; };
 		2D22EA071D2D8390001B3A11 /* MusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D22EA061D2D8390001B3A11 /* MusicViewController.swift */; };
 		2D22EA091D2ED29C001B3A11 /* MenuTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D22EA081D2ED29C001B3A11 /* MenuTable.swift */; };
+		2D7224531D43124000C327D3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D7224521D43124000C327D3 /* GoogleService-Info.plist */; };
 		2D8AC7CD1D25D7D900367326 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8AC7CC1D25D7D900367326 /* AppDelegate.swift */; };
 		2D8AC7CF1D25D7D900367326 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8AC7CE1D25D7D900367326 /* HomeViewController.swift */; };
 		2D8AC7D21D25D7D900367326 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D8AC7D01D25D7D900367326 /* Main.storyboard */; };
@@ -33,13 +34,16 @@
 		8F7324BC1D2F25BB0097036D /* Reckoner.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8F7324B91D2F25BB0097036D /* Reckoner.ttf */; };
 		8F7324C21D2F37020097036D /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F7324C11D2F37020097036D /* Launch Screen.storyboard */; };
 		8F7324C41D31C1CE0097036D /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7324C31D31C1CE0097036D /* LogInViewController.swift */; };
+		A1FD9A06A9A5FCD92B1339F2 /* Pods_LyonsDen.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 276479845EC2B5B3C8017578 /* Pods_LyonsDen.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		276479845EC2B5B3C8017578 /* Pods_LyonsDen.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LyonsDen.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D22EA011D2D7427001B3A11 /* TeacherTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeacherTable.swift; sourceTree = "<group>"; };
 		2D22EA041D2D787D001B3A11 /* AnnouncementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnnouncementViewController.swift; sourceTree = "<group>"; };
 		2D22EA061D2D8390001B3A11 /* MusicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicViewController.swift; sourceTree = "<group>"; };
 		2D22EA081D2ED29C001B3A11 /* MenuTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTable.swift; sourceTree = "<group>"; };
+		2D7224521D43124000C327D3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2D8AC7C91D25D7D900367326 /* LyonsDen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LyonsDen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D8AC7CC1D25D7D900367326 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2D8AC7CE1D25D7D900367326 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -60,12 +64,14 @@
 		2DC27BC31D386A1D002A5ADF /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		2DC48CE81D3C321C00B73361 /* EventVisual.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EventVisual.xib; sourceTree = "<group>"; };
 		2DEF28201D39A84000DA921E /* EventView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
+		5F1B779B2B3C769B56DC9BC2 /* Pods-LyonsDen.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LyonsDen.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LyonsDen/Pods-LyonsDen.debug.xcconfig"; sourceTree = "<group>"; };
 		8F7324B41D2F25A10097036D /* SplashScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashScreen.swift; sourceTree = "<group>"; };
 		8F7324B71D2F25BB0097036D /* HapnaMono-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HapnaMono-Light.otf"; sourceTree = "<group>"; };
 		8F7324B81D2F25BB0097036D /* Reckoner_Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Reckoner_Bold.ttf; sourceTree = "<group>"; };
 		8F7324B91D2F25BB0097036D /* Reckoner.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Reckoner.ttf; sourceTree = "<group>"; };
 		8F7324C11D2F37020097036D /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		8F7324C31D31C1CE0097036D /* LogInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
+		DF74D495A453CDFA2735E79F /* Pods-LyonsDen.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LyonsDen.release.xcconfig"; path = "Pods/Target Support Files/Pods-LyonsDen/Pods-LyonsDen.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +79,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1FD9A06A9A5FCD92B1339F2 /* Pods_LyonsDen.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,6 +101,8 @@
 			children = (
 				2D8AC7CB1D25D7D900367326 /* LyonsDen */,
 				2D8AC7CA1D25D7D900367326 /* Products */,
+				BEB5F00862890AD2C8CAFA55 /* Pods */,
+				D9BA4A33BDB73C527749FEB8 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -125,6 +134,7 @@
 				2D8AC7D01D25D7D900367326 /* Main.storyboard */,
 				2D8AC7D31D25D7D900367326 /* Assets.xcassets */,
 				2D8AC7D81D25D7D900367326 /* Info.plist */,
+				2D7224521D43124000C327D3 /* GoogleService-Info.plist */,
 				2D8AC8211D25E22F00367326 /* LyonsDen-Bridging-Header.h */,
 			);
 			path = LyonsDen;
@@ -163,6 +173,23 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		BEB5F00862890AD2C8CAFA55 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				5F1B779B2B3C769B56DC9BC2 /* Pods-LyonsDen.debug.xcconfig */,
+				DF74D495A453CDFA2735E79F /* Pods-LyonsDen.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		D9BA4A33BDB73C527749FEB8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				276479845EC2B5B3C8017578 /* Pods_LyonsDen.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -170,9 +197,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D8AC7DB1D25D7D900367326 /* Build configuration list for PBXNativeTarget "LyonsDen" */;
 			buildPhases = (
+				D3AE6FF09E12375DF14CB89A /* [CP] Check Pods Manifest.lock */,
 				2D8AC7C51D25D7D900367326 /* Sources */,
 				2D8AC7C61D25D7D900367326 /* Frameworks */,
 				2D8AC7C71D25D7D900367326 /* Resources */,
+				81774777928FB127265C85B5 /* [CP] Embed Pods Frameworks */,
+				793805D8D51A165733B75C88 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -223,6 +253,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DC48CE91D3C321C00B73361 /* EventVisual.xib in Resources */,
+				2D7224531D43124000C327D3 /* GoogleService-Info.plist in Resources */,
 				8F7324BA1D2F25BB0097036D /* HapnaMono-Light.otf in Resources */,
 				2D8AC7D41D25D7D900367326 /* Assets.xcassets in Resources */,
 				8F7324BB1D2F25BB0097036D /* Reckoner_Bold.ttf in Resources */,
@@ -233,6 +264,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		793805D8D51A165733B75C88 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LyonsDen/Pods-LyonsDen-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		81774777928FB127265C85B5 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LyonsDen/Pods-LyonsDen-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D3AE6FF09E12375DF14CB89A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		2D8AC7C51D25D7D900367326 /* Sources */ = {
@@ -360,6 +439,7 @@
 		};
 		2D8AC7DC1D25D7D900367326 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5F1B779B2B3C769B56DC9BC2 /* Pods-LyonsDen.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -378,6 +458,7 @@
 		};
 		2D8AC7DD1D25D7D900367326 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DF74D495A453CDFA2735E79F /* Pods-LyonsDen.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

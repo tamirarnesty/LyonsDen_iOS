@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 let navigationBarColor:UIColor = UIColor(red: 0.023, green: 0.2980, blue: 0.6980, alpha: 1)
 let foregroundColor:UIColor = UIColor(red: 0.0118, green: 0.2431, blue: 0.5765, alpha: 1)
@@ -21,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        FIRApp.configure()
         return true
     }
 

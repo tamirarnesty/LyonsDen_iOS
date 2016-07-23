@@ -2,7 +2,7 @@
 //  CalendarViewController.swift
 //  LyonsDen
 //
-//  The CalendarViewContrller will be used for controlling the calendar screen.
+//  The CalendarViewContrller will be used for displaying the calendar as well as events associated with certain dates.
 //
 //  Created by Inal Gotov on 2016-06-30.
 //  Copyright © 2016 William Lyon Mackenize CI. All rights reserved.
@@ -14,7 +14,8 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
     // The Calendar View
     // The size doesnt matter, it will resize it self later.
     var calendarView:CalendarView = CalendarView(frame: CGRectZero)
-    
+    // The loading wheel that is displayed
+    @IBOutlet var loadingWheel: UIActivityIndicatorView!
     @IBOutlet weak var menuButton: UIBarButtonItem!
     var scrollView:UIScrollView?
     var currentEvents:[EventView?] = []
@@ -23,6 +24,9 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        loadingWheel.startAnimating()
+        loadingWheel.hidesWhenStopped = true
         
         // Make sidemenu swipeable
         if self.revealViewController() != nil {
@@ -33,17 +37,12 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         // Set the DataSource and Delegate of the calendar
         calendarView.dataSource = self
         calendarView.delegate = self
-        self.loadEventsIntoCalendar()
-        // Add the calendar into the ViewController
-        self.view.addSubview(calendarView)
         
         // Create a place holder for the calendar's height
         let calendarHeight = (self.view.frame.size.width - 16.0 * 2) + 20.0
         
-        
         // Resize and position the scrollView
         scrollView = UIScrollView(frame: CGRectMake(0, calendarHeight + 16, self.view.frame.width, self.view.frame.height - calendarHeight))
-        
         scrollView!.backgroundColor = backgroundColor
         
         dateLabel.frame = CGRectMake(8, 8, scrollView!.frame.width - 16, 21)
@@ -51,8 +50,6 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         dateLabel.text = ""
         dateLabel.textAlignment = NSTextAlignment.Center
         scrollView!.addSubview(dateLabel)
-        
-        self.view.addSubview(scrollView!)
     }
     
     override func didReceiveMemoryWarning() {
@@ -68,15 +65,20 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         let height = width + 20.0
         self.calendarView.frame = CGRect(x: 16.0, y: 60.0, width: width, height: height)
         self.calendarView.setDisplayDate(NSDate(), animated: true)
-//        self.calendarView.selectDate(NSDate())
         self.calendarView.reloadData()
-        
         
         if self.currentEvents.count > 0 {
             self.scrollView!.contentSize.height = 37 + (self.currentEvents[0]!.frame.height + 16) * CGFloat(self.currentEvents.count)
         } else {
             self.scrollView!.contentSize.height = self.scrollView!.frame.height
         }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.loadEventsIntoCalendar()
+        loadingWheel.stopAnimating()
     }
     
     // Set the start date that the calendar can view
@@ -162,6 +164,7 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
     func loadEventsIntoCalendar() {
         // The link from which the calendar is downloaded
         let url = NSURL (string: "https://calendar.google.com/calendar/ical/yusuftazim204%40gmail.com/private-f2b3e6f282204329e487a76f4478cb33/basic.ics")!
+        var eventsHaveBeenLoaded = false
         
         // The process of downloading and parsing the calendar
         let task = NSURLSession.sharedSession().dataTaskWithURL(url) { (data, response, error) in
@@ -240,10 +243,28 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
                 } while (true)
                 // Pass the recorded events to the calendar
                 self.calendarView.events = events
+                print ("I loaded the events")
+                eventsHaveBeenLoaded = true
+            } else if let errorData = error {
+                print ("An error occured")
+            } else {
+                print ("No internet")
             }
         }
         
         task.resume()
+        
+        while (true) {
+            if task.state == NSURLSessionTaskState.Completed {//&& eventsHaveBeenLoaded {
+                // Add the calendar into the ViewController
+                print ("Now I'am displaying the calendar")
+                self.view.addSubview(calendarView)
+                self.view.addSubview(scrollView!)
+                
+                
+                break
+            }
+        }
     }
     
     //    // Find the stuff you need

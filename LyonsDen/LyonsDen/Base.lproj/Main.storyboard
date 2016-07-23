@@ -937,7 +937,21 @@
                     <view key="view" contentMode="scaleToFill" id="DPU-Po-dZM">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="cam-3V-GVF">
+                                <rect key="frame" x="290" y="290" width="20" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="VLy-on-o4p"/>
+                                    <constraint firstAttribute="width" constant="20" id="i4C-AK-zTN"/>
+                                </constraints>
+                                <color key="color" red="0.99607843137254903" green="0.77647058823529413" blue="0.27843137254901962" alpha="1" colorSpace="calibratedRGB"/>
+                            </activityIndicatorView>
+                        </subviews>
                         <color key="backgroundColor" red="0.011764705882352941" green="0.24313725490196078" blue="0.57647058823529407" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="cam-3V-GVF" firstAttribute="centerY" secondItem="DPU-Po-dZM" secondAttribute="centerY" id="JUo-Ac-rdf"/>
+                            <constraint firstItem="cam-3V-GVF" firstAttribute="centerX" secondItem="DPU-Po-dZM" secondAttribute="centerX" id="tzM-9L-HgB"/>
+                        </constraints>
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Calendar" id="DF1-UW-Dih">
@@ -947,6 +961,7 @@
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="loadingWheel" destination="cam-3V-GVF" id="Vmt-Xl-5sJ"/>
                         <outlet property="menuButton" destination="eXh-Bj-IMa" id="a0R-ox-w8m"/>
                     </connections>
                 </viewController>
@@ -1358,7 +1373,7 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Home" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Rf-GP-CL5">
                                 <rect key="frame" x="250" y="20" width="101" height="36"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
