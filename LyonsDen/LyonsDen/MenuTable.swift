@@ -46,6 +46,7 @@ class MenuTable: UITableViewController {
         if indexPath.row == 2 {
             return  // Make announcements unclickable
         }
-        performSegueWithIdentifier(titles[indexPath.row] + "Segue", sender: nil)
+        if indexPath.row != 0 {
+            performSegueWithIdentifier(titles[indexPath.row] + "Segue", sender: nil) }
     }
 }
