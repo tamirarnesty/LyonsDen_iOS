@@ -45,11 +45,11 @@ class EventView: UIView {
     func xibSetup() {
         // Create the contents
         contentView = loadViewFromNib()
-        // Use bounds not frame or it'll be offset
+        // Use bounds not frame or it'll be set off
         contentView!.frame = bounds
-        // Make the view stretch with containing view
+        // Make the view stretch with parent view
         contentView!.autoresizingMask = [UIViewAutoresizing.FlexibleWidth, UIViewAutoresizing.FlexibleHeight]
-        // Adding custom subview on top of our view (over any custom drawing > see note below)
+        // Add the custom subview on top of our view (over any custom drawing)
         addSubview(contentView!)
     }
     

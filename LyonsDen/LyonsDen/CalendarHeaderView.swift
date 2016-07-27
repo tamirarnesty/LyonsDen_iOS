@@ -4,6 +4,8 @@
 //
 //  Created by Michael Michailidis on 07/04/2015.
 //  Modified by Inal Gotov on 12/07/2016
+//  Added buttons for scrolling
+//
 //  Copyright (c) 2015 Karmadust. All rights reserved.
 //
 //  Commented by Inal Gotov

@@ -42,7 +42,7 @@ class CalendarDayCell: UICollectionViewCell {
         }
     }
     
-    // The value representing whether the dayCell represents today
+    // The value representing whether the dayCell represents the current date
     var isToday : Bool = false {
         // Changes the colour of the cell, to today's colors if true, otherwise default colors
         didSet {

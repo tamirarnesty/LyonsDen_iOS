@@ -21,7 +21,7 @@ class InfoViewController: UIViewController {
     // The text for the description label
     static var info:String? = "This is what the announcement is about"
     // The image for the announcement
-    static var image: UIImage? 
+    static var image: UIImage?
     // Title label
     @IBOutlet var titleLabel: UILabel!
     // Description label Text View

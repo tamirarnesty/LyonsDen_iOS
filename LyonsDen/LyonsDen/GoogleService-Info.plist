@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>666681140668-ccflqsd1erbk0g7b3euhgd1fsct4si29.apps.googleusercontent.com</string>
+	<string>439458941706-r253auuijejl0bijkhhnjh9c297l8krq.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.666681140668-ccflqsd1erbk0g7b3euhgd1fsct4si29</string>
+	<string>com.googleusercontent.apps.439458941706-r253auuijejl0bijkhhnjh9c297l8krq</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDvH1VsUDtGjy5P9WtSIvUo61F9utni1j4</string>
+	<string>AIzaSyAV6309-Euy-Eocd5pqSjb4oOcyRIDzeLM</string>
 	<key>GCM_SENDER_ID</key>
-	<string>666681140668</string>
+	<string>439458941706</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>wlmac.FileIO2</string>
+	<string>wlmac.LyonsDen</string>
 	<key>PROJECT_ID</key>
-	<string>fileio-9ee53</string>
+	<string>lyons-den</string>
 	<key>STORAGE_BUCKET</key>
-	<string>fileio-9ee53.appspot.com</string>
+	<string>lyons-den.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true/>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:666681140668:ios:c0c0437d287aaac2</string>
+	<string>1:439458941706:ios:88031884a1526b22</string>
 	<key>DATABASE_URL</key>
-	<string>https://fileio-9ee53.firebaseio.com</string>
+	<string>https://lyons-den.firebaseio.com</string>
 </dict>
 </plist>

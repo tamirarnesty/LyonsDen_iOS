@@ -2,7 +2,7 @@
 //  CalendarViewController.swift
 //  LyonsDen
 //
-//  The CalendarViewContrller will be used for displaying the calendar as well as events associated with certain dates.
+//  The CalendarViewContrller will be used for displaying the calendar as well as events associated with selected dates.
 //
 //  Created by Inal Gotov on 2016-06-30.
 //  Copyright © 2016 William Lyon Mackenize CI. All rights reserved.
@@ -16,15 +16,24 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
     var calendarView:CalendarView = CalendarView(frame: CGRectZero)
     // The loading wheel that is displayed
     @IBOutlet var loadingWheel: UIActivityIndicatorView!
+    // The menu button on the Navigation Bar
     @IBOutlet weak var menuButton: UIBarButtonItem!
+    // The scroll view, containing each event
     var scrollView:UIScrollView?
+    // An array of events for the currently selected day
     var currentEvents:[EventView?] = []
+    // The last selected day
     var lastSelectedDate:NSDate?
+    // The label representing a strigified version of the currently selected date
     let dateLabel = UILabel()
-
+    // States whether the events have been loaded or not
+    var eventsLoaded = false
+    
+    // Called when the segue initiating button is pressed
     override func viewDidLoad() {
+        // Super call
         super.viewDidLoad()
-        
+        // Start the animation of the loading wheel
         loadingWheel.startAnimating()
         loadingWheel.hidesWhenStopped = true
         
@@ -37,137 +46,74 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         // Set the DataSource and Delegate of the calendar
         calendarView.dataSource = self
         calendarView.delegate = self
-        
         // Create a place holder for the calendar's height
         let calendarHeight = (self.view.frame.size.width - 16.0 * 2) + 20.0
         
-        // Resize and position the scrollView
-        scrollView = UIScrollView(frame: CGRectMake(0, calendarHeight + 16, self.view.frame.width, self.view.frame.height - calendarHeight))
-        scrollView!.backgroundColor = backgroundColor
+        // Setup the scrollView
+        scrollView = UIScrollView(frame: CGRectMake(0, calendarHeight + 16, self.view.frame.width, self.view.frame.height - calendarHeight))    // Resize and position the scrollView
+        scrollView!.backgroundColor = backgroundColor                           // Set the scrollView's background color
+        dateLabel.frame = CGRectMake(8, 8, scrollView!.frame.width - 16, 21)    // Resize and position the dateLabel
+        dateLabel.textColor = accentColor                                       // Change the text color of the dateLabel
+        dateLabel.text = ""                                                     // Set a place holder for the text of the dateLabel
+        dateLabel.textAlignment = NSTextAlignment.Center                        // Center the dateLabel's text on screen
+        scrollView!.addSubview(dateLabel)                                       // Add the dateLabel to the scrollView
         
-        dateLabel.frame = CGRectMake(8, 8, scrollView!.frame.width - 16, 21)
-        dateLabel.textColor = accentColor
-        dateLabel.text = ""
-        dateLabel.textAlignment = NSTextAlignment.Center
-        scrollView!.addSubview(dateLabel)
+        // Add the calendar and scrollView to the main view and hide them until events are loaded
+        self.view.addSubview(calendarView)
+        self.view.addSubview(scrollView!)
+        calendarView.hidden = true
+        scrollView?.hidden = true
+        
+        // Initiate the loading of events from the web.
+        self.loadEventsIntoCalendar()
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    // Resize the Calendar to fit the screen.
+    // Called before apearing
     override func viewDidLayoutSubviews() {
+        // Super call
         super.viewDidLayoutSubviews()
-        calendarView.reloadData()
+        // Declare the width and height of the calendar
         let width = self.view.frame.size.width - 16.0 * 2
         let height = width + 20.0
-        self.calendarView.frame = CGRect(x: 16.0, y: 60.0, width: width, height: height)
-        self.calendarView.setDisplayDate(NSDate(), animated: true)
-        self.calendarView.reloadData()
-        
-        if self.currentEvents.count > 0 {
+        self.calendarView.frame = CGRect(x: 16.0, y: 60.0, width: width, height: height)    // Resize and position the calendar on screen
+        self.calendarView.setDisplayDate(NSDate(), animated: true)                          // Set the current displayed date on the calendar, to the current date
+        self.calendarView.reloadData()                                                      // Reload the calendar data
+        // If there are any events in the selected date, then resize the scrollView's contentSize accordingly
+        if self.currentEvents.count > 0 {   // If an event exists
             self.scrollView!.contentSize.height = 37 + (self.currentEvents[0]!.frame.height + 16) * CGFloat(self.currentEvents.count)
-        } else {
+        } else {                            // If an event does not exist
             self.scrollView!.contentSize.height = self.scrollView!.frame.height
         }
     }
     
+    // Called after the view has appeared
     override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        self.loadEventsIntoCalendar()
-        loadingWheel.stopAnimating()
-    }
-    
-    // Set the start date that the calendar can view
-    func startDate() -> NSDate? {
-        // This should be changed
-        
-        let dateComponents = NSDateComponents()
-        dateComponents.month = -5
-        
-        let today = NSDate()
-        let threeMonthsAgo = self.calendarView.calendar.dateByAddingComponents(dateComponents, toDate: today, options: NSCalendarOptions())
-        
-        return threeMonthsAgo
-    }
-    
-    // Set the end date that the calendar can view
-    func endDate() -> NSDate? {
-        // This should be changed
-        
-        let dateComponents = NSDateComponents()
-        
-        dateComponents.year = 1;
-        let today = NSDate()
-        
-        let oneYearsFromNow = self.calendarView.calendar.dateByAddingComponents(dateComponents, toDate: today, options: NSCalendarOptions())
-        
-        return oneYearsFromNow
-    }
-    
-    // Called before selecting a date (I think). Required to be implemented
-    func calendar(calendar: CalendarView, canSelectDate date: NSDate) -> Bool {
-        // Make a checker for whether this date has any events
-        return true
-    }
-    
-    // Called when a month is scrolled in the calendar. Required to be implemented
-    func calendar(calendar: CalendarView, didScrollToMonth date: NSDate) {
-        
-    }
-    
-    // Called when a date is deselected. Required to be implemented
-    func calendar(calendar: CalendarView, didDeselectDate date: NSDate) {
-        print ("I eselected \(date.description)")
-    }
-    
-    // Called when a date is selected. Required to be implemented
-    func calendar(calendar: CalendarView, didSelectDate date: NSDate, withEvents events: [Event]) {
-        if date == lastSelectedDate {
-            return
-        }
-        
-        if let lastDate = lastSelectedDate {
-            self.calendarView.deselectDate(lastDate)
-        }
-        lastSelectedDate = date
-        
-        dispatch_async(dispatch_get_main_queue()) {
-            self.currentEvents.removeAll()
-            
-            if self.scrollView!.subviews.count > 0 {
-                for subview in self.scrollView!.subviews {
-                    if subview != self.dateLabel {
-                        subview.removeFromSuperview()
-                    }
-                }
+        super.viewDidAppear(animated)   // Super call
+        // A listener if sorts, for when the events have been loaded
+        while (true) {
+            if eventsLoaded {   // When the events have been loaded
+                // Unhide the calendar and scrollView
+                self.calendarView.hidden = false
+                self.scrollView?.hidden = false
+                // Stop the loading wheel
+                loadingWheel.stopAnimating()
+                break   // Break out of the loop
             }
-        
-            if (events.count > 0) {
-                for h in 0...events.count - 1 {
-                    self.currentEvents.append(EventView(frame: CGRectMake(8, 37 + (320 * CGFloat(h)), self.scrollView!.frame.width - 16, 316)))
-                    self.scrollView!.addSubview(self.currentEvents[h]!)
-                    self.currentEvents[h]!.titleLabel.text = events[h].title
-                    self.currentEvents[h]!.infoLabel.text = events[h].description
-                    self.currentEvents[h]!.timeLabel.text = events[h].startDate?.description
-                    self.currentEvents[h]!.locationLabel.text = events[h].location
-                }
-            }
-            self.dateLabel.text = NSString(string: date.description).substringToIndex(10)
         }
     }
     
-    // https://calendar.google.com/calendar/ical/yusuftazim204%40gmail.com/private-f2b3e6f282204329e487a76f4478cb33/basic.ics
+    
+    // MARK: EVENTS
+    
+    // This function handles the process of downloading a calendar file from the web and parsing it, to add it to the app's calendar
     func loadEventsIntoCalendar() {
         // The link from which the calendar is downloaded
         let url = NSURL (string: "https://calendar.google.com/calendar/ical/yusuftazim204%40gmail.com/private-f2b3e6f282204329e487a76f4478cb33/basic.ics")!
-        var eventsHaveBeenLoaded = false
         
         // The process of downloading and parsing the calendar
         let task = NSURLSession.sharedSession().dataTaskWithURL(url) { (data, response, error) in
+            // The following is simply a declaration and will not execute without the line 'task.resume()'
+            
             if let URlContent = data {  // If Data has been loaded
                 // If you got to this point then you've downloaded the calendar so...
                 
@@ -180,9 +126,10 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
                 let searchTitles:[[String]] = [["SUMMARY:", "TRANSP:"], ["DESCRIPTION:", "LAST-MODIFIED:"], ["DTSTART", "DTEND"], ["DTEND", "DTSTAMP"], ["LOCATION:", "SEQUENCE:"]]
                 // An array that will contain the events themselves
                 var events:[Event] = [Event]()
-                // An array of operation for configuring the last added event, operations are in the same order as searchTitles. 
+                // An array of operation for configuring the last added event, operations are in the same order as searchTitles.
                 // The operations automatically modify the last item in the 'events' array.
                 // The actual contents of this array are calculated at the time of access and will be different as defined in the if statement
+                // Read the whole chapter on 'Functions' in the txtbook, there's some interesting stuff there, it'll all make sense
                 var eventOperations:[(NSString) -> Void] {
                     if events.count != 0 {  // If there are events. then there are operations
                         return [events[events.count-1].setTitle, events[events.count-1].setDescription, events[events.count-1].setStartDate, events[events.count-1].setEndDate, events[events.count-1].setLocation]
@@ -226,9 +173,9 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
                     eventCounter += 1           // Increase the counter to the next event
                     range = updateRange(range)  // Move our searching range to the next event
                     if NSEqualRanges(range, NSMakeRange(NSNotFound, 0)) {   // If there are no more events in the searching range
-                        break;
+                        break;                                              // Then no more shall be added (break from the loop)
                     }
-                    events.append(Event(calendar: self.calendarView.calendar))        // Create an entry for the event database
+                    events.append(Event(calendar: self.calendarView.calendar))        // Create an entry for the events database
                     
                     // Record each field into our event database
                     for h in 0...searchTitles.count-1 {
@@ -244,101 +191,110 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
                 // Pass the recorded events to the calendar
                 self.calendarView.events = events
                 print ("I loaded the events")
-                eventsHaveBeenLoaded = true
-            } else if let errorData = error {
+                // Notify the loading screen that the loading is done
+                self.eventsLoaded = true
+            } else if let errorData = error {   // If there has been an error
                 print ("An error occured")
-            } else {
+                print (errorData.description)
+                // Will, either handle or display the error, whenever i get more experience with this
+            } else {    // If there is no internet
                 print ("No internet")
+                // Will display an error
             }
         }
-        
+        // Initiate the load ing process
         task.resume()
-        
-        while (true) {
-            if task.state == NSURLSessionTaskState.Completed {//&& eventsHaveBeenLoaded {
-                // Add the calendar into the ViewController
-                print ("Now I'am displaying the calendar")
-                self.view.addSubview(calendarView)
-                self.view.addSubview(scrollView!)
-                
-                
-                break
-            }
-        }
     }
     
-    //    // Find the stuff you need
-    //    let startIndex = webContent.rangeOfString("Day Weather Forecast Summary:")
-    //    let endIndex = webContent.rangeOfString(".</span>")
-    //    // A holder variable
-    //    var str:NSString
-    //
-    //    // If the stuff you need exists
-    //    if (startIndex.length != 0) {
-    //    // Crop it out
-    //    str = NSString (string: webContent.substringToIndex(endIndex.location + 1))
-    //    str = str.substringFromIndex(startIndex.location)
-    //    // Remove the html tags
-    //    str = str.stringByReplacingOccurrencesOfString("<[^>]+>", withString: "", options: .RegularExpressionSearch, range: NSMakeRange(0, str.length))
-    //    // Replace a 'symbol' html tag with the actual symbol
-    //    str = str.stringByReplacingOccurrencesOfString("&deg;", withString: "°", options: .RegularExpressionSearch, range: NSMakeRange(0, str.length))
-    //    } else {
-    //    str = "Please enter and appropriate city"
-    //    }
+    
+    // MARK: CALENDAR DATASOURCE IMPLEMENTATION
+    
+    // Set the start date that can be viewed with the calendar
+    func startDate() -> NSDate? {
+        // This will be changed
+        
+        // Declare a dateComponents to hold the date values
+        let dateComponents = NSDateComponents()
+        
+        /////////////////////////////////////////////////////////////////
+        // This is what you need to change, everything else works fine //
+        // Set how far back the calendar can be viewed                 //
+        /////////////////////////////////////////////////////////////////
+        dateComponents.month = -5
+        
+        // Declare today's date
+        let today = NSDate()
+        // Declare the range of the between the start date and today
+        let startDate = self.calendarView.calendar.dateByAddingComponents(dateComponents, toDate: today, options: NSCalendarOptions())
+        // Return the start date
+        return startDate
+    }
+    
+    // Set the end date that can be viewed with the calendar
+    func endDate() -> NSDate? {
+        // This will be changed
+        
+        // Declare a dateComponents to hold the date values
+        let dateComponents = NSDateComponents()
+        
+        /////////////////////////////////////////////////////////////////
+        // This is what you need to change, everything else works fine //
+        // Set how far the calendar can be viewed                      //
+        /////////////////////////////////////////////////////////////////
+        dateComponents.year = 1;
+        
+        // Declare today's date
+        let today = NSDate()
+        // Declare the range of the between the end date and today
+        let oneYearsFromNow = self.calendarView.calendar.dateByAddingComponents(dateComponents, toDate: today, options: NSCalendarOptions())
+        // Return the end date
+        return oneYearsFromNow
+    }
     
     
-    //    // This will be important !!!!!!!!!!!!!!!!!!!!
-    //    // Not any more, doesnt exactly do what i hoped it would
-    //
-    //    // MARK : Events
-    //    func loadEventsInCalendar() {
-    //        // If there's a start date and an end date
-    //        if let startDate = self.startDate(), endDate = self.endDate() {
-    //            let store = EKEventStore()      // Create an instance of the system's calendar with all of its events.
-    //
-    //            // Declare an inside functioin/method that will:
-    //            let fetchEvents = { (/*take in no parameters*/) -> Void in // and return void
-    //                let predicate = store.predicateForEventsWithStartDate(startDate, endDate:endDate, calendars: nil)   // Create a portion of events, in a 'predicate' format, between the given dates
-    //
-    //                // The 'eventsMatchingPredicate' method will return all events that are in the time period of the given predicate
-    //                // Therefore it is possible that it will return nil
-    //                if let eventsBetweenDates = store.eventsMatchingPredicate(predicate) as [EKEvent]? {        // If there are events matching the predicate then
-    //                    self.calendarView.events = eventsBetweenDates                                           // Add them into the calendar
-    //                }
-    //            }
-    //
-    //            // let q = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)
-    //            if EKEventStore.authorizationStatusForEntityType(EKEntityType.Event) != EKAuthorizationStatus.Authorized {  // If the app does not have access to the system's calendar then
-    //                // Request access from the user. (A window will pop-up requesting access to the calendar events)
-    //                // 'completion' is the handler(yes, its a function) for whatever happens after the window
-    //                // The handler has the parameter of granted:Bool and error:NSError? and returns void
-    //                store.requestAccessToEntityType(EKEntityType.Event, completion: {(granted, error ) -> Void in
-    //                    if granted {    // If the user has granted access to his calendar then
-    //                        fetchEvents()   // Call the inside function
-    //                    }
-    //                })
-    //            } else {    // If the app already had access to the calendar then
-    //                fetchEvents()   // Call the inside function
-    //            }
-    //        }
-    //    }
+    // MARK: CALENDAR DELEGATE IMPLEMENTATION
     
+    // Called before selecting a date (I think). Required to be implemented
+    func calendar(calendar: CalendarView, canSelectDate date: NSDate) -> Bool { return true }
     
-//    currentEvents.append(EventView(frame: CGRectMake(8, 37, scrollView!.frame.width - 16, 316)))
-//    
-//    scrollView!.addSubview(currentEvents[0]!)
-//    
-//    currentEvents[0]!.titleLabel.text = "Ttiel"
-//    currentEvents[0]!.infoLabel.text = "Info"
-//    currentEvents[0]!.timeLabel.text = "2:30"
-//    currentEvents[0]!.locationLabel.text = "School"
-//    
-//    currentEvents.append(EventView(frame: CGRectMake(8, 37 + 316 + 8, scrollView!.frame.width - 16, 316)))
-//    
-//    scrollView!.addSubview(currentEvents[1]!)
-//    
-//    currentEvents[1]!.titleLabel.text = "Ttiel Kobalsdas"
-//    currentEvents[1]!.infoLabel.text = "Info"
-//    currentEvents[1]!.timeLabel.text = "2:30 bdshaio"
-//    currentEvents[1]!.locationLabel.text = "School dsa dsa"
+    // Called when a month is scrolled in the calendar. Required to be implemented
+    func calendar(calendar: CalendarView, didScrollToMonth date: NSDate) {}
+    
+    // Called when a date is deselected. Required to be implemented
+    func calendar(calendar: CalendarView, didDeselectDate date: NSDate) {}
+    
+    // Called when a date is selected. Required to be implemented
+    func calendar(calendar: CalendarView, didSelectDate date: NSDate, withEvents events: [Event]) {
+        if let lastDate = lastSelectedDate {
+            if date == lastDate {
+                return
+            }
+            self.calendarView.deselectDate(lastDate)
+        }
+        lastSelectedDate = date
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            self.currentEvents.removeAll()
+            
+            if self.scrollView!.subviews.count > 0 {
+                for subview in self.scrollView!.subviews {
+                    if subview != self.dateLabel {
+                        subview.removeFromSuperview()
+                    }
+                }
+            }
+        
+            if (events.count > 0) {
+                for h in 0...events.count - 1 {
+                    self.currentEvents.append(EventView(frame: CGRectMake(8, 37 + (320 * CGFloat(h)), self.scrollView!.frame.width - 16, 316)))
+                    self.scrollView!.addSubview(self.currentEvents[h]!)
+                    self.currentEvents[h]!.titleLabel.text = events[h].title
+                    self.currentEvents[h]!.infoLabel.text = events[h].description
+                    self.currentEvents[h]!.timeLabel.text = events[h].startDate?.description
+                    self.currentEvents[h]!.locationLabel.text = events[h].location
+                }
+            }
+            self.dateLabel.text = NSString(string: date.description).substringToIndex(10)
+        }
+    }
 }

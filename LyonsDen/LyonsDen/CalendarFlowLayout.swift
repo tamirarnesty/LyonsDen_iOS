@@ -5,7 +5,7 @@
 //  Created by Michael Michailidis on 02/04/2015.
 //  Copyright (c) 2015 Karmadust. All rights reserved.
 //
-//  commented by Inal Gotov
+//  Commented by Inal Gotov
 
 import UIKit
 

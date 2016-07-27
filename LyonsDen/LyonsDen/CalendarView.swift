@@ -4,6 +4,9 @@
 //
 //  Created by Michael Michailidis on 02/04/2015.
 //  Modified by Inal Gotov on 12/07/2016
+//  Added the functionality of the scrolling buttons
+//  Made minor changes to the nature of date selection
+//
 //  Copyright (c) 2015 Karmadust. All rights reserved.
 //
 //  Half-Commented by Inal Gotov
@@ -13,7 +16,7 @@ import EventKit
 
 // Global Variables
 
-let cellReuseIdentifier = "CalendarDayCell" // The reuse identifier for the cell ??????????????????????????
+let cellReuseIdentifier = "CalendarDayCell" // The reuse identifier for the cell
 let NUMBER_OF_DAYS_IN_WEEK = 7              // The number of days in a week
 let MAXIMUM_NUMBER_OF_ROWS = 6              // Maximum number of rows in a month
 let HEADER_DEFAULT_HEIGHT : CGFloat = 80.0  // Default height of the header
@@ -100,10 +103,6 @@ class CalendarView: UIView, UICollectionViewDataSource, UICollectionViewDelegate
             let secondsFromGMTDifference = NSTimeInterval(NSTimeZone.localTimeZone().secondsFromGMT)
             // For each event...
             for event in events {
-//                // If event is not one day then return from this closure
-//                if event.isOneDay == false {
-//                    return
-//                }
                 // Declare the search/create flags
                 let flags: NSCalendarUnit = [NSCalendarUnit.Month, NSCalendarUnit.Day]
                 // Determine the start date in GMT
@@ -171,7 +170,7 @@ class CalendarView: UIView, UICollectionViewDataSource, UICollectionViewDelegate
         self.initialSetup()
     }
     
-    // I still dont know what this is
+    // The Interface Builder Initializer
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -361,7 +360,7 @@ class CalendarView: UIView, UICollectionViewDataSource, UICollectionViewDelegate
         guard self.selectedIndexPaths.contains(indexPath) == true else {
             return
         }
-        // Deselc the date
+        // Deselect the date
         self.calendarView.deselectItemAtIndexPath(indexPath, animated: true)
         // Reload the calendar data
         self.calendarView.reloadData()
