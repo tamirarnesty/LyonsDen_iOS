@@ -18,7 +18,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="splash" translatesAutoresizingMaskIntoConstraints="NO" id="Q0I-cx-06i">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="Splash" translatesAutoresizingMaskIntoConstraints="NO" id="Q0I-cx-06i">
                                 <rect key="frame" x="59" y="6" width="483" height="588"/>
                                 <gestureRecognizers/>
                             </imageView>
@@ -50,6 +50,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="splash" width="1089" height="1450"/>
+        <image name="Splash" width="1089" height="1450"/>
     </resources>
 </document>

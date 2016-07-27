@@ -236,7 +236,7 @@
 				TargetAttributes = {
 					2D8AC7C81D25D7D900367326 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = VGG5HAF3L7;
+						DevelopmentTeam = V32DETHULC;
 					};
 				};
 			};
@@ -459,7 +459,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = LyonsDen/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = wlmac.LyonsDen;
+				PRODUCT_BUNDLE_IDENTIFIER = "Lyons-Den";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "LyonsDen/LyonsDen-Bridging-Header.h";
@@ -478,7 +478,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = LyonsDen/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = wlmac.LyonsDen;
+				PRODUCT_BUNDLE_IDENTIFIER = "Lyons-Den";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "LyonsDen/LyonsDen-Bridging-Header.h";

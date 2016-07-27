@@ -76,6 +76,7 @@ class HomeViewController: UIViewController, UITableViewDelegate {
         cell.textLabel!.textColor = UIColor(red: 0.9961, green: 0.7765, blue: 0.2184, alpha: 1)
         cell.detailTextLabel!.text = announcements[1][indexPath.row]
         cell.detailTextLabel!.textColor = UIColor(red: 0.9961, green: 0.7765, blue: 0.2184, alpha: 1)
+        cell.textLabel?.font = UIFont(name: "Hapna Mono", size: 12)
         return cell
     }
 

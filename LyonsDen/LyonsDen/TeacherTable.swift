@@ -39,6 +39,7 @@ class TeacherTable: UITableViewController {
         cell.detailTextLabel?.text = content[1][indexPath.row]
         cell.detailTextLabel!.textColor = UIColor(red: 0.9961, green: 0.7765, blue: 0.2184, alpha: 1)
         cell.backgroundColor = UIColor (red: 0.0118, green: 0.2431, blue: 0.5765, alpha: 1)
+        cell.textLabel?.font = UIFont(name: "Hapna Mono", size: 12)
         return cell
     }
 }

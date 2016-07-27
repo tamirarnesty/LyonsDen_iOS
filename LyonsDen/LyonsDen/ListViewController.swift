@@ -76,7 +76,7 @@ class ListViewController: UITableViewController {
         
         cell.textLabel?.text = tableContents[0][indexPath.row]                              // Set Title Text
         cell.textLabel?.textColor = UIColor (red: 0.9961, green: 0.7765, blue: 0.2784, alpha: 1)    // Set Title Text Color
-        
+        cell.textLabel?.font = UIFont(name: "Hapna Mono", size: 12)
         cell.detailTextLabel?.text = tableContents[1][indexPath.row]                        // Set Description Text
         cell.detailTextLabel?.textColor = UIColor (red: 0.9961, green: 0.7765, blue: 0.2784, alpha: 1)  // Set Description Text Color
         return cell
