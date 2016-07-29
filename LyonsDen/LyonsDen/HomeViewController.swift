@@ -20,7 +20,9 @@ class HomeViewController: UIViewController, UITableViewDelegate {
     @IBOutlet var tableList: UITableView!           // The table list holding all the announcements
     @IBOutlet var topViews: UIView!                 // The top views, above the table
     
-    var announcements = [[String](), [String]()]
+    var announcementTitlesInfos = [[String](), [String]()]
+    var announcementDatesLocations = [[String?](), [String?]()]
+    
     // Didn't let me put it into announcements becuase its optional
     // To implement it, we might need a blank image to act in place of nil
     var images = [UIImage?]()
@@ -48,8 +50,8 @@ class HomeViewController: UIViewController, UITableViewDelegate {
         
         // Temporary, Table fill
         for h in 0...37 {
-            announcements [0].append("Title\(h + 1)")
-            announcements [1].append("Description\(h + 1)")
+            announcementTitlesInfos [0].append("Title\(h + 1)")
+            announcementTitlesInfos [1].append("Description\(h + 1)")
             if (h == 2 || h == 5) {
                 images.append(UIImage(named: "Splash"))
             } else {
@@ -65,16 +67,16 @@ class HomeViewController: UIViewController, UITableViewDelegate {
 
     // Set number of items in table
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return announcements[0].count
+        return announcementTitlesInfos[0].count
     }
     
     // Configure each item
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "Cell")
         cell.backgroundColor = UIColor(red: 0.0118, green: 0.2431, blue: 0.5765, alpha: 1)
-        cell.textLabel!.text = announcements[0][indexPath.row]
+        cell.textLabel!.text = announcementTitlesInfos[0][indexPath.row]
         cell.textLabel!.textColor = UIColor(red: 0.9961, green: 0.7765, blue: 0.2184, alpha: 1)
-        cell.detailTextLabel!.text = announcements[1][indexPath.row]
+        cell.detailTextLabel!.text = announcementTitlesInfos[1][indexPath.row]
         cell.detailTextLabel!.textColor = UIColor(red: 0.9961, green: 0.7765, blue: 0.2184, alpha: 1)
         cell.textLabel?.font = UIFont(name: "Hapna Mono", size: 12)
         return cell
@@ -83,7 +85,11 @@ class HomeViewController: UIViewController, UITableViewDelegate {
     // Set each item to segue into InfoViewController
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         // Prepare InfoViewController
-        InfoViewController.setupViewController(announcements[0][indexPath.row], info: announcements[1][indexPath.row], image: images[indexPath.row])
+        InfoViewController.setupViewController(title: announcementTitlesInfos[0][indexPath.row],
+                                               info: announcementTitlesInfos[1][indexPath.row],
+                                               date: announcementDatesLocations[0][indexPath.row],
+                                               location: announcementDatesLocations[0][indexPath.row],
+                                               image: images[indexPath.row])
         // Segue into InfoViewController
         performSegueWithIdentifier("AnnouncementSegue", sender: self)
     }

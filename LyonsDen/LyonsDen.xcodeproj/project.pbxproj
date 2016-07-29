@@ -7,10 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2D22EA021D2D7427001B3A11 /* TeacherTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D22EA011D2D7427001B3A11 /* TeacherTable.swift */; };
+		2D22EA021D2D7427001B3A11 /* PeopleList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D22EA011D2D7427001B3A11 /* PeopleList.swift */; };
 		2D22EA051D2D787D001B3A11 /* AnnouncementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D22EA041D2D787D001B3A11 /* AnnouncementViewController.swift */; };
 		2D22EA071D2D8390001B3A11 /* MusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D22EA061D2D8390001B3A11 /* MusicViewController.swift */; };
 		2D22EA091D2ED29C001B3A11 /* MenuTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D22EA081D2ED29C001B3A11 /* MenuTable.swift */; };
+		2D6706171D4AE28300C52860 /* ClubViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6706161D4AE28300C52860 /* ClubViewController.swift */; };
 		2D7224531D43124000C327D3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D7224521D43124000C327D3 /* GoogleService-Info.plist */; };
 		2D72245B1D441D2A00C327D3 /* LoginScreenSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D72245A1D441D2A00C327D3 /* LoginScreenSegue.swift */; };
 		2D8AC7CD1D25D7D900367326 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8AC7CC1D25D7D900367326 /* AppDelegate.swift */; };
@@ -40,10 +41,11 @@
 
 /* Begin PBXFileReference section */
 		276479845EC2B5B3C8017578 /* Pods_LyonsDen.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LyonsDen.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2D22EA011D2D7427001B3A11 /* TeacherTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeacherTable.swift; sourceTree = "<group>"; };
+		2D22EA011D2D7427001B3A11 /* PeopleList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeopleList.swift; sourceTree = "<group>"; };
 		2D22EA041D2D787D001B3A11 /* AnnouncementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnnouncementViewController.swift; sourceTree = "<group>"; };
 		2D22EA061D2D8390001B3A11 /* MusicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicViewController.swift; sourceTree = "<group>"; };
 		2D22EA081D2ED29C001B3A11 /* MenuTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTable.swift; sourceTree = "<group>"; };
+		2D6706161D4AE28300C52860 /* ClubViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClubViewController.swift; sourceTree = "<group>"; };
 		2D7224521D43124000C327D3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2D72245A1D441D2A00C327D3 /* LoginScreenSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginScreenSegue.swift; path = SegueAnimators/LoginScreenSegue.swift; sourceTree = "<group>"; };
 		2D8AC7C91D25D7D900367326 /* LyonsDen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LyonsDen.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -91,7 +93,7 @@
 		2D22EA031D2D7438001B3A11 /* ContactViews */ = {
 			isa = PBXGroup;
 			children = (
-				2D22EA011D2D7427001B3A11 /* TeacherTable.swift */,
+				2D22EA011D2D7427001B3A11 /* PeopleList.swift */,
 				2D22EA041D2D787D001B3A11 /* AnnouncementViewController.swift */,
 				2D22EA061D2D8390001B3A11 /* MusicViewController.swift */,
 			);
@@ -134,6 +136,7 @@
 				2D8AC7DE1D25D8D700367326 /* ListViewController.swift */,
 				2D8AC7E01D25D96800367326 /* CalendarViewController.swift */,
 				2D8AC82A1D25E86900367326 /* ContactViewController.swift */,
+				2D6706161D4AE28300C52860 /* ClubViewController.swift */,
 				2D8AC82C1D25EEEB00367326 /* InfoViewController.swift */,
 				2D22EA081D2ED29C001B3A11 /* MenuTable.swift */,
 				8F7324C31D31C1CE0097036D /* LogInViewController.swift */,
@@ -236,7 +239,7 @@
 				TargetAttributes = {
 					2D8AC7C81D25D7D900367326 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = V32DETHULC;
+						DevelopmentTeam = VGG5HAF3L7;
 					};
 				};
 			};
@@ -340,13 +343,14 @@
 				2D8AC7CF1D25D7D900367326 /* HomeViewController.swift in Sources */,
 				2D8AC8241D25E23000367326 /* SWRevealViewController.m in Sources */,
 				2D72245B1D441D2A00C327D3 /* LoginScreenSegue.swift in Sources */,
+				2D6706171D4AE28300C52860 /* ClubViewController.swift in Sources */,
 				2D8AC82D1D25EEEB00367326 /* InfoViewController.swift in Sources */,
 				2DC27BC81D386A1D002A5ADF /* Event.swift in Sources */,
 				2D22EA051D2D787D001B3A11 /* AnnouncementViewController.swift in Sources */,
 				8F7324B61D2F25A10097036D /* SplashScreen.swift in Sources */,
 				2D8AC7DF1D25D8D700367326 /* ListViewController.swift in Sources */,
 				8F7324C41D31C1CE0097036D /* LogInViewController.swift in Sources */,
-				2D22EA021D2D7427001B3A11 /* TeacherTable.swift in Sources */,
+				2D22EA021D2D7427001B3A11 /* PeopleList.swift in Sources */,
 				2D8AC7CD1D25D7D900367326 /* AppDelegate.swift in Sources */,
 				2D8AC82B1D25E86900367326 /* ContactViewController.swift in Sources */,
 			);
@@ -459,7 +463,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = LyonsDen/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Lyons-Den";
+				PRODUCT_BUNDLE_IDENTIFIER = LyonsDen;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "LyonsDen/LyonsDen-Bridging-Header.h";
@@ -478,7 +482,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = LyonsDen/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Lyons-Den";
+				PRODUCT_BUNDLE_IDENTIFIER = LyonsDen;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "LyonsDen/LyonsDen-Bridging-Header.h";

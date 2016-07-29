@@ -31,16 +31,10 @@ class MenuTable: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if (indexPath.row == 1) {
-            print ("I will show events")
-            // Setup ListViewController for the events table
-            
-            ListViewController.showingClubs = false
-        } else if (indexPath.row == 2) {
-            print ("I will show clubs")
-            // setup ListViewController for the clubs table
-            
-            ListViewController.showingClubs = true
+        if (indexPath.row == 5) {
+            ListViewController.isDisplayingClubs = false
+        } else if (indexPath.row == 4) {
+            ListViewController.isDisplayingClubs = true
         }
         // TEMPORARY !!!!!!!!!!!!!!!!!!!!!!
         if indexPath.row == 2 {
