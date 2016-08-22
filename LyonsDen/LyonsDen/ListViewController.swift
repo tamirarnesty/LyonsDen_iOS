@@ -45,6 +45,18 @@ class ListViewController: UITableViewController {
         }
     }
     
+    static func formatTime (time:NSString) -> String {
+        var output:NSString = ""
+        output = output.stringByAppendingString(time.substringToIndex(4)) + "-"
+        output = output.stringByAppendingString(time.substringWithRange(NSMakeRange(4, 2)) + "-")
+        output = output.stringByAppendingString(time.substringWithRange(NSMakeRange(6, 2)))
+        if time.substringWithRange(NSMakeRange(8, 4)) != "2400" {
+            output = output.stringByAppendingString(" " + time.substringWithRange(NSMakeRange(8, 2)) + ":")
+            output = output.stringByAppendingString(time.substringWithRange(NSMakeRange(10, 2)))
+        }
+        return output as String
+    }
+    
     func parseForEvents (reference:FIRDatabaseReference) {
         // Navigate to and download the Events data
         reference.observeSingleEventOfType(FIRDataEventType.Value, withBlock: { (snapshot) in
@@ -57,7 +69,7 @@ class ListViewController: UITableViewController {
                 for h in 0...dataContent.count-1 {
                     self.eventData[0].append(dataContent.objectAtIndex(h).objectForKey("title")! as! String)
                     self.eventData[1].append(dataContent.objectAtIndex(h).objectForKey("description")! as! String)
-                    self.eventData[2].append((dataContent.objectAtIndex(h).objectForKey("dateTime")! as! NSNumber).description)
+                    self.eventData[2].append(ListViewController.formatTime(((dataContent.objectAtIndex(h).objectForKey("dateTime")! as! NSNumber).description) as NSString))
                     self.eventData[3].append(dataContent.objectAtIndex(h).objectForKey("location")! as! String)
                     self.images.append(nil) // Will be implemented later
                 }

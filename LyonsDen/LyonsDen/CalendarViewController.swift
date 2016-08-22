@@ -78,7 +78,7 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         self.calendarView.frame = CGRect(x: 16.0, y: 60.0, width: width, height: height)    // Resize and position the calendar on screen
         self.calendarView.setDisplayDate(NSDate(), animated: true)                          // Set the current displayed date on the calendar, to the current date
         self.calendarView.reloadData()                                                      // Reload the calendar data
-        // If there are any events in the selected date, then resize the scrollView's contentSize accordingly
+        // If there are any events in the current date, then resize the scrollView's contentSize accordingly
         if self.currentEvents.count > 0 {   // If an event exists
             self.scrollView!.contentSize.height = 37 + (self.currentEvents[0]!.frame.height + 16) * CGFloat(self.currentEvents.count)
         } else {                            // If an event does not exist
@@ -121,6 +121,9 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
                 
                 // The string that holds the contents of the calendar's events
                 let webContent:NSString = NSString(data: URlContent, encoding: NSUTF8StringEncoding)!
+                
+                print (webContent)
+                
                 // An array of flags used for locating the event fields
                 // [h][0] - The flag that marks the begining of a field, [h][1] - The flag that marks the end of a field
                 let searchTitles:[[String]] = [["SUMMARY:", "TRANSP:"], ["DESCRIPTION:", "LAST-MODIFIED:"], ["DTSTART", "DTEND"], ["DTEND", "DTSTAMP"], ["LOCATION:", "SEQUENCE:"]]
@@ -163,14 +166,11 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
                     return NSMakeRange(location, length)
                 }
                 
-                // Counter for which event is currently being recorded
-                var eventCounter = -1
                 // A holder for the begining and end flags for each event field
                 var fieldBoundaries:[NSRange]
                 
                 // The actual parsing of each event
                 repeat {
-                    eventCounter += 1           // Increase the counter to the next event
                     range = updateRange(range)  // Move our searching range to the next event
                     if NSEqualRanges(range, NSMakeRange(NSNotFound, 0)) {   // If there are no more events in the searching range
                         break;                                              // Then no more shall be added (break from the loop)
@@ -283,15 +283,25 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
                     }
                 }
             }
-        
+            
             if (events.count > 0) {
                 for h in 0...events.count - 1 {
                     self.currentEvents.append(EventView(frame: CGRectMake(8, 37 + (320 * CGFloat(h)), self.scrollView!.frame.width - 16, 316)))
                     self.scrollView!.addSubview(self.currentEvents[h]!)
                     self.currentEvents[h]!.titleLabel.text = events[h].title
                     self.currentEvents[h]!.infoLabel.text = events[h].description
-                    self.currentEvents[h]!.timeLabel.text = events[h].startDate?.description
+                    let tempHold = events[h].startDate!.description as NSString
+                    self.currentEvents[h]!.timeLabel.text = tempHold.substringToIndex(16) as String
                     self.currentEvents[h]!.locationLabel.text = events[h].location
+                    
+                    
+                    self.currentEvents[h]!.locationLabel.frame.size.width = (self.currentEvents[h]!.frame.width/2) - 16
+                    self.currentEvents[h]!.timeLabel.frame.size.width = (self.currentEvents[h]!.frame.width/2) - 16
+                    
+                    print ()
+                    print (self.currentEvents[h]!.timeLabel.frame.width)
+                    print (self.currentEvents[h]!.locationLabel.frame.width)
+                    print (self.currentEvents[h]!.frame.width)
                 }
             }
             self.dateLabel.text = NSString(string: date.description).substringToIndex(10)

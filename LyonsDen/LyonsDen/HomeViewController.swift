@@ -52,6 +52,8 @@ class HomeViewController: UIViewController, UITableViewDelegate {
         for h in 0...37 {
             announcementTitlesInfos [0].append("Title\(h + 1)")
             announcementTitlesInfos [1].append("Description\(h + 1)")
+            announcementDatesLocations[0].append("Date\(h + 1)")
+            announcementDatesLocations[1].append("Location\(h + 1)")
             if (h == 2 || h == 5) {
                 images.append(UIImage(named: "Splash"))
             } else {
@@ -84,11 +86,13 @@ class HomeViewController: UIViewController, UITableViewDelegate {
 
     // Set each item to segue into InfoViewController
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        // Deselct the selected cell
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
         // Prepare InfoViewController
         InfoViewController.setupViewController(title: announcementTitlesInfos[0][indexPath.row],
                                                info: announcementTitlesInfos[1][indexPath.row],
                                                date: announcementDatesLocations[0][indexPath.row],
-                                               location: announcementDatesLocations[0][indexPath.row],
+                                               location: announcementDatesLocations[1][indexPath.row],
                                                image: images[indexPath.row])
         // Segue into InfoViewController
         performSegueWithIdentifier("AnnouncementSegue", sender: self)

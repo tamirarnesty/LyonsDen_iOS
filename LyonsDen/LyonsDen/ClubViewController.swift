@@ -71,7 +71,7 @@ class ClubViewController: UIViewController, UITableViewDelegate {
                 for h in 0...dataContent.count-1 {
                     self.eventData[0].append(dataContent.objectAtIndex(h).objectForKey("title")! as! String)
                     self.eventData[1].append(dataContent.objectAtIndex(h).objectForKey("description")! as! String)
-                    self.eventData[2].append((dataContent.objectAtIndex(h).objectForKey("dateTime")! as! NSNumber).description)
+                    self.eventData[2].append(ListViewController.formatTime(((dataContent.objectAtIndex(h).objectForKey("dateTime")! as! NSNumber).description) as NSString))
                     self.eventData[3].append(dataContent.objectAtIndex(h).objectForKey("location")! as! String)
                     self.images.append(nil) // Will be implemented later
                 }
@@ -110,7 +110,7 @@ class ClubViewController: UIViewController, UITableViewDelegate {
                     memberList[1].append("")
                 }
                 // Prepare the PeopleList to display the member of this club
-                PeopleList.setupPeopleList(withContent: memberList, andTitle: "\(ClubViewController.title) Members")
+//                PeopleList.setupPeopleList(withContent: memberList, andTitle: "\(ClubViewController.title) Members")
                 // Segue into PeopleList
                 self.performSegueWithIdentifier("MemberListSegue", sender: self)
             } else {
