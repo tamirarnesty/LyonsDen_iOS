@@ -20,35 +20,59 @@ class InfoViewController: UIViewController {
     static var title:String = "This is an announcement"
     // The text for the description label
     static var info:String? = "This is what the announcement is about"
+    // The text for the date label
+    static var date:String? = "This is when the announcement is"
+    // The text for the location label
+    static var location:String? = "This is where the announcement is"
     // The image for the announcement
     static var image: UIImage?
     // Title label
-    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var titleView: UILabel!
     // Description label Text View
     @IBOutlet var infoView: UITextView!
     // Announcemnet image
     @IBOutlet var imageView: UIImageView!
+    // Date label
+    @IBOutlet var dateView: UILabel!
+    // Location label
+    @IBOutlet var locationView: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        titleLabel.text = InfoViewController.title  // Set title text
+        titleView.text = InfoViewController.title  // Set title text
         infoView.text = InfoViewController.info    // Set description text
         if let img = InfoViewController.image {     // If an announcemnt image is present
             imageView.image = img       // Set the image
             // Move the title label to the side, if not already moved (Removes the additional constraint)
-            self.view.removeConstraint(NSLayoutConstraint(item: titleLabel.superview!, attribute: NSLayoutAttribute.Leading, relatedBy: NSLayoutRelation.Equal, toItem: titleLabel, attribute: NSLayoutAttribute.Leading, multiplier: 1, constant: -8))
+            self.view.removeConstraint(NSLayoutConstraint(item: titleView.superview!, attribute: NSLayoutAttribute.Leading, relatedBy: NSLayoutRelation.Equal, toItem: titleView, attribute: NSLayoutAttribute.Leading, multiplier: 1, constant: -8))
             imageView.hidden = false    // Show the image
         } else {    // If not announcement image is present
             imageView.hidden = true     // Hide the image just in case
             // Move the title label to the left side (Add an additional constraint)
-            self.view.addConstraint(NSLayoutConstraint(item: titleLabel.superview!, attribute: NSLayoutAttribute.Leading, relatedBy: NSLayoutRelation.Equal, toItem: titleLabel, attribute: NSLayoutAttribute.Leading, multiplier: 1, constant: -8))
+            self.view.addConstraint(NSLayoutConstraint(item: titleView.superview!, attribute: NSLayoutAttribute.Leading, relatedBy: NSLayoutRelation.Equal, toItem: titleView, attribute: NSLayoutAttribute.Leading, multiplier: 1, constant: -8))
+        }
+        
+        if let date = InfoViewController.date {
+            dateView.hidden = false     // Just in case
+            dateView.text = date
+        } else {
+            dateView.hidden = true
+        }
+        
+        if let location = InfoViewController.location {
+            locationView.hidden = false     // Just in case
+            locationView.text = location
+        } else {
+            locationView.hidden = true
         }
     }
     
-    static func setupViewController (title:String, info:String?, image:UIImage?) {
+    static func setupViewController (title title:String, info:String?, date:String?, location:String?, image:UIImage?) {
         InfoViewController.title = title
         InfoViewController.info = info
+        InfoViewController.date = date
+        InfoViewController.location = location
         InfoViewController.image = image
     }
     
