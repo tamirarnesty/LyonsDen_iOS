@@ -19,6 +19,11 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let gradient: CAGradientLayer = CAGradientLayer()
+        gradient.frame = self.view.bounds
+        gradient.colors = [UIColor.whiteColor().CGColor, accentColor.CGColor]
+        self.view.layer.insertSublayer(gradient, atIndex: 0)
         self.userNameField.delegate = self
         self.passwordField.delegate = self
     }
