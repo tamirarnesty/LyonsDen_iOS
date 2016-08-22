@@ -53,8 +53,6 @@ class CoursesViewController: UIViewController {
         labels[identifierIndex!][3] = roomNumber.text!
         
         NSUserDefaults.standardUserDefaults().setObject(labels, forKey: "labels")
-        if !((NSUserDefaults.standardUserDefaults().objectForKey("infoStored") as? Bool)!) {
-            NSUserDefaults.standardUserDefaults().setObject(true, forKey: "infoStored") }
         for var i in 0...labels.count-1 {
             print (labels[identifierIndex!][i])
         }

@@ -38,6 +38,7 @@
 		8F7324BC1D2F25BB0097036D /* Reckoner.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8F7324B91D2F25BB0097036D /* Reckoner.ttf */; };
 		8F7324C21D2F37020097036D /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F7324C11D2F37020097036D /* Launch Screen.storyboard */; };
 		8F7324C41D31C1CE0097036D /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7324C31D31C1CE0097036D /* LogInViewController.swift */; };
+		8FA355561D6ADBD4007E5BA4 /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FA355551D6ADBD4007E5BA4 /* UserViewController.swift */; };
 		8FD393F91D62C23900DE3F4F /* InputtedCoursesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD393F81D62C23900DE3F4F /* InputtedCoursesViewController.swift */; };
 		A1FD9A06A9A5FCD92B1339F2 /* Pods_LyonsDen.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 276479845EC2B5B3C8017578 /* Pods_LyonsDen.framework */; };
 /* End PBXBuildFile section */
@@ -80,6 +81,7 @@
 		8F7324B91D2F25BB0097036D /* Reckoner.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Reckoner.ttf; sourceTree = "<group>"; };
 		8F7324C11D2F37020097036D /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		8F7324C31D31C1CE0097036D /* LogInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
+		8FA355551D6ADBD4007E5BA4 /* UserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
 		8FD393F81D62C23900DE3F4F /* InputtedCoursesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputtedCoursesViewController.swift; sourceTree = "<group>"; };
 		DF74D495A453CDFA2735E79F /* Pods-LyonsDen.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LyonsDen.release.xcconfig"; path = "Pods/Target Support Files/Pods-LyonsDen/Pods-LyonsDen.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -147,6 +149,7 @@
 				2D22EA081D2ED29C001B3A11 /* MenuTable.swift */,
 				8F7324C31D31C1CE0097036D /* LogInViewController.swift */,
 				8F7324B41D2F25A10097036D /* SplashScreen.swift */,
+				8FA355551D6ADBD4007E5BA4 /* UserViewController.swift */,
 				2D7224571D441C0700C327D3 /* SegueAnimators */,
 				2DC27BBE1D3869FC002A5ADF /* Calendar */,
 				2D22EA031D2D7438001B3A11 /* ContactViews */,
@@ -351,6 +354,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DC27BC41D386A1D002A5ADF /* CalendarDayCell.swift in Sources */,
+				8FA355561D6ADBD4007E5BA4 /* UserViewController.swift in Sources */,
 				2DC27BC61D386A1D002A5ADF /* CalendarHeaderView.swift in Sources */,
 				8F2D32581D52AF2500B7A4B8 /* CoursesViewController.swift in Sources */,
 				2D22EA091D2ED29C001B3A11 /* MenuTable.swift in Sources */,

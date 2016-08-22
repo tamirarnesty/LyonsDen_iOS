@@ -7,10 +7,11 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class MenuTable: UITableViewController {
     // An array containig the titles of the cell in [0]
-    let titles = ["DEN", "Home", "Announcements", "Calendar", "Clubs", "Events", "Contact"]
+    let titles = ["DEN", "Home", "Announcements", "Calendar", "Clubs", "Events", "Contact", "User"]
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return titles.count
@@ -27,6 +28,9 @@ class MenuTable: UITableViewController {
         } else {
         cell.textLabel?.font = UIFont(name: "Reckoner", size: 26.0)
         }
+        if indexPath.row == (titles.count-1) {
+            cell.textLabel?.text = ((FIRAuth.auth()?.currentUser?.displayName == nil) ? "User" : FIRAuth.auth()?.currentUser?.displayName)
+        }
         return cell
     }
     
@@ -40,7 +44,12 @@ class MenuTable: UITableViewController {
         if indexPath.row == 2 {
             return  // Make announcements unclickable
         }
-        if indexPath.row != 0 {
-            performSegueWithIdentifier(titles[indexPath.row] + "Segue", sender: nil) }
+        if indexPath.row != 0 && indexPath.row != (titles.count-1) {
+            performSegueWithIdentifier(titles[indexPath.row] + "Segue", sender: nil)
+        }
+        if indexPath.row == (titles.count-1) {
+            performSegueWithIdentifier("UserSegue", sender: nil)
+            //try! FIRAuth.auth()!.signOut()
+        }
     }
 }

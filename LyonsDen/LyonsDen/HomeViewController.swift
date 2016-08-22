@@ -41,9 +41,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
     
     override func viewWillAppear(animated: Bool) {
         //----------- set up labels for courses
-//        if ((NSUserDefaults.standardUserDefaults().objectForKey("infoStored") as? Bool)!)  {
-//        labels = NSUserDefaults.standardUserDefaults().objectForKey("labels") as! [[String]]
-//            print (labels) }
+        if let tempLabels = NSUserDefaults.standardUserDefaults().objectForKey("labels") as? [[String]] {
+            labels = tempLabels
+            print (labels)
+        }
         loadLabelsForViews()
         
         // tap & hold gesture recognizers for courses views to segue to specific controllers.
