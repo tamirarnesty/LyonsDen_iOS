@@ -23,8 +23,6 @@ import FirebaseAuth
  You can also try doing the auto login in splashscreen, so as to be able to integrate it with a loadingWheelThing
  You can do it differently if you like
  */
-
-// I needed to test things with authentication so... sry, i made the basics of login
 class LogInViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var switcher: UISegmentedControl!
     @IBOutlet var userNameField: UITextField!
@@ -55,6 +53,9 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
                     //Log in succesful
 //                    user?.profileChangeRequest().displayName = "Tamir Arnesty"
                     self.performSegueWithIdentifier("LogInSuccess", sender: self)
+                    print()
+                    print("Log In: Auto-Login Success!")
+                    print()
                 } else if error != nil {
                     // Try comparing error to FIRAuthErrorCodes from https://firebase.google.com/docs/reference/ios/firebaseauth/interface_f_i_r_auth_errors.html#ab5026c267a1f5fee09466e5563aa3e69
                     // or from https://firebase.google.com/docs/auth/ios/errors
