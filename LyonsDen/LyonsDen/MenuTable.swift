@@ -11,8 +11,13 @@ import FirebaseAuth
 
 class MenuTable: UITableViewController {
     // An array containig the titles of the cell in [0]
-    let titles = ["DEN", "Home", "Announcements", "Calendar", "Clubs", "Events", "Contact", "User"]
+    var titles = ["DEN", "Home", "Announcements", "Calendar", "Clubs", "Events", "Contact", "User"]
     
+    override func viewDidLoad() {
+        if let username = NSUserDefaults.standardUserDefaults().objectForKey("displayName") {
+            titles[titles.count-1] = username as! String
+        }
+    }
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return titles.count
     }
@@ -29,7 +34,7 @@ class MenuTable: UITableViewController {
         cell.textLabel?.font = UIFont(name: "Reckoner", size: 26.0)
         }
         if indexPath.row == (titles.count-1) {
-            cell.textLabel?.text = ((FIRAuth.auth()?.currentUser?.displayName == nil) ? "User" : FIRAuth.auth()?.currentUser?.displayName)
+            cell.textLabel?.text = ((FIRAuth.auth()?.currentUser?.displayName == nil) ? titles[titles.count-1] : FIRAuth.auth()?.currentUser?.displayName)
         }
         return cell
     }
@@ -49,7 +54,6 @@ class MenuTable: UITableViewController {
         }
         if indexPath.row == (titles.count-1) {
             performSegueWithIdentifier("UserSegue", sender: nil)
-            //try! FIRAuth.auth()!.signOut()
         }
     }
 }

@@ -20,6 +20,13 @@ var contactStore = CNContactStore()
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    
+    func displayError (title: String!, errorMsg: String!) {
+        let alertController = UIAlertController(title: title, message: errorMsg, preferredStyle: .Alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+        UIApplication.sharedApplication().keyWindow?.rootViewController!.presentViewController(alertController, animated: true, completion: nil)
+        
+    }
 
     // for contacts methods. used in ContactViewController for emergency contact setting
     class func getAppDelegate() -> AppDelegate {

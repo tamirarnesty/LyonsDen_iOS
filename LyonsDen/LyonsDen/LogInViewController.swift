@@ -42,7 +42,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     var username = ""
     let signUpKey = "MacLyonsRule"  // idk, this should be something symbolic or patriotic... or secretive
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewDidAppear(animated: Bool) {
         // Auto login
         if let username = NSUserDefaults.standardUserDefaults().objectForKey("uID") as! String?,    // If a username has been pre-saved and
             password = NSUserDefaults.standardUserDefaults().objectForKey("Pass") as! String? {     // a password has been pre-saved then
@@ -53,7 +53,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             FIRAuth.auth()?.signInWithEmail(username, password: password, completion: { (user, error) in
                 if user != nil {
                     //Log in succesful
-                    user?.profileChangeRequest().displayName = "Tamir Arnesty"
+//                    user?.profileChangeRequest().displayName = "Tamir Arnesty"
                     self.performSegueWithIdentifier("LogInSuccess", sender: self)
                 } else if error != nil {
                     // Try comparing error to FIRAuthErrorCodes from https://firebase.google.com/docs/reference/ios/firebaseauth/interface_f_i_r_auth_errors.html#ab5026c267a1f5fee09466e5563aa3e69
@@ -118,6 +118,11 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     @IBAction func buttonPressed(sender: AnyObject) {
         self.password = passwordField.text!
         self.username = userNameField.text!
+    
+        if (passwordField.text?.isEmpty)! || (userNameField.text?.isEmpty)! {
+            (UIApplication.sharedApplication().delegate as! AppDelegate).displayError("Missing Information", errorMsg: "Please fill in all the requirements.")
+            return
+        }
         
         if entranceOption == 0 {
             if signUpKeyField.text == signUpKey {
@@ -126,9 +131,9 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
                         if let code = FIRAuthErrorCode(rawValue: error!.code) {
                             switch code {
                             case .ErrorCodeEmailAlreadyInUse: // user exists
-                                self.displayError("Sorry!", errorMsg: "This email is already in use. Please log in, or use another email to sign up.")
+                                (UIApplication.sharedApplication().delegate as! AppDelegate).displayError("Sorry!", errorMsg: "This email is already in use. Please log in, or use another email to sign up.")
                             case .ErrorCodeInvalidEmail: // self explanatory
-                                self.displayError("Invalid Email", errorMsg: "Please make sure your email is typed in correctly.")
+                                (UIApplication.sharedApplication().delegate as! AppDelegate).displayError("Invalid Email", errorMsg: "Please make sure your email is typed in correctly.")
                             default:
                                 break
                             }
@@ -143,7 +148,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
                     }
                 }) // createUserWithEmail close
             } else {
-                displayError("Incorrect Sign Up Key", errorMsg: "Please try again.")
+                (UIApplication.sharedApplication().delegate as! AppDelegate).displayError("Incorrect Sign Up Key", errorMsg: "Please try again.")
             } // first if close
         } else if entranceOption == 1 {
             // Authentication
@@ -152,7 +157,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
                     if let code = FIRAuthErrorCode(rawValue: error!.code) {
                         switch code {
                         case .ErrorCodeWrongPassword: // wrong password
-                            self.displayError("Invalid Password", errorMsg: "The password you entered is incorrect. Please try again.")
+                            (UIApplication.sharedApplication().delegate as! AppDelegate).displayError("Invalid Password", errorMsg: "The password you entered is incorrect. Please try again.")
                         default:
                             break
                         }
@@ -170,14 +175,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             print("Something is very wrong...")
         }
     }
-    
-    func displayError (title: String!, errorMsg: String!) {
-        let alertController = UIAlertController(title: title, message: errorMsg, preferredStyle: .Alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-        self.presentViewController(alertController, animated: true, completion: nil)
-        
-    }
-    
+
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
