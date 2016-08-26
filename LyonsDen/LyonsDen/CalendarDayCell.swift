@@ -10,11 +10,16 @@
 import UIKit
 
 // The colour of a default cell
-let cellColorDefault = UIColor(red: 0.0078, green: 0.1647, blue: 0.3922, alpha: 0.5)
+let cellColorDefault = backgroundColor.colorWithAlphaComponent(0.5)
 // The colour of today's cell
-let cellColorToday = UIColor(red: 0.0078, green: 0.1647, blue: 0.3922, alpha: 1)
+let cellColorToday = backgroundColor
 // The colour of the border of a cell
-let borderColor = UIColor(red: 0.9961, green: 0.7765, blue: 0.2784, alpha: 0.9)
+//let borderColor = UIColor(red: 0.9961, green: 0.7765, blue: 0.2784, alpha: 0.9)
+let borderColor = skyBlueColor
+
+let cellTextColor = accentColor
+
+let eventDotColor = accentColor
 
 // This class is used for the manipulation of an individual day cell of the calendar
 class CalendarDayCell: UICollectionViewCell {
@@ -28,15 +33,15 @@ class CalendarDayCell: UICollectionViewCell {
                 sview.removeFromSuperview()
             }
             
-            let stride = self.dotsView.frame.size.width / CGFloat(eventsCount+1)
+            let stride = self.dotsView.frame.size.width / 2
             let viewHeight = self.dotsView.frame.size.height
             let halfViewHeight = viewHeight / 2.0
             
-            for _ in 0..<eventsCount {
+            if eventsCount > 0 {
                 let frm = CGRect(x: (stride+1.0) - halfViewHeight, y: 0.0, width: viewHeight, height: viewHeight)
                 let circle = UIView(frame: frm)
                 circle.layer.cornerRadius = halfViewHeight
-                circle.backgroundColor = borderColor
+                circle.backgroundColor = eventDotColor
                 self.dotsView.addSubview(circle)
             }
         }
@@ -88,7 +93,7 @@ class CalendarDayCell: UICollectionViewCell {
     lazy var textLabel : UILabel = {
         let lbl = UILabel()     // Text Label
         lbl.textAlignment = NSTextAlignment.Center  // Text Allignment
-        lbl.textColor = borderColor     // TEXT COLOR!!!!
+        lbl.textColor = cellTextColor     // TEXT COLOR!!!!
         
         return lbl
     }()

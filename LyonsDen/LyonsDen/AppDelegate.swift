@@ -14,6 +14,7 @@ let navigationBarColor:UIColor = UIColor(red: 0.023, green: 0.2980, blue: 0.6980
 let foregroundColor:UIColor = UIColor(red: 0.0118, green: 0.2431, blue: 0.5765, alpha: 1)
 let backgroundColor:UIColor = UIColor(red: 0.0078, green: 0.1647, blue: 0.3922, alpha: 1)
 let accentColor:UIColor = UIColor(red: 0.9961, green: 0.7765, blue: 0.2784, alpha: 1)
+let skyBlueColor:UIColor = UIColor(red: 0.6392, green: 0.7451, blue: 0.8980, alpha: 1)
 var contactStore = CNContactStore()
 
 @UIApplicationMain
@@ -103,7 +104,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-
 }
 

@@ -10,19 +10,8 @@ import Foundation
 import UIKit
 import FirebaseAuth
 
-/*
- So here's my thought on it
- When there's login selected it just does it the regular way
- When they choose signup, an extra textfield appears and the button's text changes
- The first two fields act the same way, but the third one is where they enter the signup key
- The keys will be compared so as to prevent the wrong audience from signing up
- You can find instructions on the firebase website on how to login and how to create users
- Also make sure that after the first log in, you add the credential to NSUserDefaults (i can explain how to do it if you need)
- This is so that the login screen doesnt show up everytime
- On second launch it will just check if the credentials already exist and use those
- You can also try doing the auto login in splashscreen, so as to be able to integrate it with a loadingWheelThing
- You can do it differently if you like
- */
+// TODO: AUTO_LOGIN PERFORMS TWICE FROM TIME TO TIME< WHICH CAUSES A THROW BACK INTO HOME SCREEN, PUT AUTO_LOG IN A DIFFERENT PLACE
+
 class LogInViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var switcher: UISegmentedControl!
     @IBOutlet var userNameField: UITextField!

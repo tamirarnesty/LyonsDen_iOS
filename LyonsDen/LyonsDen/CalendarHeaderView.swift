@@ -19,7 +19,7 @@ class CalendarHeaderView: UIView {
         let lbl = UILabel()                                 // Create label
         lbl.textAlignment = NSTextAlignment.Center          // Center the text allignment
         lbl.font = UIFont(name: "Helvetica", size: 20.0)    // Helvetica the font with size 20
-        lbl.textColor = borderColor                         // Paint the text gray
+        lbl.textColor = cellTextColor                       // Paint the text gray
         
         self.addSubview(lbl)                                // Add the label to the header
         return lbl
@@ -36,7 +36,7 @@ class CalendarHeaderView: UIView {
             
             weekdayLabel.font = UIFont(name: "Helvetica", size: 14.0)       // Helvetica the label's font with size 14
             weekdayLabel.text = day.substringToIndex(2).uppercaseString     // Set the text of the label to the first two letters of the weekday in caps
-            weekdayLabel.textColor = borderColor                            // Paint the text gray
+            weekdayLabel.textColor = cellTextColor                          // Paint the text gray
             weekdayLabel.textAlignment = NSTextAlignment.Center             // Center the text allignment
             v.addSubview(weekdayLabel)                                      // Add the label to the day's view
         }
@@ -86,6 +86,7 @@ class CalendarHeaderView: UIView {
 
         button.setImage(UIImage(named: "LeftButton"), forState: .Normal)
         button.imageView?.tintColor = borderColor
+        button.alpha = 0.7  // Visuals
         button.addTarget(CalendarView(), action: #selector(CalendarView.changeMonth), forControlEvents: .TouchUpInside)
         
         self.addSubview(button)
@@ -97,6 +98,7 @@ class CalendarHeaderView: UIView {
         
         button.setImage(UIImage(named: "RightButton"), forState: .Normal)
         button.imageView?.tintColor = borderColor
+        button.alpha = 0.7  // Visuals
         button.addTarget(CalendarView(), action: #selector(CalendarView.changeMonth), forControlEvents: .TouchUpInside)
         
         self.addSubview(button)

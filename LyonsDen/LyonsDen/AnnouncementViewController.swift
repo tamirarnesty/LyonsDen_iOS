@@ -6,82 +6,375 @@
 //  Copyright © 2016 William Lyon Mackenize CI. All rights reserved.
 //
 
-import UIKit
+// TODO: FIX ALL DATEVIEW ISSUES
+// TODO: IMPLEMENT ALL INTERNET BASED ISSUE HANDLERS
 
-class AnnouncementViewController: UIViewController {
-    @IBOutlet var titleTextField: UITextField!
-    @IBOutlet var infoTextView: UITextView!
-    @IBOutlet var teacherUserName: UITextField!
-    @IBOutlet var teacherPass: UITextField!
+import UIKit
+import FirebaseDatabase
+// For more indepth visual modifications
+import QuartzCore
+
+// This class is used for proposing announcements
+class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
+    // The container Scroll View
     @IBOutlet var scrollView: UIScrollView!
+    // Title Text Field
+    @IBOutlet var titleField: UITextField!
+    // Description Label
+    @IBOutlet var descriptionLabel: UILabel!
+    // Description Text Field
+    @IBOutlet var descriptionField: UITextView!
+    // The container of Date views
+    @IBOutlet var dateView: UIView!
+    // Date Picker
+    @IBOutlet var datePicker: UIDatePicker!
+    // Date Label
+    @IBOutlet var dateLabel: UILabel!
+    // The container of Location and Teacher views
+    @IBOutlet var bottomViews: UIView!
+    // Location Field
+    @IBOutlet var locationField: UITextField!
+    // Teacher Login Field
+    @IBOutlet var teacherCredential: UITextField!
+    // The description UITextView placeholder
+    @IBOutlet var descriptionPlaceHolder: UILabel!
+    
+    // States whether the date drawer is open or not
+    var dateViewOpen = false
+    // Holder for the height of the date drawer in its opened state
+    var dateViewOpenHeight:CGFloat = 0
+    // Holder for the defualt vertical position of the bottom views container
+    var bottomViewDefaultY:CGFloat = 0
+    // Holder for the content height of the scroll view
+    var scrollViewContentHeight:CGFloat = 0
+    // States whether the proposal has been validated
+    var proposalValidated = false
+    // Holder for the database
+    let database = FIRDatabase.database()
+    // Cache of teacher IDs (for now redownloading it every time)
+    var teacherIDCache:[String: String]?
+    // The border color of invalid fields
+    let invalidFieldStrokeColor = UIColor(red: 1, green: 0, blue: 0.18431373, alpha: 0.5)
+    
     
     override func viewDidLoad() {
+        // Super call
         super.viewDidLoad()
-        
         // Set the view title text, at the Navigation Bar
         self.title = "Propose Announcement"
+        // Set the scrollView's delegate
+        self.scrollView.delegate = self
         
-        // Set the Title Text Field width appropriate to the current screen size
-        titleTextField.addConstraint(NSLayoutConstraint(item: titleTextField, attribute: NSLayoutAttribute.Width, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.Width, multiplier: 1, constant: view.bounds.width - 83))
+        // Make it so that, whenever the user taps on the description placeholder, descriptionPlaceHolderAction() function is called
+        descriptionPlaceHolder.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(descriptionPlaceHolderAction)))
+        
+        // Configure datePicker's colors
+        datePicker.setValue(accentColor, forKey:"textColor")
+        datePicker.performSelector(Selector("setHighlightsToday:"), withObject: accentColor)
+        
+        // Make it so that, whenever the user taps on the date view, switchDateCell() function is called
+        dateView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(switchDateCell)))
+        
+        // Instantiate the 'default date cell height' holder, for the 'open' state of the date cell
+        dateViewOpenHeight = dateView.frame.height
+        
+        // Instantiate the 'default vertical position of the bottom views' holder, for the 'open' state of the date cell
+        bottomViewDefaultY = bottomViews.frame.origin.y
+        
+        // Instantiate the scrollView's defualt content height
+        scrollViewContentHeight = titleField.frame.height + descriptionLabel.frame.height + descriptionField.frame.height + dateViewOpenHeight + bottomViews.frame.height + 40
+        
+        // Set the initial text for the dateLabel
+        datePickerValueChanged(datePicker)
+        
+        // Make each appropriate view's borders rounded and coloured
+        let fields:[UIView] = [titleField, descriptionField, locationField, teacherCredential, dateView]
+        for field in fields {
+            field.layer.cornerRadius = 5
+            field.layer.masksToBounds = true
+            field.layer.borderWidth = 2
+            field.layer.borderColor = backgroundColor.CGColor
+        }
 
         // To make screen move up, when editing the lower textfields
-        // Code credit to: Dan Beaulieu in http://stackoverflow.com/a/32915049
+        // Code credit to: Dan Beaulieu at http://stackoverflow.com/a/32915049
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillShow), name:UIKeyboardWillShowNotification, object: self.view.window)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillHide), name:UIKeyboardWillHideNotification, object: self.view.window)
         // End of Dan's code
     }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+
+    override func viewDidLayoutSubviews() {
+        if !dateViewOpen {  // If the drawer should be closed then close it!
+            dateView.frame.size.height = dateViewOpenHeight - 216
+            bottomViews.frame.origin.y = bottomViewDefaultY - 216
+            scrollView.contentSize.height = scrollViewContentHeight - 216
+        }
     }
+    
+    // Called whenever the description's placeholder is tapped
+    func descriptionPlaceHolderAction () {
+        descriptionField.becomeFirstResponder()     // Initiate the editing of description's UITextView
+    }
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        if !dateViewOpen {  // If the drawer should be closed then close it!
+            scrollView.layoutSubviews()
+            self.dateView.frame.size.height = dateViewOpenHeight - 216
+            self.bottomViews.frame.origin.y = bottomViewDefaultY - 216
+            scrollView.contentSize.height = scrollViewContentHeight - 216
+        }
+    }
+    
+    func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        if !dateViewOpen {  // If the drawer should be closed then close it!
+            scrollView.layoutSubviews()
+            self.dateView.frame.size.height = dateViewOpenHeight - 216
+            self.bottomViews.frame.origin.y = bottomViewDefaultY - 216
+            scrollView.contentSize.height = scrollViewContentHeight - 216
+        }
+    }
+   
+    func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
+        if !dateViewOpen {  // If the drawer should be closed then close it!
+            scrollView.layoutSubviews()
+            self.dateView.frame.size.height = dateViewOpenHeight - 216
+            self.bottomViews.frame.origin.y = bottomViewDefaultY - 216
+            scrollView.contentSize.height = scrollViewContentHeight - 216
+        }
+    }
+    
+    // Called whenever the dateView is tapped
+    func switchDateCell () {
+        // Switch the state of the dateView
+        dateViewOpen = !dateViewOpen
+        
+        // These sequences used to make sense to me, now they don't, but now they work exactly they way I wanted them to (something I didn't have before :)
+        
+        if !dateViewOpen {  // If the view should be closed, then close it
+            // Close the view
+            UIView.animateWithDuration(0.5, animations: {
+                self.dateView.frame.size.height = self.dateViewOpenHeight - 216
+                self.bottomViews.frame.origin.y = self.bottomViewDefaultY - 216
+                self.scrollView.contentSize.height = self.scrollViewContentHeight - 216
+            })
+            // Hide datePicker
+            UIView.animateWithDuration(0.2, delay: 0.3, options: .AllowAnimatedContent, animations: { self.datePicker.alpha = 0 }, completion: nil)
+        } else {    // Otherwise it must be an opening request, so, open it!
+            // Show datePicker
+            UIView.animateWithDuration(0.2, animations: { self.datePicker.alpha = 1 })
+            // Open the view
+            UIView.animateWithDuration(0.5, animations: {
+                self.dateView.frame.size.height = self.dateViewOpenHeight
+                self.bottomViews.frame.origin.y = self.bottomViewDefaultY
+                self.scrollView.contentSize.height = self.scrollViewContentHeight
+            })
+        }
+    }
+    
+    // Called whenever the value on the datePicker is changed
+    @IBAction func datePickerValueChanged(sender: UIDatePicker) {
+        // Format the new date
+        let format:NSDateFormatter = NSDateFormatter()
+        format.dateFormat = "yyyy-MM-dd 'at' HH:mm"
+        // Display the new date
+        dateLabel.text = format.stringFromDate(sender.date)
+    }
+    
+    // This is used to make the keyboard go away, when a tap outside of the keyboard are has been made
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.view.endEditing(true)
     }
     
+    // This is used to make the keyboard go away, when the return key is pressed
     func textFieldShouldReturn(textField: UITextField) -> Bool{
         textField.resignFirstResponder()
         return true
     }
     
-    @IBAction func approved(sender: UIButton) {
-        // If ((username && password) == valid)
-        titleTextField.allowsEditingTextAttributes = false
-        infoTextView.allowsEditingTextAttributes = false
-        teacherUserName.text = ""
-        teacherUserName.allowsEditingTextAttributes = false
-        teacherPass.text = ""
-        teacherPass.allowsEditingTextAttributes = false
-        // Enable 'Post-it' button
+    // This is called whenever the submit button is pressed
+    @IBAction func submitProposal(sender: UIButton) {
+        print ("Whoops! Seems like the proper method is not here 8(")
+    }
+
+    // This is used for checking if all the input fields are valid, returns true if they are
+    func fieldsAreValid () -> Bool {
+        // The final output, set to the 'allFieldsValid' value
+        var fieldsAreValid = true
+        
+        if descriptionField.text == nil || descriptionField.text == "" {    // If the description field is empty, then change output to false and highlight it
+            fieldsAreValid = false
+            descriptionField.layer.borderColor = invalidFieldStrokeColor.CGColor
+        } else {    // Otherwise de-highlight it, just in case
+            descriptionField.layer.borderColor = backgroundColor.CGColor
+        }
+        
+        // An array of UITextFields to check through
+        let fields:[UITextField] = [titleField, teacherCredential]
+        // For every UITextField that should be valid
+        for field in fields {
+            if (field.text == nil || field.text == "") {    // If the field is empty then change output to false and highlight it
+                fieldsAreValid = false
+                field.layer.borderColor = invalidFieldStrokeColor.CGColor
+            } else {    // Otherwise de-highlight it, just in case
+                field.layer.borderColor = backgroundColor.CGColor
+            }
+        }
+        // Return the final output
+        return fieldsAreValid
     }
     
-    
     // To make screen move up, when editing the lower textfields
-    // Code credit to: Boris in http://stackoverflow.com/a/31124676
+    // Code credit to: Boris at http://stackoverflow.com/a/31124676
     // Modified by: Inal Gotov
     func keyboardWillShow(notification: NSNotification) {
-        if (teacherPass.editing || teacherUserName.editing) {
+        // If the teacher credential field or the location field are being edited, and are blocked by the keyboard, then shift the screen up
+        if (teacherCredential.editing || locationField.editing) {
             if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
                 if view.frame.origin.y == 0{
-                    self.view.frame.origin.y -= keyboardSize.height
+                    self.scrollView.frame.origin.y -= keyboardSize.height
                 }
                 else {
                     
                 }
             }
+        }
+        // If the description UITextView is being edited then hide the place holder
+        if (!teacherCredential.editing && !locationField.editing && !titleField.editing) {
+            descriptionPlaceHolder.hidden = true    // It doesn't have a .editing property :(
         }
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        if (teacherPass.editing || teacherUserName.editing) {
+        // If the teacher credential field or the location field have been edited, while they would be blocked by the keyboard, shift the screen down
+        if (teacherCredential.editing || locationField.editing) {
             if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
                 if view.frame.origin.y != 0 {
-                    self.view.frame.origin.y += keyboardSize.height
+                    self.scrollView.frame.origin.y += keyboardSize.height
                 }
                 else {
                     
                 }
             }
         }
+        // If the description UITextView has been edited and it does not have any text in it, show the placeholder
+        if (!teacherCredential.editing && !locationField.editing && !titleField.editing) {
+            if descriptionField.text == "" {
+                descriptionPlaceHolder.hidden = false   // It doesn't have a .editing property :(
+                
+            }
+        }
     }
     // End of Boris' code
+}
+
+// The BigNumber structure
+struct BigNumber {
+    var value:String
+    // To implement for future use: negativity
+    func multiply (right: BigNumber) -> BigNumber {
+        // If any of the multiplicants are zero then return zero
+        if value == "0" || right.value == "0" { return BigNumber(value: "0") }
+        // Convert the left multiplicant into an array of digits
+        var a1 = value.characters.reverse().map { Int(String($0))! }
+        // Convert the right multiplicant into an array of digits
+        var a2 = right.value.characters.reverse().map { Int(String($0))! }
+        // Declare the product as an array of digits
+        var product = [Int]()
+        // Declare an index counter
+        var currentIndex = 0
+        // Declare the first digit
+        product.append(0)
+        // Declare the next digit for security
+        product.append(0)
+        
+        // The following loop will multiply every digit of the right multiplicant with every digit on the left multiplicant
+        // Therefore n = a1.count * a2.count
+        
+        // Iterate through the left multiplicant
+        for iterator1 in 0..<a1.count {
+            // Iterate through the right multiplicant
+            for iterator2 in 0..<a2.count {
+                // Declare the current index that is being calculated
+                currentIndex = iterator1 + iterator2
+                // Calculate the current index
+                product[currentIndex] += a1[iterator1] * a2[iterator2]
+                // If the extradigit was not enough, produce an extra one
+                if (currentIndex + 1) > product.count - 1 { product.append(0) }
+                // If a carry is produced, then carry it to the next index
+                if product[currentIndex] > 9 {
+                    product[currentIndex + 1] += (product[currentIndex] / 10)
+                    product[currentIndex] -= (product[currentIndex] / 10) * 10
+                }
+            }
+        }
+        // If the extra digit was not used, then remove it
+        if (product.last == 0) {
+            product.removeLast()
+        }
+        // Flip the array frontwards
+        product = Array(product.reverse())
+        // Convert the array of digits into BigInt type and return
+        return BigNumber(value: product.map { String($0) }.joinWithSeparator(""))
+    }
+    // To implement for future use: negativity
+    func add(right:BigNumber) -> BigNumber {
+        // Convert this BigInt to an array of integers, with each item containing a single digit. The whole array is reversed
+        var a1 = value.characters.reverse().map { Int(String($0))! }
+        // Convert the to be added BigInt to an array of integers, with each item containing a single digit. The whole array is reversed
+        var a2 = right.value.characters.reverse().map { Int(String($0))! }
+        // Declare the result
+        var result = [Int]()
+        // Declare an index counter for the result
+        var indexCounter = 0
+        
+        // Make the two array equal in length
+        var lesser = (a1.count < a2.count) ? a1 : a2
+        for _ in 1...abs(a1.count - a2.count) {
+            lesser.append(0)
+        }
+        if (a1.count < a2.count) {
+            a1 = lesser
+        } else {
+            a2 = lesser
+        }
+        // Add 2 entries to the result (1st is the current entry, 2nd is an extry entry for carrying)
+        result.append(0)
+        result.append(0)
+        
+        // Calculate
+        for iterator in 0..<a1.count {
+            // Add the digits in at the current index, including a possible carry
+            result[indexCounter] += a1[iterator] + a2[iterator]
+            
+            // If a carry is produced at this index then
+            if result[indexCounter] > 9 {
+                result[indexCounter + 1] = (result[indexCounter] / 10)      // Add it to the next index and
+                result[indexCounter] -= (result[indexCounter] / 10) * 10    // Remove it from the current
+            }
+            // Create a new entry for the next iteration
+            result.append(0)
+            // Increase the indexCounter for the next iteration
+            indexCounter += 1
+        }
+        
+        // Two is necessary
+        if (result.last == 0) {     // If the result did not increase in length (no carry at last iteration)
+            result.removeLast()     // Then remove the last zero
+        }
+        if (result.last == 0) {     // And do that again because idk
+            result.removeLast()
+        }
+        
+        result = Array(result.reverse())    // Reverse the array to be in human deciaml direction
+        return BigNumber(value: result.map { String($0) }.joinWithSeparator(""))   // Convert to BigInt and return
+    }
+}
+
+// Override basic operator to work with BigInts
+func + (left:BigNumber, right:BigNumber) -> BigNumber {
+    return left.add(right)
+}
+// Override basic operator to work with BigInts
+func * (left:BigNumber, right:BigNumber) -> BigNumber {
+    return left.multiply(right)
 }

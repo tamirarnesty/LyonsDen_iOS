@@ -22,6 +22,16 @@ class EventView: UIView {
     // Instance of the content View of this class
     var contentView: UIView?
     
+    override func drawRect(rect: CGRect) {
+        self.layer.cornerRadius = 8
+        self.layer.masksToBounds = true
+        self.layer.borderWidth = 2
+        self.layer.borderColor = UIColor(red: 0.0078, green: 0.1647, blue: 0.3922, alpha: 1).CGColor    // Could not access it from here
+        
+        locationLabel.clipsToBounds = true
+        timeLabel.clipsToBounds = true
+    }
+    
     // For creating this view programmatically
     override init(frame: CGRect) {
         // Create the UIView

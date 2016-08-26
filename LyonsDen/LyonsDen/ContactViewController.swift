@@ -12,8 +12,10 @@ import UIKit
 import Contacts
 
 class ContactViewController: UIViewController {
+    static var displayToast = false
     @IBOutlet weak var menuButton: UIBarButtonItem!
     @IBOutlet var navBar: UINavigationItem!
+    var toast:ToastView!
     
     
     override func viewDidLoad() {
@@ -27,9 +29,29 @@ class ContactViewController: UIViewController {
         }
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        if ContactViewController.displayToast {
+            toast = ToastView(view: self.view)
+            self.view.addSubview(toast)
+            ContactViewController.displayToast = false
+        }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        if let toastView = toast {
+            toastView.initiate()
+        }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    @IBAction func myUnwindAction (unwindSegue: UIStoryboardSegue) {
+        
     }
     
     // for contacts
@@ -73,4 +95,38 @@ class ContactViewController: UIViewController {
         }
     }
     
+}
+
+
+class ToastView: UIView {
+    override func drawRect(rect: CGRect) {
+        let label = UILabel()
+        label.textColor = UIColor.whiteColor()
+        label.font = label.font.fontWithSize(22)
+        label.text = "Submitted!"
+        self.addSubview(label)
+        label.sizeToFit()
+        label.center.x = self.frame.size.width/2
+        label.center.y = self.frame.size.height/2
+        self.backgroundColor = UIColor(white: 0, alpha: 0.25)
+        self.alpha = 0
+        label.alpha = 0.7
+    }
+    
+    func initiate () {
+        UIView.animateWithDuration(0.1) { self.alpha = 1 }
+        UIView.animateWithDuration(0.1, delay: 1.1, options: .AllowAnimatedContent, animations: { self.alpha = 0 }, completion: { (completed) in if completed { self.removeFromSuperview() } })
+    }
+    
+    convenience init(view:UIView) {
+        self.init(frame: CGRectZero, inView: view)
+    }
+    
+    init(frame: CGRect, inView view:UIView) {
+        super.init(frame: CGRectMake((view.center.x - (135/2)), (view.center.y - (45/2)), 135, 45))
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }

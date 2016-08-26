@@ -10,6 +10,8 @@
 
 import UIKit
 
+// TODO: FIX LOCATION LABEL GETTING OUT OF ITS BOUNDS
+
 class CalendarViewController: UIViewController, CalendarViewDataSource, CalendarViewDelegate {
     // The Calendar View
     // The size doesnt matter, it will resize it self later.
@@ -26,8 +28,7 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
     var lastSelectedDate:NSDate?
     // The label representing a strigified version of the currently selected date
     let dateLabel = UILabel()
-    // States whether the events have been loaded or not
-    var eventsLoaded = false
+    
     
     // Called when the segue initiating button is pressed
     override func viewDidLoad() {
@@ -76,8 +77,8 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         let width = self.view.frame.size.width - 16.0 * 2
         let height = width + 20.0
         self.calendarView.frame = CGRect(x: 16.0, y: 60.0, width: width, height: height)    // Resize and position the calendar on screen
-        self.calendarView.setDisplayDate(NSDate(), animated: true)                          // Set the current displayed date on the calendar, to the current date
-        self.calendarView.reloadData()                                                      // Reload the calendar data
+
+
         // If there are any events in the current date, then resize the scrollView's contentSize accordingly
         if self.currentEvents.count > 0 {   // If an event exists
             self.scrollView!.contentSize.height = 37 + (self.currentEvents[0]!.frame.height + 16) * CGFloat(self.currentEvents.count)
@@ -89,21 +90,33 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
     // Called after the view has appeared
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)   // Super call
-        // A listener if sorts, for when the events have been loaded
-        while (true) {
-            if eventsLoaded {   // When the events have been loaded
-                // Unhide the calendar and scrollView
-                self.calendarView.hidden = false
-                self.scrollView?.hidden = false
-                // Stop the loading wheel
-                loadingWheel.stopAnimating()
-                break   // Break out of the loop
-            }
+        self.calendarView.setDisplayDate(NSDate(), animated: true)                          // Set the current displayed date on the calendar, to the current date
+        self.calendarView.reloadData()                                                      // Reload the calendar data
+    }
+    
+    // Called whenever the events have been loaded
+    func eventsDidLoad() {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.calendarView.reloadData()
+            
+            self.calendarView.alpha = 0
+            self.scrollView?.alpha = 0
+            // Unhide the calendar and scrollView
+            self.calendarView.hidden = false
+            self.scrollView?.hidden = false
+            
+            UIView.animateWithDuration(0.2, animations: {
+                self.calendarView.alpha = 1
+                self.scrollView?.alpha = 1
+                self.loadingWheel.alpha = 0
+            })
+            
+            // Stop the loading wheel
+            self.loadingWheel.stopAnimating()
         }
     }
     
-    
-    // MARK: EVENTS
+// MARK: EVENTS
     
     // This function handles the process of downloading a calendar file from the web and parsing it, to add it to the app's calendar
     func loadEventsIntoCalendar() {
@@ -113,16 +126,11 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         // The process of downloading and parsing the calendar
         let task = NSURLSession.sharedSession().dataTaskWithURL(url) { (data, response, error) in
             // The following is simply a declaration and will not execute without the line 'task.resume()'
-            
             if let URlContent = data {  // If Data has been loaded
                 // If you got to this point then you've downloaded the calendar so...
-                
                 // Calendar File parsing starts here!!!
-                
                 // The string that holds the contents of the calendar's events
                 let webContent:NSString = NSString(data: URlContent, encoding: NSUTF8StringEncoding)!
-                
-                print (webContent)
                 
                 // An array of flags used for locating the event fields
                 // [h][0] - The flag that marks the begining of a field, [h][1] - The flag that marks the end of a field
@@ -168,7 +176,6 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
                 
                 // A holder for the begining and end flags for each event field
                 var fieldBoundaries:[NSRange]
-                
                 // The actual parsing of each event
                 repeat {
                     range = updateRange(range)  // Move our searching range to the next event
@@ -190,15 +197,17 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
                 } while (true)
                 // Pass the recorded events to the calendar
                 self.calendarView.events = events
-                print ("I loaded the events")
-                // Notify the loading screen that the loading is done
-                self.eventsLoaded = true
+                // Notify the ViewController that the events have been loaded
+                self.eventsDidLoad()
             } else if let errorData = error {   // If there has been an error
-                print ("An error occured")
+                print ("Calendar View: Event Download, Failed!")
+                print ("Printing error description...")
+                print ()
                 print (errorData.description)
+                print ()
                 // Will, either handle or display the error, whenever i get more experience with this
             } else {    // If there is no internet
-                print ("No internet")
+                print ("Calendar View: Event Download, No Internet!")
                 // Will display an error
             }
         }
@@ -206,8 +215,7 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         task.resume()
     }
     
-    
-    // MARK: CALENDAR DATASOURCE IMPLEMENTATION
+// MARK: CALENDAR DATASOURCE IMPLEMENTATION
     
     // Set the start date that can be viewed with the calendar
     func startDate() -> NSDate? {
@@ -251,8 +259,7 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         return oneYearsFromNow
     }
     
-    
-    // MARK: CALENDAR DELEGATE IMPLEMENTATION
+// MARK: CALENDAR DELEGATE IMPLEMENTATION
     
     // Called before selecting a date (I think). Required to be implemented
     func calendar(calendar: CalendarView, canSelectDate date: NSDate) -> Bool { return true }
@@ -265,6 +272,7 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
     
     // Called when a date is selected. Required to be implemented
     func calendar(calendar: CalendarView, didSelectDate date: NSDate, withEvents events: [Event]) {
+        print ("A date has been selected")
         if let lastDate = lastSelectedDate {
             if date == lastDate {
                 return
@@ -272,6 +280,7 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
             self.calendarView.deselectDate(lastDate)
         }
         lastSelectedDate = date
+        print ("The previous selected date has been deselected")
         
         dispatch_async(dispatch_get_main_queue()) {
             self.currentEvents.removeAll()
@@ -298,13 +307,14 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
                     self.currentEvents[h]!.locationLabel.frame.size.width = (self.currentEvents[h]!.frame.width/2) - 16
                     self.currentEvents[h]!.timeLabel.frame.size.width = (self.currentEvents[h]!.frame.width/2) - 16
                     
-                    print ()
-                    print (self.currentEvents[h]!.timeLabel.frame.width)
-                    print (self.currentEvents[h]!.locationLabel.frame.width)
-                    print (self.currentEvents[h]!.frame.width)
+//                    print ()
+//                    print (self.currentEvents[h]!.timeLabel.frame.width)
+//                    print (self.currentEvents[h]!.locationLabel.frame.width)
+//                    print (self.currentEvents[h]!.frame.width)
                 }
             }
             self.dateLabel.text = NSString(string: date.description).substringToIndex(10)
+            print ("The new date has been selected")
         }
     }
 }

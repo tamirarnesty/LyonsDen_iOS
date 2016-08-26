@@ -11,7 +11,7 @@ import FirebaseAuth
 
 class MenuTable: UITableViewController {
     // An array containig the titles of the cell in [0]
-    var titles = ["DEN", "Home", "Announcements", "Calendar", "Clubs", "Events", "Contact", "User"]
+    var titles = ["DEN", "Home", "Calendar", "Announcements", "Events", "Clubs", "Contact", "User"]
     
     override func viewDidLoad() {
         if let username = NSUserDefaults.standardUserDefaults().objectForKey("displayName") {
@@ -40,14 +40,9 @@ class MenuTable: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if (indexPath.row == 5) {
-            ListViewController.isDisplayingClubs = false
-        } else if (indexPath.row == 4) {
-            ListViewController.isDisplayingClubs = true
-        }
-        // TEMPORARY !!!!!!!!!!!!!!!!!!!!!!
-        if indexPath.row == 2 {
-            return  // Make announcements unclickable
+        // Announcements == 3, Events == 4, Clubs == 5
+        if (indexPath.row < 6 && indexPath.row > 2) {
+            ListViewController.displayContent = indexPath.row - 2
         }
         if indexPath.row != 0 && indexPath.row != (titles.count-1) {
             performSegueWithIdentifier(titles[indexPath.row] + "Segue", sender: nil)

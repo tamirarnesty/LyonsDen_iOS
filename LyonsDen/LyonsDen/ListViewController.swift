@@ -14,8 +14,8 @@ import Firebase
 class ListViewController: UITableViewController {
     // The menu button
     @IBOutlet weak var menuButton: UIBarButtonItem!
-    // States whether to display Clubs(if true) or to display Events(if false)
-    static var isDisplayingClubs: Bool = false
+    
+    static var displayContent = 0
     // Contains Image for each item. Will be implemented later
     var images = [UIImage?]()
     // Reference to the database
@@ -35,13 +35,13 @@ class ListViewController: UITableViewController {
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
         
-        // Setup this table view to display the appropriate data
-        if ListViewController.isDisplayingClubs { // then
-            self.title = "Clubs"    // Set the title
-            parseForClubs()         // Download club data
+        
+        let titles = ["Announcements", "Events", "Clubs"]
+        self.title = titles[ListViewController.displayContent - 1]
+        if ListViewController.displayContent == 3 {
+            parseForClubs()
         } else {
-            self.title = "Event"    // Set the title
-            parseForEvents(self.ref.child("events"))    // Download events data
+            parseForEvents(self.ref.child((ListViewController.displayContent == 1) ? "announcements" : "events"))    // Download events data
         }
     }
     
@@ -66,11 +66,11 @@ class ListViewController: UITableViewController {
                 // Create an NSArray instance of all the values from the NSDictionary
                 let dataContent = data.allValues as NSArray
                 // Record each field of the events
-                for h in 0...dataContent.count-1 {
-                    self.eventData[0].append(dataContent.objectAtIndex(h).objectForKey("title")! as! String)
-                    self.eventData[1].append(dataContent.objectAtIndex(h).objectForKey("description")! as! String)
-                    self.eventData[2].append(ListViewController.formatTime(((dataContent.objectAtIndex(h).objectForKey("dateTime")! as! NSNumber).description) as NSString))
-                    self.eventData[3].append(dataContent.objectAtIndex(h).objectForKey("location")! as! String)
+                let key = ["title", "description", "dateTime", "location"]
+                for h in 0..<dataContent.count {
+                    for j in 0..<key.count {
+                        self.eventData[j].append(dataContent.objectAtIndex(h).objectForKey(key[j])?.description!)
+                    }
                     self.images.append(nil) // Will be implemented later
                 }
                 // Reload the tableView to display the loaded data
@@ -90,10 +90,11 @@ class ListViewController: UITableViewController {
                 let data = snapshot.value as! NSDictionary
                 let dataContent = data.allValues as NSArray
                 // Record each field of the clubs
+                let key = ["title", "description", "leads"]
                 for h in 0...dataContent.count - 1 {
-                    self.eventData[0].append(dataContent.objectAtIndex(h).objectForKey("title")! as! String)
-                    self.eventData[1].append(dataContent.objectAtIndex(h).objectForKey("description")! as! String)
-                    self.eventData[2].append(dataContent.objectAtIndex(h).objectForKey("leads")! as! String)
+                    for j in 0..<key.count {
+                        self.eventData[j].append(dataContent.objectAtIndex(h).objectForKey(key[j])! as! String)
+                    }
                     self.images.append(nil)
                 }
                 // Reload the tableView to display the loaded data
@@ -103,11 +104,6 @@ class ListViewController: UITableViewController {
                 // Handle the error
             }
         })
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     // Set the number of cell the table will display
@@ -140,7 +136,7 @@ class ListViewController: UITableViewController {
         // Deselect the selected cell
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         // Segue into the appropriate ViewController
-        if ListViewController.isDisplayingClubs {
+        if ListViewController.displayContent == 3 {
             // Prepare ClubViewController, if nil is passed for image, then constraints are remade appropriately
             ClubViewController.setupClubViewController(withTitle: self.eventData[0][indexPath.row]!,    // Club Title
                                                        description: self.eventData[1][indexPath.row]!,  // Club Description
