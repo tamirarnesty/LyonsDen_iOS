@@ -9,10 +9,11 @@
 //
 
 import UIKit
+import FirebaseDatabase
 import Contacts
 
 class ContactViewController: UIViewController {
-    static var displayToast = false
+    static var displayToast = true
     @IBOutlet weak var menuButton: UIBarButtonItem!
     @IBOutlet var navBar: UINavigationItem!
     var toast:ToastView!
@@ -32,7 +33,7 @@ class ContactViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         if ContactViewController.displayToast {
-            toast = ToastView(view: self.view)
+            toast = ToastView(inView: self.view, withText: "Proposal Submitted!")
             self.view.addSubview(toast)
             ContactViewController.displayToast = false
         }
@@ -45,11 +46,18 @@ class ContactViewController: UIViewController {
         }
     }
     
+    @IBAction func displayTeacherList(sender: UIButton) {
+        PeopleList.listRef = FIRDatabase.database().referenceWithPath("users").child("teachers")
+        PeopleList.title = "Teachers"
+        performSegueWithIdentifier("TeacherListSegue", sender: self)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
+    // This is required for a successful unwind to this View Controller
     @IBAction func myUnwindAction (unwindSegue: UIStoryboardSegue) {
         
     }
@@ -94,18 +102,21 @@ class ContactViewController: UIViewController {
             UIApplication.sharedApplication().openURL(phoneNumber)
         }
     }
-    
 }
 
 
 class ToastView: UIView {
+    var displayText:String
+    
     override func drawRect(rect: CGRect) {
         let label = UILabel()
         label.textColor = UIColor.whiteColor()
         label.font = label.font.fontWithSize(22)
-        label.text = "Submitted!"
-        self.addSubview(label)
+        label.text = displayText
         label.sizeToFit()
+        self.frame.size.width = label.frame.width + 16
+        self.frame.size.height = label.frame.height + 16
+        self.addSubview(label)
         label.center.x = self.frame.size.width/2
         label.center.y = self.frame.size.height/2
         self.backgroundColor = UIColor(white: 0, alpha: 0.25)
@@ -118,11 +129,12 @@ class ToastView: UIView {
         UIView.animateWithDuration(0.1, delay: 1.1, options: .AllowAnimatedContent, animations: { self.alpha = 0 }, completion: { (completed) in if completed { self.removeFromSuperview() } })
     }
     
-    convenience init(view:UIView) {
-        self.init(frame: CGRectZero, inView: view)
+    convenience init(inView view:UIView, withText text:String) {
+        self.init(frame: CGRectZero, inView: view, withText: text)
     }
     
-    init(frame: CGRect, inView view:UIView) {
+    init(frame: CGRect, inView view:UIView, withText text:String) {
+        displayText = text
         super.init(frame: CGRectMake((view.center.x - (135/2)), (view.center.y - (45/2)), 135, 45))
     }
     

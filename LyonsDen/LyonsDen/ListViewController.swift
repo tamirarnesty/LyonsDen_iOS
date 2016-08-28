@@ -11,17 +11,23 @@
 import UIKit
 import Firebase
 
+// TODO: IMLPEMENT PULL TO REFRESH
+
 class ListViewController: UITableViewController {
     // The menu button
     @IBOutlet weak var menuButton: UIBarButtonItem!
     
     static var displayContent = 0
+    
+    static var contentChanged = false
     // Contains Image for each item. Will be implemented later
     var images = [UIImage?]()
     // Reference to the database
     var ref:FIRDatabaseReference!
                         //       Title        Description  Date&Time    Location
     var eventData:[[String?]] = [[String?](), [String?](), [String?](), [String?]()]
+    var clubKeys:[String] = [String]()
+    var loadingWheel:UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.White)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +41,12 @@ class ListViewController: UITableViewController {
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
         
+        self.view.backgroundColor = backgroundColor
+        
+        loadingWheel.center.x = self.view.center.x
+        loadingWheel.center.y = self.view.center.y
+        webContentWillLoad()
+        
         
         let titles = ["Announcements", "Events", "Clubs"]
         self.title = titles[ListViewController.displayContent - 1]
@@ -42,6 +54,15 @@ class ListViewController: UITableViewController {
             parseForClubs()
         } else {
             parseForEvents(self.ref.child((ListViewController.displayContent == 1) ? "announcements" : "events"))    // Download events data
+        }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        if ListViewController.contentChanged {
+            ListViewController.contentChanged = false
+            webContentWillLoad()
+            parseForClubs()
         }
     }
     
@@ -55,6 +76,18 @@ class ListViewController: UITableViewController {
             output = output.stringByAppendingString(time.substringWithRange(NSMakeRange(10, 2)))
         }
         return output as String
+    }
+    
+    func webContentWillLoad () {
+        self.tableView.hidden = true
+        self.clubKeys.removeAll()
+        for h in 0..<eventData.count { eventData[h].removeAll() }
+        loadingWheel.startAnimating()
+    }
+    
+    func webContentDidLoad () {
+        self.tableView.hidden = false
+        loadingWheel.stopAnimating()
     }
     
     func parseForEvents (reference:FIRDatabaseReference) {
@@ -75,6 +108,7 @@ class ListViewController: UITableViewController {
                 }
                 // Reload the tableView to display the loaded data
                 self.tableView.reloadData()
+                self.webContentDidLoad()
             } else {
                 print ("There has been an error")
                 // Handle the error
@@ -84,7 +118,7 @@ class ListViewController: UITableViewController {
     
     func parseForClubs () {
         // Navigate to and download the Clubs data
-        self.ref.child("clubs").observeSingleEventOfType(FIRDataEventType.Value, withBlock: { (snapshot) in
+        self.ref.child("clubs").queryOrderedByKey().observeSingleEventOfType(FIRDataEventType.Value, withBlock: { (snapshot) in
             if snapshot.exists() {
                 // Create an NSDictionary instance of the data
                 let data = snapshot.value as! NSDictionary
@@ -92,13 +126,17 @@ class ListViewController: UITableViewController {
                 // Record each field of the clubs
                 let key = ["title", "description", "leads"]
                 for h in 0...dataContent.count - 1 {
+                    self.clubKeys.append(dataContent.objectAtIndex(h).objectForKey("key")! as! String)
+                    
                     for j in 0..<key.count {
                         self.eventData[j].append(dataContent.objectAtIndex(h).objectForKey(key[j])! as! String)
                     }
+                    
                     self.images.append(nil)
                 }
                 // Reload the tableView to display the loaded data
                 self.tableView.reloadData()
+                self.webContentDidLoad()
             } else {
                 print ("There has been an error")
                 // Handle the error
@@ -142,7 +180,7 @@ class ListViewController: UITableViewController {
                                                        description: self.eventData[1][indexPath.row]!,  // Club Description
                                                        clubLeads: self.eventData[2][indexPath.row]!,    // Club Leaders
                                                        clubImage: self.images[indexPath.row],           // Club Image
-                                                       andEvents: self.ref.child("clubs").child(eventData[0][indexPath.row]!).child("announcements"))   // Database reference to the club's announcements
+                                                       andEvents: self.ref.child("clubs").child(clubKeys[indexPath.row]))   // Database reference to the club
             // Segue into ClubViewController
             performSegueWithIdentifier("ClubSegue", sender: nil)
         } else {
