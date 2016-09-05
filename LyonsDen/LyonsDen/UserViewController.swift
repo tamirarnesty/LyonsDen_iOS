@@ -9,15 +9,31 @@
 import Foundation
 import FirebaseAuth
 
-class UserViewController: UIViewController, UITextViewDelegate {
+class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var menuButton: UIBarButtonItem!
     @IBOutlet var userInfo: [UITextView]!
     @IBOutlet weak var rightBarButton: UIBarButtonItem!
+    @IBOutlet weak var identityPicker: UIPickerView!
+    @IBOutlet weak var extraPicker: UIPickerView!
+    
     //------------ fix constraints and make it work
     var displayNameText:String! = nil
+    var identityData = ["None Of The Above", "Student", "Teacher", "Administrator"]
+    var extraData = ["None Of The Above", "Switch"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // set up picker views
+        self.identityPicker.dataSource = self
+        self.extraPicker.dataSource = self
+        self.identityPicker.delegate = self
+        self.extraPicker.delegate = self
+        self.extraPicker.hidden = true
+        
+        self.identityPicker.setValue(accentColor, forKey: "textColor")
+        self.extraPicker.setValue(accentColor, forKey: "textColor")
+        
         // Make sidemenu swipeable
         if self.revealViewController() != nil {
             menuButton.target = self.revealViewController()
@@ -39,6 +55,60 @@ class UserViewController: UIViewController, UITextViewDelegate {
         userInfo[1].text = FIRAuth.auth()?.currentUser?.email
     }
     
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        if pickerView == extraPicker {
+            return extraData.count
+        }
+        return identityData.count
+    }
+    
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        if pickerView == extraPicker {
+            return extraData[row]
+        }
+        return identityData[row]
+    }
+    
+    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
+    {
+        if pickerView == identityPicker {
+        switch row {
+        case 0:
+            extraPicker.hidden = true
+            identityPicker.hidden = false
+            userInfo[userInfo.count-1].text = "Nil"
+        case 1: // student
+            extraPicker.hidden = false
+            identityPicker.hidden = true
+            userInfo[userInfo.count-1].text = identityData[row]
+            extraData += ["Club President", "Student Council Member"]
+        case 2: // teacher
+            extraPicker.hidden = false
+            identityPicker.hidden = true
+            userInfo[userInfo.count-1].text = identityData[row]
+            extraData += ["Math", "English", "Social Science", "Science", "Arts"]
+        case 3: // admin
+            extraPicker.hidden = false
+            identityPicker.hidden = true
+            userInfo[userInfo.count-1].text = identityData[row]
+            extraData += ["Principal", "Vice Principal"]
+        default:
+            break;
+        }
+        } else {
+            if row == 1 {
+                extraPicker.hidden = true
+                identityPicker.hidden = false
+            }
+            print("extra picker")
+        }
+        
+    }
+    
     @IBAction func signOutPressed(sender: AnyObject) {
         try! FIRAuth.auth()?.signOut()
         NSUserDefaults.standardUserDefaults().setValue("SignedOut", forKey: "Pass") // reset password key to prevent automatic log in.
@@ -47,7 +117,7 @@ class UserViewController: UIViewController, UITextViewDelegate {
 
     @IBAction func deleteAccount(sender: AnyObject) {
         FIRAuth.auth()?.currentUser?.deleteWithCompletion { error in
-            if let error = error {
+            if error != nil {
                 print("Something went wrong")
             } else {
                (UIApplication.sharedApplication().delegate as! AppDelegate).displayError("Success", errorMsg: "\(FIRAuth.auth()?.currentUser?.displayName) has been deleted.")
@@ -58,7 +128,7 @@ class UserViewController: UIViewController, UITextViewDelegate {
     @IBAction func resetPassword(sender: AnyObject) {
         
         FIRAuth.auth()?.sendPasswordResetWithEmail((FIRAuth.auth()?.currentUser?.email)!) { error in
-            if let error = error {
+            if error != nil {
                 print ("Something went wrong")
             } else {
                 (UIApplication.sharedApplication().delegate as! AppDelegate).displayError("Success", errorMsg: "A password reset email was sent to \(FIRAuth.auth()?.currentUser?.displayName)")
@@ -101,13 +171,25 @@ class UserViewController: UIViewController, UITextViewDelegate {
             for text in userInfo {
                 text.editable = false
             }
+            self.rightBarButton.title = "Edit"
             
-            (UIApplication.sharedApplication().delegate as! AppDelegate).displayError("Success", errorMsg: "All updates have been submitted.")
+            //(UIApplication.sharedApplication().delegate as! AppDelegate).displayError("Success", errorMsg: "All updates have been submitted.")
+            let toast = ToastView(inView: self.view, withText: "All updates have been submitted")
+            self.view.addSubview(toast)
+            toast.initiate()
+
         }
     }
     
     @IBAction func editInfo(sender: AnyObject) {
         // make edit have to verify with touchID or current password.
+        self.rightBarButton.title = "Done"
+        if self.rightBarButton.title == "Done" {
+            self.view.endEditing(true)
+            for text in userInfo {
+                text.resignFirstResponder()
+            }
+        }
         for text in userInfo {
             text.editable = true
         }

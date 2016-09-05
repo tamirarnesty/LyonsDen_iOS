@@ -121,7 +121,7 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
     // This function handles the process of downloading a calendar file from the web and parsing it, to add it to the app's calendar
     func loadEventsIntoCalendar() {
         // The link from which the calendar is downloaded
-        let url = NSURL (string: "https://calendar.google.com/calendar/ical/yusuftazim204%40gmail.com/private-f2b3e6f282204329e487a76f4478cb33/basic.ics")!
+        let url = NSURL (string: "https://calendar.google.com/calendar/ical/wlmacci%40gmail.com/public/basic.ics")!
         
         // The process of downloading and parsing the calendar
         let task = NSURLSession.sharedSession().dataTaskWithURL(url) { (data, response, error) in

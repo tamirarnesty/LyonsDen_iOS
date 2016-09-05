@@ -80,17 +80,17 @@ class ContactViewController: UIViewController {
     @IBAction func hotlineSelected(sender: AnyObject) {
         let options = UIAlertController(title: "Emergency Hotline", message: "Who would you like to talk to?", preferredStyle: .ActionSheet)
         options.addAction(UIAlertAction(title: "Student Emergency Hotline", style: .Default, handler: { action in
-            self.phoneCall(NSURL(string: "telprompt://1-800-668-6868")!) // find actual number
+            self.phoneCall(NSURL(string: "telprompt://1-800-668-6868")!) // kids help phone
         }))
         options.addAction(UIAlertAction(title: "Emergency Contact", style: .Default, handler: { action in
             // for now
             self.phoneCall(NSURL(string: "telprompt://647-300-9301")!) // rachels
         })) // set emergency contact from contacts in phone. save to NSDefaults. figure out how
         options.addAction(UIAlertAction(title: "WLMCI", style: .Default, handler: { action in
-            self.phoneCall(NSURL(string: "telprompt://416-395-3330")!)
+            self.phoneCall(NSURL(string: "telprompt://416-395-3330")!) // school's phone
         }))
         options.addAction(UIAlertAction(title: "911", style: .Default, handler: { action in
-            self.phoneCall(NSURL(string: "telprompt://911")!)
+            self.phoneCall(NSURL(string: "telprompt://911")!) // obvious
 
         }))
         options.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
@@ -117,7 +117,9 @@ class ToastView: UIView {
         self.frame.size.width = label.frame.width + 16
         self.frame.size.height = label.frame.height + 16
         self.addSubview(label)
-        label.center.x = self.frame.size.width/2
+        label.frame.origin.x = 0
+        label.frame.size.width = self.frame.size.width
+//        label.center.x = self.frame.
         label.center.y = self.frame.size.height/2
         self.backgroundColor = UIColor(white: 0, alpha: 0.25)
         self.alpha = 0
