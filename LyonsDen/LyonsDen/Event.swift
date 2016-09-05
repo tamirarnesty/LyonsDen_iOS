@@ -8,13 +8,23 @@
 
 import Foundation
 
-class Event {
+class Event: Hashable {
     var title:String
     var description:String
     var startDate:NSDate?
     var endDate:NSDate?
     var location:String
     private var dateCreator:NSDateComponents = NSDateComponents()
+    
+    var hashValue: Int {
+        get {
+            if title == "" && description == "" && startDate == nil && endDate == nil && location == "" {
+                return -1
+            } else {
+                return (title + description + (startDate?.description)! + (endDate?.description)! + location).hashValue
+            }
+        }
+    }
     
     init (calendar:NSCalendar) {
         self.title = ""
@@ -42,6 +52,14 @@ class Event {
             dateCreator.minute = Int (newDate.substringWithRange(NSMakeRange(12, 2)))!
             dateCreator.second = Int (newDate.substringWithRange(NSMakeRange(14, 2)))!
             self.startDate = dateCreator.date!
+        } else if newDate.hasPrefix(";TZID") {
+            dateCreator.year = Int (newDate.substringWithRange(NSMakeRange(22, 4)))!
+            dateCreator.month = Int (newDate.substringWithRange(NSMakeRange(26, 2)))!
+            dateCreator.day = Int (newDate.substringWithRange(NSMakeRange(28, 2)))!
+            dateCreator.hour = 00
+            dateCreator.minute = 00
+            dateCreator.second = 00
+            self.startDate = dateCreator.date!
         } else if newDate.hasPrefix(";") {
             dateCreator.year = Int (newDate.substringWithRange(NSMakeRange(12, 4)))!
             dateCreator.month = Int (newDate.substringWithRange(NSMakeRange(16, 2)))!
@@ -50,6 +68,16 @@ class Event {
             dateCreator.minute = 00
             dateCreator.second = 00
             self.startDate = dateCreator.date!
+        } else if newDate == "" {
+            dateCreator.year = 1970
+            dateCreator.month = 01
+            dateCreator.day = 01
+            dateCreator.hour = 00
+            dateCreator.minute = 00
+            dateCreator.second = 00
+            self.startDate = dateCreator.date!
+        } else {
+            fatalError("Failed to prase \(newDate)")
         }
     }
     
@@ -61,7 +89,15 @@ class Event {
             dateCreator.hour = Int (newDate.substringWithRange(NSMakeRange(10, 2)))! - 4    // Minus 4 because it returns time in a different timezone (No clue as to why)
             dateCreator.minute = Int (newDate.substringWithRange(NSMakeRange(12, 2)))!
             dateCreator.second = Int (newDate.substringWithRange(NSMakeRange(14, 2)))!
-            self.startDate = dateCreator.date!
+            self.endDate = dateCreator.date!
+        } else if newDate.hasPrefix(";TZID") {
+            dateCreator.year = Int (newDate.substringWithRange(NSMakeRange(22, 4)))!
+            dateCreator.month = Int (newDate.substringWithRange(NSMakeRange(26, 2)))!
+            dateCreator.day = Int (newDate.substringWithRange(NSMakeRange(28, 2)))!
+            dateCreator.hour = 00
+            dateCreator.minute = 00
+            dateCreator.second = 00
+            self.endDate = dateCreator.date!
         } else if newDate.hasPrefix(";") {
             dateCreator.year = Int (newDate.substringWithRange(NSMakeRange(12, 4)))!
             dateCreator.month = Int (newDate.substringWithRange(NSMakeRange(16, 2)))!
@@ -69,11 +105,30 @@ class Event {
             dateCreator.hour = 00
             dateCreator.minute = 00
             dateCreator.second = 00
-            self.startDate = dateCreator.date!
+            self.endDate = dateCreator.date!
+        } else if newDate == "" {
+            dateCreator.year = 1970
+            dateCreator.month = 01
+            dateCreator.day = 01
+            dateCreator.hour = 00
+            dateCreator.minute = 00
+            dateCreator.second = 00
+            self.endDate = dateCreator.date!
+        } else {
+            fatalError("Failed to prase \(newDate)")
         }
     }
     
     func setLocation (newLocation:NSString) {
         self.location = newLocation as String
     }
+}
+
+func == (lhs: Event, rhs: Event) -> Bool {
+    if (lhs.hashValue == rhs.hashValue) {
+        return true
+    } else if (lhs.title == rhs.title) && (lhs.description == rhs.description) && (lhs.startDate == rhs.startDate) && (lhs.endDate == rhs.endDate) && (lhs.location == rhs.location) {
+        return true
+    }
+    return false
 }

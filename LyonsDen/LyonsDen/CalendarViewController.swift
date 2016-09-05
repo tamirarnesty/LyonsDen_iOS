@@ -121,7 +121,7 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
     // This function handles the process of downloading a calendar file from the web and parsing it, to add it to the app's calendar
     func loadEventsIntoCalendar() {
         // The link from which the calendar is downloaded
-        let url = NSURL (string: "https://calendar.google.com/calendar/ical/yusuftazim204%40gmail.com/private-f2b3e6f282204329e487a76f4478cb33/basic.ics")!
+        let url = NSURL (string: "https://calendar.google.com/calendar/ical/wlmacci%40gmail.com/public/basic.ics")!
         
         // The process of downloading and parsing the calendar
         let task = NSURLSession.sharedSession().dataTaskWithURL(url) { (data, response, error) in
@@ -135,19 +135,19 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
                 // An array of flags used for locating the event fields
                 // [h][0] - The flag that marks the begining of a field, [h][1] - The flag that marks the end of a field
                 let searchTitles:[[String]] = [["SUMMARY:", "TRANSP:"], ["DESCRIPTION:", "LAST-MODIFIED:"], ["DTSTART", "DTEND"], ["DTEND", "DTSTAMP"], ["LOCATION:", "SEQUENCE:"]]
-                // An array that will contain the events themselves
-                var events:[Event] = [Event]()
+                // The set that will contain the events themselves
+                var eventBank:Set<Event> = Set<Event>()
                 // An array of operation for configuring the last added event, operations are in the same order as searchTitles.
                 // The operations automatically modify the last item in the 'events' array.
                 // The actual contents of this array are calculated at the time of access and will be different as defined in the if statement
                 // Read the whole chapter on 'Functions' in the txtbook, there's some interesting stuff there, it'll all make sense
+                
+                var curEvent = Event(calendar: self.calendarView.calendar)
+
                 var eventOperations:[(NSString) -> Void] {
-                    if events.count != 0 {  // If there are events. then there are operations
-                        return [events[events.count-1].setTitle, events[events.count-1].setDescription, events[events.count-1].setStartDate, events[events.count-1].setEndDate, events[events.count-1].setLocation]
-                    } else {                // If there are no events, then there are no operations
-                        return []
-                    }                       // Simple as that.
+                        return [curEvent.setTitle, curEvent.setDescription, curEvent.setStartDate, curEvent.setEndDate, curEvent.setLocation]
                 }
+                
                 // The range of "webContent's" content that is to be scanned
                 // Must be decreased after each event is scanned
                 var range:NSRange = NSMakeRange(0, webContent.length - 1)
@@ -182,7 +182,6 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
                     if NSEqualRanges(range, NSMakeRange(NSNotFound, 0)) {   // If there are no more events in the searching range
                         break;                                              // Then no more shall be added (break from the loop)
                     }
-                    events.append(Event(calendar: self.calendarView.calendar))        // Create an entry for the events database
                     
                     // Record each field into our event database
                     for h in 0...searchTitles.count-1 {
@@ -194,9 +193,11 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
                         tempHold = tempHold.stringByReplacingOccurrencesOfString("\u{005C}", withString: "", options: .LiteralSearch, range: nil)           // Replace all backslashes from the event field
                         eventOperations[h](tempHold)                                                                                                        // Add the event field to the current event being recorded
                     }
+                    eventBank.insert(curEvent)
+                    curEvent = Event(calendar: self.calendarView.calendar)
                 } while (true)
                 // Pass the recorded events to the calendar
-                self.calendarView.events = events
+                self.calendarView.events = Array(eventBank)
                 // Notify the ViewController that the events have been loaded
                 self.eventsDidLoad()
             } else if let errorData = error {   // If there has been an error
@@ -272,7 +273,6 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
     
     // Called when a date is selected. Required to be implemented
     func calendar(calendar: CalendarView, didSelectDate date: NSDate, withEvents events: [Event]) {
-        print ("A date has been selected")
         if let lastDate = lastSelectedDate {
             if date == lastDate {
                 return
@@ -280,7 +280,6 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
             self.calendarView.deselectDate(lastDate)
         }
         lastSelectedDate = date
-        print ("The previous selected date has been deselected")
         
         dispatch_async(dispatch_get_main_queue()) {
             self.currentEvents.removeAll()
@@ -303,18 +302,11 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
                     self.currentEvents[h]!.timeLabel.text = tempHold.substringToIndex(16) as String
                     self.currentEvents[h]!.locationLabel.text = events[h].location
                     
-                    
                     self.currentEvents[h]!.locationLabel.frame.size.width = (self.currentEvents[h]!.frame.width/2) - 16
                     self.currentEvents[h]!.timeLabel.frame.size.width = (self.currentEvents[h]!.frame.width/2) - 16
-                    
-//                    print ()
-//                    print (self.currentEvents[h]!.timeLabel.frame.width)
-//                    print (self.currentEvents[h]!.locationLabel.frame.width)
-//                    print (self.currentEvents[h]!.frame.width)
                 }
             }
             self.dateLabel.text = NSString(string: date.description).substringToIndex(10)
-            print ("The new date has been selected")
         }
     }
 }
