@@ -8,13 +8,23 @@
 
 import Foundation
 
-class Event {
+class Event: Hashable {
     var title:String
     var description:String
     var startDate:NSDate?
     var endDate:NSDate?
     var location:String
     private var dateCreator:NSDateComponents = NSDateComponents()
+    
+    var hashValue: Int {
+        get {
+            if title == "" && description == "" && startDate == nil && endDate == nil && location == "" {
+                return -1
+            } else {
+                return (title + description + (startDate?.description)! + (endDate?.description)! + location).hashValue
+            }
+        }
+    }
     
     init (calendar:NSCalendar) {
         self.title = ""
@@ -113,4 +123,13 @@ class Event {
     func setLocation (newLocation:NSString) {
         self.location = newLocation as String
     }
+}
+
+func == (lhs: Event, rhs: Event) -> Bool {
+    if (lhs.hashValue == rhs.hashValue) {
+        return true
+    } else if (lhs.title == rhs.title) && (lhs.description == rhs.description) && (lhs.startDate == rhs.startDate) && (lhs.endDate == rhs.endDate) && (lhs.location == rhs.location) {
+        return true
+    }
+    return false
 }

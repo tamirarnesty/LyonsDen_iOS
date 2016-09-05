@@ -56,7 +56,6 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
     // The border color of invalid fields
     let invalidFieldStrokeColor = UIColor(red: 1, green: 0, blue: 0.18431373, alpha: 0.5)
     
-    
     override func viewDidLoad() {
         // Super call
         super.viewDidLoad()
@@ -268,7 +267,7 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
 }
 
 // The BigNumber structure
-struct BigNumber {
+struct BigNumber: Equatable {
     var value:String
     // To implement for future use: negativity
     func multiply (right: BigNumber) -> BigNumber {
@@ -368,6 +367,13 @@ struct BigNumber {
         result = Array(result.reverse())    // Reverse the array to be in human deciaml direction
         return BigNumber(value: result.map { String($0) }.joinWithSeparator(""))   // Convert to BigInt and return
     }
+}
+
+func == (lhs:BigNumber, rhs:BigNumber) -> Bool {
+    if lhs.value == rhs.value {
+        return true
+    }
+    return false
 }
 
 // Override basic operator to work with BigInts
