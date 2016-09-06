@@ -69,7 +69,7 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         self.loadEventsIntoCalendar()
     }
     
-    // Called before apearing
+    // Called before apearing 
     override func viewDidLayoutSubviews() {
         // Super call
         super.viewDidLayoutSubviews()
