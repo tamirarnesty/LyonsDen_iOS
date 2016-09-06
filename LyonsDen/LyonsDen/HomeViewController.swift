@@ -1,3 +1,4 @@
+
 //
 //  HomeViewController.swift
 //  LyonsDen
@@ -17,6 +18,7 @@ var labels:[[String]] = [["Name", "Code", "Teacher", "Room"],
                         ["Name", "Code", "Teacher", "Room"],
                         ["Name", "Code", "Teacher", "Room"],
                         ["Name", "Code", "Teacher", "Room"]]
+var labelsDict:[String: [String]] = ["period1" : ["Name", "Code", "Teacher", "Room"]]
 var defaultLabels = ["Name", "Code", "Teacher", "Room"]
 var different = false
 
@@ -29,6 +31,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
     @IBOutlet var courses: [UIView]!                // The four period courses views
     @IBAction func returnToHome(returnSegue: UIStoryboardSegue) {}
     
+    var dayText = ""
     var announcementTitlesInfos = [[String](), [String]()]
     var announcementDatesLocations = [[String?](), [String?]()]
     
@@ -37,16 +40,12 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
     var images = [UIImage?]()
     var lastTableViewOffSet:CGFloat = 0.0
     var index = -1
-    var tapped:Int = 0
+    //var tapped:Int = 0
     
     override func viewWillAppear(animated: Bool) {
-        //----------- set up labels for courses
-        if let tempLabels = NSUserDefaults.standardUserDefaults().objectForKey("labels") as? [[String]] {
-            labels = tempLabels
-            print (labels)
-        }
-        loadLabelsForViews()
-        
+        super.viewWillAppear(animated)
+
+
         // tap & hold gesture recognizers for courses views to segue to specific controllers.
         var longTaps = [UILongPressGestureRecognizer(target: self, action: #selector(HomeViewController.handleLongTap(_:))),
                         UILongPressGestureRecognizer(target: self, action: #selector(HomeViewController.handleLongTap(_:))),
@@ -66,11 +65,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
         
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-//        loadLabelsForViews()
-        
-        
+    func periodUpdater () {
         //------- non period time gaps
         let y:CGFloat = 161.0
         let beforeSchoolView:UIView = UIView(frame: CGRectMake(3, y, 4, self.courses[0].frame.size.height))
@@ -85,7 +80,75 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
         afterSchoolView.hidden = true
         //--------- end
         
-        // Set the size of the scrollView
+        
+        //individual NSDates for each period. Day is same, time is different.
+        let calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)
+        let currentDate = NSDate()
+        let currentDateComponents = NSDateComponents()
+        let periodOneComponents = currentDateComponents;
+        periodOneComponents.hour = 08; periodOneComponents.minute = 45
+        let periodTwoComponents = currentDateComponents;
+        periodTwoComponents.hour = 10; periodTwoComponents.minute = 10
+        let periodThreeComponents = currentDateComponents;
+        periodThreeComponents.hour = 12; periodThreeComponents.minute = 30
+        let periodFourComponents = currentDateComponents;
+        periodFourComponents.hour = 13; periodFourComponents.minute = 50
+        
+        let lunchComponents = currentDateComponents;
+        lunchComponents.hour = 11; lunchComponents.minute = 30
+        let afterSchoolComponents = currentDateComponents;
+        afterSchoolComponents.hour = 15; afterSchoolComponents.minute = 05
+        
+        let periodOne = calendar?.dateFromComponents(periodOneComponents)
+        let periodTwo = calendar?.dateFromComponents(periodTwoComponents)
+        let periodThree = calendar?.dateFromComponents(periodThreeComponents)
+        let periodFour = calendar?.dateFromComponents(periodFourComponents)
+        let lunch = calendar?.dateFromComponents(lunchComponents)
+        let afterSchool = calendar?.dateFromComponents(afterSchoolComponents)
+        
+        var period = false
+        var before = false; var duringLunch = false; var after = false
+        //var wasActivated = [false, false, false, false, false, false, false]
+        
+        let components = NSDateComponents()
+        components.hour = 10; components.minute = 10
+        let date = calendar?.dateFromComponents(components)
+        
+        let start = 0
+        
+        if periodOne?.timeIntervalSinceDate(date!) >= 0 {
+            print (periodOne?.timeIntervalSinceDate(date!))
+        }
+        
+        
+        
+        if period && (before || duringLunch || after) {
+            before = false; duringLunch = false; after = false
+            beforeSchoolView.hidden = true; lunchView.hidden = true; afterSchoolView.hidden = true
+        } else {
+            if !period {
+                if before { beforeSchoolView.hidden = false }
+                else if duringLunch { lunchView.hidden = false }
+                else { if after { afterSchoolView.hidden = false }}
+            }
+        }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        //----------- set up labels for courses
+        if let tempLabels = NSUserDefaults.standardUserDefaults().objectForKey("labels") as? [[String]] {
+            labels = tempLabels
+            print (labels)
+        }
+        loadLabelsForViews()
+        
+        let updatePeriods = NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: #selector(periodUpdater), userInfo: nil, repeats: true)
+        
+        // set date label to current day 1/2
+        self.parseForDay()
+        
+                // Set the size of the scrollView
         scrollView.frame = view.bounds
         // Set the table's height to fill the screen, subtract 64pt for nav. bar
         tableList.constraints[0].constant = view.bounds.height - 64
@@ -125,24 +188,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
 //        let hours = components.hour
 //        let day = calendar.components(.Day, fromDate: startDate!).day
         
-        
-        //individual NSDates for each period. Day is same, time is different.
-        let calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)
-        let currentDate = NSDate()
-        let currentDateComponents = NSDateComponents()
-        let periodOneComponents = currentDateComponents; periodOneComponents.day = 1; periodOneComponents.month = 08; periodOneComponents.year = 2016; periodOneComponents.hour = 08; periodOneComponents.minute = 45
-        let periodTwoComponents = currentDateComponents; periodTwoComponents.day = 1; periodTwoComponents.month = 08; periodTwoComponents.year = 2016; periodTwoComponents.hour = 10; periodTwoComponents.minute = 10
-        let periodThreeComponents = currentDateComponents; periodThreeComponents.day = 1; periodThreeComponents.month = 08; periodThreeComponents.year = 2016; periodThreeComponents.hour = 12; periodThreeComponents.minute = 30
-        let periodFourComponents = currentDateComponents; periodFourComponents.day = 1; periodFourComponents.month = 08; periodFourComponents.year = 2016; periodFourComponents.hour = 13; periodFourComponents.minute = 50
-        let lunchComponents = currentDateComponents; lunchComponents.day = 1; lunchComponents.month = 08; lunchComponents.year = 2016; lunchComponents.hour = 11; lunchComponents.minute = 30
-        let afterSchoolComponents = currentDateComponents; afterSchoolComponents.day = 1; afterSchoolComponents.month = 08; afterSchoolComponents.year = 2016; afterSchoolComponents.hour = 15; afterSchoolComponents.minute = 05
-        
-        let periodOne = calendar?.dateFromComponents(periodOneComponents)
-        let periodTwo = calendar?.dateFromComponents(periodTwoComponents)
-        let periodThree = calendar?.dateFromComponents(periodThreeComponents)
-        let periodFour = calendar?.dateFromComponents(periodFourComponents)
-        let lunch = calendar?.dateFromComponents(lunchComponents)
-        let afterSchool = calendar?.dateFromComponents(afterSchoolComponents)
+       
 //        let periodOneStart = currentDateComponents
 //        let periodOneEnd = currentDateComponents
 //        let periodTwo = currentDateComponents
@@ -176,13 +222,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
 //        let afterSchoolDate = calendar?.dateFromComponents(afterSchool)
 //        let lunchTimeDate = calendar?.dateFromComponents(lunchTime)
         
-        var period = false
-        var before = false; var duringLunch = false; var after = false
-        //var wasActivated = [false, false, false, false, false, false, false]
         
-        let components = NSDateComponents()
-        components.day = 1; components.month = 08; components.year = 2016; components.hour = 10; components.minute = 45
-        let date = calendar?.dateFromComponents(components)
         
 //        let comps = calendar?.components([.Minute, .Hour], fromDate: date!)
 //        let hours = comps!.hour
@@ -206,46 +246,36 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
 //            index = 1
 //            print ("period two")
 //        }
-        if date!.compare(periodOne!) == .OrderedAscending { // before school
-            period = false; before = true
-            print ("before school")
-        }
-        else if date!.compare(periodTwo!) == .OrderedAscending { // before period two (period one)
-            period = true
-            print ("period one")
-        }
-        else if date!.compare(lunch!) == .OrderedAscending { // before lunch (period two)
-            period = true
-            print ("period two")
-        }
-        else if date!.compare(periodThree!) == .OrderedAscending { // before period three (during lunch)
-            period = false; duringLunch = true
-            print ("period lunch")
-        }
-        else if date!.compare(periodFour!) == .OrderedAscending { // before period four
-            period = true
-            print ("period three")
-        }
-        else if date!.compare(afterSchool!) == .OrderedAscending { // before end of school (last period)
-            period = true
-            print ("period four")
-        }
-        else {
-            if date!.compare(afterSchool!) == .OrderedDescending { // date is later than after school
-                period = false; after = true
-                print ("after school")
-            }}
-        
-        if period && (before || duringLunch || after) {
-            before = false; duringLunch = false; after = false
-            beforeSchoolView.hidden = true; lunchView.hidden = true; afterSchoolView.hidden = true
-        } else {
-            if !period {
-                if before { beforeSchoolView.hidden = false }
-                else if duringLunch { lunchView.hidden = false }
-                else { if after { afterSchoolView.hidden = false }}
-            }
-        }
+//        if date!.compare(periodOne!) == .OrderedAscending { // before school
+//            period = false; before = true
+//            print ("before school")
+//        }
+//        else if date!.compare(periodTwo!) == .OrderedAscending { // before period two (period one)
+//            period = true
+//            print ("period one")
+//        }
+//        else if date!.compare(lunch!) == .OrderedAscending { // before lunch (period two)
+//            period = true
+//            print ("period two")
+//        }
+//        else if date!.compare(periodThree!) == .OrderedAscending { // before period three (during lunch)
+//            period = false; duringLunch = true
+//            print ("period lunch")
+//        }
+//        else if date!.compare(periodFour!) == .OrderedAscending { // before period four
+//            period = true
+//            print ("period three")
+//        }
+//        else if date!.compare(afterSchool!) == .OrderedAscending { // before end of school (last period)
+//            period = true
+//            print ("period four")
+//        }
+//        else {
+//            if date!.compare(afterSchool!) == .OrderedDescending { // date is later than after school
+//                period = false; after = true
+//                print ("after school")
+//            }}
+ 
 
 //        if (date?.compare(periodOneDate!) == .OrderedAscending || date?.compare(periodOneDate!) == .OrderedSame){
 //            period = true
@@ -450,6 +480,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
         for var i in 0...courses.count-1 {
             for var x in 0...courses.count-1 {
                 (courses[i].viewWithTag(x+1) as? UILabel)?.text = labels[i][x]
+                print((courses[i].viewWithTag(x+1) as? UILabel)?.text)
             }
 //            (courses[i].viewWithTag(1) as? UILabel)?.text = labels[i][0]
 //            (courses[i].viewWithTag(2) as? UILabel)?.text = labels[i][1]
@@ -459,7 +490,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
     }
 
     func getIndex (gesture: UIGestureRecognizer) -> Int {
-        var temp:Int?
         let value = ((gesture.view?.tag)!-1)
         return value
         
@@ -565,6 +595,122 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
 //        print ("last off set = \(lastTableViewOffSet)")
 //        print ()
 //        let max = 0
+    }
+    
+    func labelDidLoad() {
+        dispatch_async(dispatch_get_main_queue()) {
+            UIView.animateWithDuration(0.2, animations: {
+                self.dayLabel.text = self.dayText
+                self.dayLabel.alpha = 1
+            })
+        }
+    }
+    
+    // day formats
+    // DTSTART;VALUE=DATE:20170613
+    // DTSTART:20130410T230000Z
+    // DTSTART;TZID=America/Toronto:20110524T100000
+    
+    func parseForDay () {
+        var day = "3"
+        // The link from which the calendar is downloaded
+        let url = NSURL (string: "https://calendar.google.com/calendar/ical/wlmacci%40gmail.com/public/basic.ics")!
+
+        // The process of downloading and parsing the calendar
+        let task = NSURLSession.sharedSession().dataTaskWithURL(url) { (data, response, error) in
+
+            let formats:[String] = [";VALUE=DATE:", ":", ";TZID=America/Toronto:"]
+                                                // closures
+            let formatDate:(NSString, Int) -> String = {(noFormat:NSString, index:Int) -> String in
+                // fix dates yyyymmdd
+                let formattedDate = noFormat.substringWithRange(NSMakeRange(0, 4)) + noFormat.substringWithRange(NSMakeRange(5, 2)) + noFormat.substringWithRange(NSMakeRange(8, 2))
+                let finalDate = formats[index] + formattedDate
+                
+                return finalDate
+            }
+            
+            
+            // The following is simply a declaration and will not execute without the line 'task.resume()'
+            if let URlContent = data {  // If Data has been loaded
+                // If you got to this point then you've downloaded the calendar so...
+                // Calendar File parsing starts here!!!
+                // The string that holds the contents of the calendar's events
+                let webContent:NSString = NSString(data: URlContent, encoding: NSUTF8StringEncoding)!
+                
+                // An array of flags used for locating the event fields
+                // [h][0] - The flag that marks the begining of a field, [h][1] - The flag that marks the end of a field
+                var searchTitles:[[String]] = [["DTSTART", "DTEND"], ["SUMMARY:", "TRANSP:"]]
+                
+                // The range of "webContent's" content that is to be scanned
+                // Must be decreased after each event is scanned
+                var range:NSRange = NSMakeRange(0, webContent.length - 1)
+                // Inside function that will be used to determine the 'difference' range between the begining and end flag ranges.
+                let findDifference:(NSRange, NSRange) -> NSRange = {(first:NSRange, second:NSRange) -> NSRange in
+                    let location = first.location + first.length, length = second.location - location   // Determine the start position and length of our new range
+                    return NSMakeRange(location, length)                                                // Create and return the new range
+                }
+                // Inside function that will be used to move the searching range to the next event
+                // Returns an NSNotFound range (NSNotFound, 0) if there are not more events
+                let updateRange:(NSRange) -> NSRange = {(oldRange:NSRange) -> NSRange in
+                    let beginingDeclaration = webContent.rangeOfString("BEGIN:VEVENT", options: NSStringCompareOptions.LiteralSearch, range: oldRange)
+                    // If the "BEGIN:VEVENT" was not found in webContent (no more events)
+                    if NSEqualRanges(beginingDeclaration, NSMakeRange(NSNotFound, 0)) {
+                        return beginingDeclaration  // Return an 'NSNotFound' range (Named it myself;)
+                    }
+                    // Calculate the index of the last character of 'beginingDeclaration' flag
+                    let endOfBeginingDeclaration = beginingDeclaration.location + beginingDeclaration.length
+                    // Calculate the length of the new range
+                    let length = oldRange.length - endOfBeginingDeclaration + oldRange.location
+                    // Calculate the starting location of the new range
+                    let location = endOfBeginingDeclaration
+                    // Create and return the new range
+                    return NSMakeRange(location, length)
+                }
+                
+                // A holder for the begining and end flags for each event field
+                var fieldBoundaries:[NSRange]
+
+                // Parse section to find event day info (1/2)
+                OUTER:
+                    for var i in 0...formats.count-1 {
+                        searchTitles[0][0] += formatDate(NSDate().description, i)
+                        INNER:
+                        repeat {
+                            range = updateRange(range)
+                            // if end of file is reached
+                            if NSEqualRanges(range, NSMakeRange(NSNotFound, 0)) {   // If there are no more events in the searching range
+                                if i == formats.count-1 {
+                                    day = String(0)
+                                    break OUTER;
+                                } else {
+                                    break INNER; }                                            // Then no more shall be added (break from the loop)
+                            }
+                            
+                            for x in 0...searchTitles.count-1 {
+                                fieldBoundaries = [NSRange]()
+                                fieldBoundaries.append(webContent.rangeOfString(searchTitles[x][0], options: NSStringCompareOptions.LiteralSearch, range: range))   // Find the begining flag
+                                fieldBoundaries.append(webContent.rangeOfString(searchTitles[x][1], options: NSStringCompareOptions.LiteralSearch, range: range))   // Find the ending flag
+                                var tempHold:NSString = webContent.substringWithRange(findDifference(fieldBoundaries[0], fieldBoundaries[1]))                         // Create a new string from whatever is in between the two flags. This will be the current field of the event
+                                tempHold = tempHold.stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet())                                           // Remove all /r /n and other 'new line' characters from the event field
+                                tempHold = tempHold.stringByReplacingOccurrencesOfString("\u{005C}", withString: "", options: .LiteralSearch, range: NSMakeRange(0, tempHold.length-1))           // Replace all backslashes from the event field
+                                if x == 1 && tempHold.hasPrefix("DAY") {
+                                    day = tempHold.substringWithRange(NSMakeRange(4, 1))
+                                    print(day)
+                                    break OUTER;
+                                }
+                            }
+                            
+                        } while (true)
+                        
+                }
+                self.dayText = day
+                self.labelDidLoad()
+            } else {
+//                let noDataAlert = UIAlertController () // tell them they have no data
+                print("connect to data pls")
+            }
+        }
+        task.resume()
     }
     
     override func didReceiveMemoryWarning() {

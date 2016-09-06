@@ -9,6 +9,7 @@
 
 import Foundation
 import UIKit
+import Firebase
 
 class SplashScreen: UIViewController {
     
@@ -24,14 +25,30 @@ class SplashScreen: UIViewController {
         time += 1
         if (time == 3) {
             timer!.invalidate()
-            self.performSegueWithIdentifier ("splash", sender: nil)
+            // Auto login
+            if let username = NSUserDefaults.standardUserDefaults().objectForKey("uID") as! String?,    // If a username has been pre-saved and
+                password = NSUserDefaults.standardUserDefaults().objectForKey("Pass") as! String? {     // a password has been pre-saved then
+                if password.compare("SignedOut") == .OrderedSame {
+                    self.performSegueWithIdentifier ("SplashScreenSegue", sender: self)
+                    return
+                }
+                // Authenticate
+                FIRAuth.auth()?.signInWithEmail(username, password: password, completion: { (user, error) in
+                    if user != nil {
+                        //Log in succesful
+                        self.performSegueWithIdentifier("AutoLogInSegue", sender: self)
+                        print()
+                        print("Log In: Auto-Login Success!")
+                        print()
+                    } else if error != nil {
+                        // Try comparing error to FIRAuthErrorCodes from https://firebase.google.com/docs/reference/ios/firebaseauth/interface_f_i_r_auth_errors.html#ab5026c267a1f5fee09466e5563aa3e69
+                        // or from https://firebase.google.com/docs/auth/ios/errors
+                    }
+                })
+            } else {
+            self.performSegueWithIdentifier ("SplashScreenSegue", sender: self)
+            }
         }
-    }
-    
-    @IBAction func skipped(sender: AnyObject) {
-        timer!.invalidate()
-        timer = nil
-        self.performSegueWithIdentifier ("splash", sender: nil)
     }
     
     override func viewDidLoad() {

@@ -13,7 +13,6 @@ import FirebaseAuth
 // TODO: AUTO_LOGIN PERFORMS TWICE FROM TIME TO TIME< WHICH CAUSES A THROW BACK INTO HOME SCREEN, PUT AUTO_LOG IN A DIFFERENT PLACE
 
 class LogInViewController: UIViewController, UITextFieldDelegate {
-    @IBOutlet var switcher: UISegmentedControl!
     @IBOutlet var userNameField: UITextField!
     @IBOutlet var passwordField: UITextField!
     @IBOutlet var segmentedController: UISegmentedControl!
@@ -23,35 +22,12 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var topConstraint: NSLayoutConstraint!
     @IBOutlet var bottomDenConstraint: NSLayoutConstraint!
     @IBOutlet var passwordFieldConstraint: NSLayoutConstraint!
+    @IBOutlet weak var logInButton: UIButton!
     
     var entranceOption:Int!
     var password = ""
     var username = ""
     let signUpKey = "MacLyonsRule"  // idk, this should be something symbolic or patriotic... or secretive
-    
-    override func viewDidAppear(animated: Bool) {
-        // Auto login
-        if let username = NSUserDefaults.standardUserDefaults().objectForKey("uID") as! String?,    // If a username has been pre-saved and
-            password = NSUserDefaults.standardUserDefaults().objectForKey("Pass") as! String? {     // a password has been pre-saved then
-            if password.compare("SignedOut") == .OrderedSame {
-                return
-            }
-            // Authenticate
-            FIRAuth.auth()?.signInWithEmail(username, password: password, completion: { (user, error) in
-                if user != nil {
-                    //Log in succesful
-//                    user?.profileChangeRequest().displayName = "Tamir Arnesty"
-                    self.performSegueWithIdentifier("LogInSuccess", sender: self)
-                    print()
-                    print("Log In: Auto-Login Success!")
-                    print()
-                } else if error != nil {
-                    // Try comparing error to FIRAuthErrorCodes from https://firebase.google.com/docs/reference/ios/firebaseauth/interface_f_i_r_auth_errors.html#ab5026c267a1f5fee09466e5563aa3e69
-                    // or from https://firebase.google.com/docs/auth/ios/errors
-                }
-            })
-        }
-    }
     
     @IBAction func optionSwitched(sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
@@ -59,25 +35,24 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             entranceOption = 0
             print(entranceOption)
             self.view.layoutIfNeeded()
-            UIView.animateWithDuration(1, animations: {
-                self.signUpKeyField.hidden = false // textfield shows up
-                self.bottomConstraint.constant -= 15
-                self.topConstraint.constant += 10
-                self.bottomDenConstraint.constant -= 10
-                self.passwordFieldConstraint.constant += 10
+            
+            UIView.animateWithDuration(0.5, animations: {
+                self.signUpKeyField.alpha = 1
+                self.logInButton.frame.origin.y += self.signUpKeyField.frame.height/2
                 self.view.layoutIfNeeded()
+                }, completion: { (completed) in
+                    self.signUpKeyField.hidden = false // textfield shows up
             })
         case 1: // log in
             entranceOption = 1
             print(entranceOption)
             self.view.layoutIfNeeded()
-            UIView.animateWithDuration(1, animations: {
-                self.signUpKeyField.hidden = true // textfield disappears
-                self.bottomConstraint.constant += 15
-                self.topConstraint.constant -= 10
-                self.bottomDenConstraint.constant += 10
-                self.passwordFieldConstraint.constant -= 10
+            UIView.animateWithDuration(0.5, animations: {
+                self.signUpKeyField.alpha = 0
+                self.logInButton.frame.origin.y -= self.signUpKeyField.frame.height/2
                 self.view.layoutIfNeeded()
+                }, completion: { (completed) in
+                    self.signUpKeyField.hidden = true // textfield disappears
             })
         default:
             break
