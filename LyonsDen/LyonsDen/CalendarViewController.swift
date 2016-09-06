@@ -27,7 +27,7 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
     // The last selected day
     var lastSelectedDate:NSDate?
     // The label representing a strigified version of the currently selected date
-    let dateLabel = UILabel()
+    let dateLabel = UILabel() 
     
     
     // Called when the segue initiating button is pressed
@@ -69,7 +69,7 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         self.loadEventsIntoCalendar()
     }
     
-    // Called before apearing 
+    // Called before apearing
     override func viewDidLayoutSubviews() {
         // Super call
         super.viewDidLayoutSubviews()
