@@ -18,7 +18,6 @@ class ContactViewController: UIViewController {
     @IBOutlet var navBar: UINavigationItem!
     var toast:ToastView!
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         

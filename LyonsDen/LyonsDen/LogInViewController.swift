@@ -17,14 +17,15 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var passwordField: UITextField!
     @IBOutlet var segmentedController: UISegmentedControl!
     @IBOutlet var signUpKeyField: UITextField!
+    @IBOutlet var mainView: UIView!
+    @IBOutlet weak var logo: UIImageView!
     
+    @IBOutlet weak var logoToSegmentConstraint: NSLayoutConstraint!
     @IBOutlet var bottomConstraint: NSLayoutConstraint!
     @IBOutlet var topConstraint: NSLayoutConstraint!
-    @IBOutlet var bottomDenConstraint: NSLayoutConstraint!
-    @IBOutlet var passwordFieldConstraint: NSLayoutConstraint!
     @IBOutlet weak var logInButton: UIButton!
     
-    var entranceOption:Int!
+    var entranceOption:Int = 0
     var password = ""
     var username = ""
     let signUpKey = "MacLyonsRule"  // idk, this should be something symbolic or patriotic... or secretive
@@ -68,6 +69,11 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         self.userNameField.delegate = self
         self.passwordField.delegate = self
         
+        // To make screen move up, when editing the lower textfields
+        // Code credit to: Dan Beaulieu at http://stackoverflow.com/a/32915049
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillShow), name:UIKeyboardWillShowNotification, object: self.view.window)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillHide), name:UIKeyboardWillHideNotification, object: self.view.window)
+        // End of Dan's code
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -140,7 +146,39 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             print("Something is very wrong...")
         }
     }
-
+    
+    // To make screen move up, when editing the lower textfields
+    // Code credit to: Boris at http://stackoverflow.com/a/31124676
+    // Modified by: Inal Gotov
+    func keyboardWillShow(notification: NSNotification) {
+        // If the teacher credential field or the location field are being edited, and are blocked by the keyboard, then shift the screen up
+        if (userNameField.editing || passwordField.editing || signUpKeyField.editing) {
+            if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+                if self.mainView.frame.origin.y == 0{
+                    self.mainView.frame.origin.y -= keyboardSize.height
+                }
+                else {
+                    
+                }
+            }
+        }
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        // If the teacher credential field or the location field have been edited, while they would be blocked by the keyboard, shift the screen down
+        if (userNameField.editing || passwordField.editing || signUpKeyField.editing) {
+            if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+                if self.mainView.frame.origin.y != 0 {
+                    self.mainView.frame.origin.y = 0
+                    self.segmentedController.frame.origin.y += 20
+                }
+                else {
+                    
+                }
+            }
+        }
+    }
+    // End of Boris' code
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

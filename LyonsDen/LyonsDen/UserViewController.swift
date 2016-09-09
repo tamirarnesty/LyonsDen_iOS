@@ -14,25 +14,29 @@ class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDele
     @IBOutlet var userInfo: [UITextView]!
     @IBOutlet weak var rightBarButton: UIBarButtonItem!
     @IBOutlet weak var identityPicker: UIPickerView!
-    @IBOutlet weak var extraPicker: UIPickerView!
+    @IBOutlet weak var departmentPicker: UIPickerView!
+    @IBOutlet weak var extraCurricularPicker: UIPickerView!
+    @IBOutlet weak var departmentLabel: UILabel!
+    @IBOutlet weak var extraCurricularLabel: UILabel!
     
     //------------ fix constraints and make it work
     var displayNameText:String! = nil
     var identityData = ["None Of The Above", "Student", "Teacher", "Administrator"]
-    var extraData = ["None Of The Above", "Switch"]
+    var departmentData = ["None Of The Above", "Switch"]
+    var clubsData = [""]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // set up picker views
         self.identityPicker.dataSource = self
-        self.extraPicker.dataSource = self
+        self.departmentPicker.dataSource = self
         self.identityPicker.delegate = self
-        self.extraPicker.delegate = self
-        self.extraPicker.hidden = true
+        self.departmentPicker.delegate = self
+        self.departmentPicker.hidden = true
         
         self.identityPicker.setValue(accentColor, forKey: "textColor")
-        self.extraPicker.setValue(accentColor, forKey: "textColor")
+        self.departmentPicker.setValue(accentColor, forKey: "textColor")
         
         // Make sidemenu swipeable
         if self.revealViewController() != nil {
@@ -60,15 +64,15 @@ class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDele
     }
     
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if pickerView == extraPicker {
-            return extraData.count
+        if pickerView == departmentPicker {
+            return departmentData.count
         }
         return identityData.count
     }
     
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        if pickerView == extraPicker {
-            return extraData[row]
+        if pickerView == departmentPicker {
+            return departmentData[row]
         }
         return identityData[row]
     }
@@ -78,30 +82,30 @@ class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDele
         if pickerView == identityPicker {
         switch row {
         case 0:
-            extraPicker.hidden = true
+            departmentPicker.hidden = true
             identityPicker.hidden = false
             userInfo[userInfo.count-1].text = "Nil"
         case 1: // student
-            extraPicker.hidden = false
+            departmentPicker.hidden = false
             identityPicker.hidden = true
             userInfo[userInfo.count-1].text = identityData[row]
-            extraData += ["Club President", "Student Council Member"]
+            departmentData += ["Club President", "Student Council Member"]
         case 2: // teacher
-            extraPicker.hidden = false
+            departmentPicker.hidden = false
             identityPicker.hidden = true
             userInfo[userInfo.count-1].text = identityData[row]
-            extraData += ["Math", "English", "Social Science", "Science", "Arts"]
+            departmentData += ["Math", "English", "Social Science", "Science", "Arts"]
         case 3: // admin
-            extraPicker.hidden = false
+            departmentPicker.hidden = false
             identityPicker.hidden = true
             userInfo[userInfo.count-1].text = identityData[row]
-            extraData += ["Principal", "Vice Principal"]
+            departmentData += ["Principal", "Vice Principal"]
         default:
             break;
         }
         } else {
             if row == 1 {
-                extraPicker.hidden = true
+                departmentPicker.hidden = true
                 identityPicker.hidden = false
             }
             print("extra picker")
@@ -112,6 +116,7 @@ class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDele
     @IBAction func signOutPressed(sender: AnyObject) {
         try! FIRAuth.auth()?.signOut()
         NSUserDefaults.standardUserDefaults().setValue("SignedOut", forKey: "Pass") // reset password key to prevent automatic log in.
+        updatePeriods!.invalidate()
         self.performSegueWithIdentifier("signOutSegue", sender: self)
     }
 
@@ -126,7 +131,6 @@ class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDele
     }
     
     @IBAction func resetPassword(sender: AnyObject) {
-        
         FIRAuth.auth()?.sendPasswordResetWithEmail((FIRAuth.auth()?.currentUser?.email)!) { error in
             if error != nil {
                 print ("Something went wrong")
