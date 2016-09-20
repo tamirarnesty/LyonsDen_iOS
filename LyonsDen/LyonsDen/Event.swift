@@ -32,7 +32,7 @@ class Event: Hashable {
         self.startDate = nil
         self.endDate = nil
         self.location = ""
-        (self.dateCreator as NSDateComponents).calendar = calendar
+        self.dateCreator.calendar = calendar
     }
     
     func setTitle (_ newTitle:NSString) {
@@ -44,30 +44,36 @@ class Event: Hashable {
     }
     
     func setStartDate (_ newDate:NSString) {
-        if newDate.hasPrefix(":"){
+        if newDate.hasPrefix(":"){      // Example :20130410T230000Z
             dateCreator.year = Int (newDate.substring(with: NSMakeRange(1, 4)))!
             dateCreator.month = Int (newDate.substring(with: NSMakeRange(5, 2)))!
             dateCreator.day = Int (newDate.substring(with: NSMakeRange(7, 2)))!
             dateCreator.hour = Int (newDate.substring(with: NSMakeRange(10, 2)))! - 4 // Minus 4 because it returns time in a different timezone (No clue as to why)
             dateCreator.minute = Int (newDate.substring(with: NSMakeRange(12, 2)))!
             dateCreator.second = Int (newDate.substring(with: NSMakeRange(14, 2)))!
-            self.startDate = (dateCreator as NSDateComponents).date!
-        } else if newDate.hasPrefix(";TZID") {
+            
+            startDate = dateCreator.date!
+        } else if newDate.hasPrefix(";TZID") {      // Example ;TZID=America/Toronto:20120928T100000
+            let firstLocation = newDate.range(of: "=").location + 1
+            dateCreator.timeZone = TimeZone(identifier: newDate.substring(with: NSMakeRange(firstLocation, newDate.range(of: ":").location - firstLocation)))
+            
             dateCreator.year = Int (newDate.substring(with: NSMakeRange(22, 4)))!
             dateCreator.month = Int (newDate.substring(with: NSMakeRange(26, 2)))!
             dateCreator.day = Int (newDate.substring(with: NSMakeRange(28, 2)))!
-            dateCreator.hour = 00
-            dateCreator.minute = 00
-            dateCreator.second = 00
-            self.startDate = (dateCreator as NSDateComponents).date!
-        } else if newDate.hasPrefix(";") {
+            dateCreator.hour = Int (newDate.substring(with: NSMakeRange(31, 2)))! - 4
+            dateCreator.minute = Int (newDate.substring(with: NSMakeRange(33, 2)))!
+            dateCreator.second = Int (newDate.substring(with: NSMakeRange(35, 2)))!
+            
+            startDate = dateCreator.date!
+        } else if newDate.hasPrefix(";") {      // Example ;VALUE=DATE:20170609
             dateCreator.year = Int (newDate.substring(with: NSMakeRange(12, 4)))!
             dateCreator.month = Int (newDate.substring(with: NSMakeRange(16, 2)))!
             dateCreator.day = Int (newDate.substring(with: NSMakeRange(18, 2)))!
-            dateCreator.hour = 00
+            dateCreator.hour = 00 - 4
             dateCreator.minute = 00
             dateCreator.second = 00
-            self.startDate = (dateCreator as NSDateComponents).date!
+            
+            startDate = dateCreator.date!
         } else if newDate == "" {
             dateCreator.year = 1970
             dateCreator.month = 01
@@ -75,37 +81,44 @@ class Event: Hashable {
             dateCreator.hour = 00
             dateCreator.minute = 00
             dateCreator.second = 00
-            self.startDate = (dateCreator as NSDateComponents).date!
+            
+            startDate = dateCreator.date!
         } else {
             fatalError("Failed to prase \(newDate)")
         }
     }
     
     func setEndDate (_ newDate:NSString) {
-        if newDate.hasPrefix(":"){
+        if newDate.hasPrefix(":"){      // Example :20130410T230000Z
             dateCreator.year = Int (newDate.substring(with: NSMakeRange(1, 4)))!
             dateCreator.month = Int (newDate.substring(with: NSMakeRange(5, 2)))!
             dateCreator.day = Int (newDate.substring(with: NSMakeRange(7, 2)))!
             dateCreator.hour = Int (newDate.substring(with: NSMakeRange(10, 2)))! - 4 // Minus 4 because it returns time in a different timezone (No clue as to why)
             dateCreator.minute = Int (newDate.substring(with: NSMakeRange(12, 2)))!
             dateCreator.second = Int (newDate.substring(with: NSMakeRange(14, 2)))!
-            self.endDate = (dateCreator as NSDateComponents).date!
-        } else if newDate.hasPrefix(";TZID") {
+            
+            endDate = dateCreator.date!
+        } else if newDate.hasPrefix(";TZID") {      // Example ;TZID=America/Toronto:20120928T100000
+            let firstLocation = newDate.range(of: "=").location + 1
+            dateCreator.timeZone = TimeZone(identifier: newDate.substring(with: NSMakeRange(firstLocation, newDate.range(of: ":").location - firstLocation)))
+            
             dateCreator.year = Int (newDate.substring(with: NSMakeRange(22, 4)))!
             dateCreator.month = Int (newDate.substring(with: NSMakeRange(26, 2)))!
             dateCreator.day = Int (newDate.substring(with: NSMakeRange(28, 2)))!
-            dateCreator.hour = 00
-            dateCreator.minute = 00
-            dateCreator.second = 00
-            self.endDate = (dateCreator as NSDateComponents).date!
-        } else if newDate.hasPrefix(";") {
+            dateCreator.hour = Int (newDate.substring(with: NSMakeRange(31, 2)))! - 4
+            dateCreator.minute = Int (newDate.substring(with: NSMakeRange(33, 2)))!
+            dateCreator.second = Int (newDate.substring(with: NSMakeRange(35, 2)))!
+            
+            endDate = dateCreator.date!
+        } else if newDate.hasPrefix(";") {      // Example ;VALUE=DATE:20170609
             dateCreator.year = Int (newDate.substring(with: NSMakeRange(12, 4)))!
             dateCreator.month = Int (newDate.substring(with: NSMakeRange(16, 2)))!
             dateCreator.day = Int (newDate.substring(with: NSMakeRange(18, 2)))!
-            dateCreator.hour = 00
+            dateCreator.hour = 00 - 4
             dateCreator.minute = 00
             dateCreator.second = 00
-            self.endDate = (dateCreator as NSDateComponents).date!
+            
+            endDate = dateCreator.date!
         } else if newDate == "" {
             dateCreator.year = 1970
             dateCreator.month = 01
@@ -113,11 +126,11 @@ class Event: Hashable {
             dateCreator.hour = 00
             dateCreator.minute = 00
             dateCreator.second = 00
-            self.endDate = (dateCreator as NSDateComponents).date!
+            
+            endDate = dateCreator.date!
         } else {
             fatalError("Failed to prase \(newDate)")
         }
-
     }
     
     func setLocation (_ newLocation:NSString) {
