@@ -11,10 +11,10 @@ import Foundation
 class Event: Hashable {
     var title:String
     var description:String
-    var startDate:NSDate?
-    var endDate:NSDate?
+    var startDate:Date?
+    var endDate:Date?
     var location:String
-    private var dateCreator:NSDateComponents = NSDateComponents()
+    fileprivate var dateCreator:DateComponents = DateComponents()
     
     var hashValue: Int {
         get {
@@ -26,48 +26,48 @@ class Event: Hashable {
         }
     }
     
-    init (calendar:NSCalendar) {
+    init (calendar:Calendar) {
         self.title = ""
         self.description = ""
         self.startDate = nil
         self.endDate = nil
         self.location = ""
-        self.dateCreator.calendar = calendar
+        (self.dateCreator as NSDateComponents).calendar = calendar
     }
     
-    func setTitle (newTitle:NSString) {
+    func setTitle (_ newTitle:NSString) {
         self.title = newTitle as String
     }
     
-    func setDescription (newDescription:NSString) {
+    func setDescription (_ newDescription:NSString) {
         self.description = newDescription as String
     }
     
-    func setStartDate (newDate:NSString) {
+    func setStartDate (_ newDate:NSString) {
         if newDate.hasPrefix(":"){
-            dateCreator.year = Int (newDate.substringWithRange(NSMakeRange(1, 4)))!
-            dateCreator.month = Int (newDate.substringWithRange(NSMakeRange(5, 2)))!
-            dateCreator.day = Int (newDate.substringWithRange(NSMakeRange(7, 2)))!
-            dateCreator.hour = Int (newDate.substringWithRange(NSMakeRange(10, 2)))! - 4 // Minus 4 because it returns time in a different timezone (No clue as to why)
-            dateCreator.minute = Int (newDate.substringWithRange(NSMakeRange(12, 2)))!
-            dateCreator.second = Int (newDate.substringWithRange(NSMakeRange(14, 2)))!
-            self.startDate = dateCreator.date!
+            dateCreator.year = Int (newDate.substring(with: NSMakeRange(1, 4)))!
+            dateCreator.month = Int (newDate.substring(with: NSMakeRange(5, 2)))!
+            dateCreator.day = Int (newDate.substring(with: NSMakeRange(7, 2)))!
+            dateCreator.hour = Int (newDate.substring(with: NSMakeRange(10, 2)))! - 4 // Minus 4 because it returns time in a different timezone (No clue as to why)
+            dateCreator.minute = Int (newDate.substring(with: NSMakeRange(12, 2)))!
+            dateCreator.second = Int (newDate.substring(with: NSMakeRange(14, 2)))!
+            self.startDate = (dateCreator as NSDateComponents).date!
         } else if newDate.hasPrefix(";TZID") {
-            dateCreator.year = Int (newDate.substringWithRange(NSMakeRange(22, 4)))!
-            dateCreator.month = Int (newDate.substringWithRange(NSMakeRange(26, 2)))!
-            dateCreator.day = Int (newDate.substringWithRange(NSMakeRange(28, 2)))!
+            dateCreator.year = Int (newDate.substring(with: NSMakeRange(22, 4)))!
+            dateCreator.month = Int (newDate.substring(with: NSMakeRange(26, 2)))!
+            dateCreator.day = Int (newDate.substring(with: NSMakeRange(28, 2)))!
             dateCreator.hour = 00
             dateCreator.minute = 00
             dateCreator.second = 00
-            self.startDate = dateCreator.date!
+            self.startDate = (dateCreator as NSDateComponents).date!
         } else if newDate.hasPrefix(";") {
-            dateCreator.year = Int (newDate.substringWithRange(NSMakeRange(12, 4)))!
-            dateCreator.month = Int (newDate.substringWithRange(NSMakeRange(16, 2)))!
-            dateCreator.day = Int (newDate.substringWithRange(NSMakeRange(18, 2)))!
+            dateCreator.year = Int (newDate.substring(with: NSMakeRange(12, 4)))!
+            dateCreator.month = Int (newDate.substring(with: NSMakeRange(16, 2)))!
+            dateCreator.day = Int (newDate.substring(with: NSMakeRange(18, 2)))!
             dateCreator.hour = 00
             dateCreator.minute = 00
             dateCreator.second = 00
-            self.startDate = dateCreator.date!
+            self.startDate = (dateCreator as NSDateComponents).date!
         } else if newDate == "" {
             dateCreator.year = 1970
             dateCreator.month = 01
@@ -75,37 +75,37 @@ class Event: Hashable {
             dateCreator.hour = 00
             dateCreator.minute = 00
             dateCreator.second = 00
-            self.startDate = dateCreator.date!
+            self.startDate = (dateCreator as NSDateComponents).date!
         } else {
             fatalError("Failed to prase \(newDate)")
         }
     }
     
-    func setEndDate (newDate:NSString) {
+    func setEndDate (_ newDate:NSString) {
         if newDate.hasPrefix(":"){
-            dateCreator.year = Int (newDate.substringWithRange(NSMakeRange(1, 4)))!
-            dateCreator.month = Int (newDate.substringWithRange(NSMakeRange(5, 2)))!
-            dateCreator.day = Int (newDate.substringWithRange(NSMakeRange(7, 2)))!
-            dateCreator.hour = Int (newDate.substringWithRange(NSMakeRange(10, 2)))! - 4 // Minus 4 because it returns time in a different timezone (No clue as to why)
-            dateCreator.minute = Int (newDate.substringWithRange(NSMakeRange(12, 2)))!
-            dateCreator.second = Int (newDate.substringWithRange(NSMakeRange(14, 2)))!
-            self.endDate = dateCreator.date!
+            dateCreator.year = Int (newDate.substring(with: NSMakeRange(1, 4)))!
+            dateCreator.month = Int (newDate.substring(with: NSMakeRange(5, 2)))!
+            dateCreator.day = Int (newDate.substring(with: NSMakeRange(7, 2)))!
+            dateCreator.hour = Int (newDate.substring(with: NSMakeRange(10, 2)))! - 4 // Minus 4 because it returns time in a different timezone (No clue as to why)
+            dateCreator.minute = Int (newDate.substring(with: NSMakeRange(12, 2)))!
+            dateCreator.second = Int (newDate.substring(with: NSMakeRange(14, 2)))!
+            self.endDate = (dateCreator as NSDateComponents).date!
         } else if newDate.hasPrefix(";TZID") {
-            dateCreator.year = Int (newDate.substringWithRange(NSMakeRange(22, 4)))!
-            dateCreator.month = Int (newDate.substringWithRange(NSMakeRange(26, 2)))!
-            dateCreator.day = Int (newDate.substringWithRange(NSMakeRange(28, 2)))!
+            dateCreator.year = Int (newDate.substring(with: NSMakeRange(22, 4)))!
+            dateCreator.month = Int (newDate.substring(with: NSMakeRange(26, 2)))!
+            dateCreator.day = Int (newDate.substring(with: NSMakeRange(28, 2)))!
             dateCreator.hour = 00
             dateCreator.minute = 00
             dateCreator.second = 00
-            self.endDate = dateCreator.date!
+            self.endDate = (dateCreator as NSDateComponents).date!
         } else if newDate.hasPrefix(";") {
-            dateCreator.year = Int (newDate.substringWithRange(NSMakeRange(12, 4)))!
-            dateCreator.month = Int (newDate.substringWithRange(NSMakeRange(16, 2)))!
-            dateCreator.day = Int (newDate.substringWithRange(NSMakeRange(18, 2)))!
+            dateCreator.year = Int (newDate.substring(with: NSMakeRange(12, 4)))!
+            dateCreator.month = Int (newDate.substring(with: NSMakeRange(16, 2)))!
+            dateCreator.day = Int (newDate.substring(with: NSMakeRange(18, 2)))!
             dateCreator.hour = 00
             dateCreator.minute = 00
             dateCreator.second = 00
-            self.endDate = dateCreator.date!
+            self.endDate = (dateCreator as NSDateComponents).date!
         } else if newDate == "" {
             dateCreator.year = 1970
             dateCreator.month = 01
@@ -113,14 +113,14 @@ class Event: Hashable {
             dateCreator.hour = 00
             dateCreator.minute = 00
             dateCreator.second = 00
-            self.endDate = dateCreator.date!
+            self.endDate = (dateCreator as NSDateComponents).date!
         } else {
             fatalError("Failed to prase \(newDate)")
         }
 
     }
     
-    func setLocation (newLocation:NSString) {
+    func setLocation (_ newLocation:NSString) {
         self.location = newLocation as String
     }
 }

@@ -45,30 +45,30 @@ class InfoViewController: UIViewController {
         if let img = InfoViewController.image {     // If an announcemnt image is present
             imageView.image = img       // Set the image
             // Move the title label to the side, if not already moved (Removes the additional constraint)
-            self.view.removeConstraint(NSLayoutConstraint(item: titleView.superview!, attribute: NSLayoutAttribute.Leading, relatedBy: NSLayoutRelation.Equal, toItem: titleView, attribute: NSLayoutAttribute.Leading, multiplier: 1, constant: -8))
-            imageView.hidden = false    // Show the image
+            self.view.removeConstraint(NSLayoutConstraint(item: titleView.superview!, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: titleView, attribute: NSLayoutAttribute.leading, multiplier: 1, constant: -8))
+            imageView.isHidden = false    // Show the image
         } else {    // If not announcement image is present
-            imageView.hidden = true     // Hide the image just in case
+            imageView.isHidden = true     // Hide the image just in case
             // Move the title label to the left side (Add an additional constraint)
-            self.view.addConstraint(NSLayoutConstraint(item: titleView.superview!, attribute: NSLayoutAttribute.Leading, relatedBy: NSLayoutRelation.Equal, toItem: titleView, attribute: NSLayoutAttribute.Leading, multiplier: 1, constant: -8))
+            self.view.addConstraint(NSLayoutConstraint(item: titleView.superview!, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: titleView, attribute: NSLayoutAttribute.leading, multiplier: 1, constant: -8))
         }
         
         if let date = InfoViewController.date {
-            dateView.hidden = false     // Just in case
+            dateView.isHidden = false     // Just in case
             dateView.text = date
         } else {
-            dateView.hidden = true
+            dateView.isHidden = true
         }
         
         if let location = InfoViewController.location {
-            locationView.hidden = false     // Just in case
+            locationView.isHidden = false     // Just in case
             locationView.text = location
         } else {
-            locationView.hidden = true
+            locationView.isHidden = true
         }
     }
     
-    static func setupViewController (title title:String, info:String?, date:String?, location:String?, image:UIImage?) {
+    static func setupViewController (title:String, info:String?, date:String?, location:String?, image:UIImage?) {
         InfoViewController.title = title
         InfoViewController.info = info
         InfoViewController.date = date

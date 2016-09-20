@@ -69,7 +69,7 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
         
         // Configure datePicker's colors
         datePicker.setValue(accentColor, forKey:"textColor")
-        datePicker.performSelector(Selector("setHighlightsToday:"), withObject: accentColor)
+        datePicker.perform(Selector("setHighlightsToday:"), with: accentColor)
         
         // Make it so that, whenever the user taps on the date view, switchDateCell() function is called
         dateView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(switchDateCell)))
@@ -92,13 +92,13 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
             field.layer.cornerRadius = 5
             field.layer.masksToBounds = true
             field.layer.borderWidth = 2
-            field.layer.borderColor = backgroundColor.CGColor
+            field.layer.borderColor = backgroundColor.cgColor
         }
 
         // To make screen move up, when editing the lower textfields
         // Code credit to: Dan Beaulieu at http://stackoverflow.com/a/32915049
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillShow), name:UIKeyboardWillShowNotification, object: self.view.window)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillHide), name:UIKeyboardWillHideNotification, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:NSNotification.Name.UIKeyboardWillHide, object: self.view.window)
         // End of Dan's code
     }
 
@@ -115,7 +115,7 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
         descriptionField.becomeFirstResponder()     // Initiate the editing of description's UITextView
     }
     
-    func scrollViewDidScroll(scrollView: UIScrollView) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if !dateViewOpen {  // If the drawer should be closed then close it!
             scrollView.layoutSubviews()
             self.dateView.frame.size.height = dateViewOpenHeight - 216
@@ -124,7 +124,7 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         if !dateViewOpen {  // If the drawer should be closed then close it!
             scrollView.layoutSubviews()
             self.dateView.frame.size.height = dateViewOpenHeight - 216
@@ -133,7 +133,7 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
         }
     }
    
-    func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         if !dateViewOpen {  // If the drawer should be closed then close it!
             scrollView.layoutSubviews()
             self.dateView.frame.size.height = dateViewOpenHeight - 216
@@ -151,18 +151,18 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
         
         if !dateViewOpen {  // If the view should be closed, then close it
             // Close the view
-            UIView.animateWithDuration(0.5, animations: {
+            UIView.animate(withDuration: 0.5, animations: {
                 self.dateView.frame.size.height = self.dateViewOpenHeight - 216
                 self.bottomViews.frame.origin.y = self.bottomViewDefaultY - 216
                 self.scrollView.contentSize.height = self.scrollViewContentHeight - 216
             })
             // Hide datePicker
-            UIView.animateWithDuration(0.2, delay: 0.3, options: .AllowAnimatedContent, animations: { self.datePicker.alpha = 0 }, completion: nil)
+            UIView.animate(withDuration: 0.2, delay: 0.3, options: .allowAnimatedContent, animations: { self.datePicker.alpha = 0 }, completion: nil)
         } else {    // Otherwise it must be an opening request, so, open it!
             // Show datePicker
-            UIView.animateWithDuration(0.2, animations: { self.datePicker.alpha = 1 })
+            UIView.animate(withDuration: 0.2, animations: { self.datePicker.alpha = 1 })
             // Open the view
-            UIView.animateWithDuration(0.5, animations: {
+            UIView.animate(withDuration: 0.5, animations: {
                 self.dateView.frame.size.height = self.dateViewOpenHeight
                 self.bottomViews.frame.origin.y = self.bottomViewDefaultY
                 self.scrollView.contentSize.height = self.scrollViewContentHeight
@@ -171,27 +171,27 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
     }
     
     // Called whenever the value on the datePicker is changed
-    @IBAction func datePickerValueChanged(sender: UIDatePicker) {
+    @IBAction func datePickerValueChanged(_ sender: UIDatePicker) {
         // Format the new date
-        let format:NSDateFormatter = NSDateFormatter()
+        let format:DateFormatter = DateFormatter()
         format.dateFormat = "yyyy-MM-dd 'at' HH:mm"
         // Display the new date
-        dateLabel.text = format.stringFromDate(sender.date)
+        dateLabel.text = format.string(from: sender.date)
     }
     
     // This is used to make the keyboard go away, when a tap outside of the keyboard are has been made
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
     
     // This is used to make the keyboard go away, when the return key is pressed
-    func textFieldShouldReturn(textField: UITextField) -> Bool{
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         textField.resignFirstResponder()
         return true
     }
     
     // This is called whenever the submit button is pressed
-    @IBAction func submitProposal(sender: UIButton) {
+    @IBAction func submitProposal(_ sender: UIButton) {
         print ("Whoops! Seems like the proper method is not here 8(")
     }
 
@@ -202,9 +202,9 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
         
         if descriptionField.text == nil || descriptionField.text == "" {    // If the description field is empty, then change output to false and highlight it
             fieldsAreValid = false
-            descriptionField.layer.borderColor = invalidFieldStrokeColor.CGColor
+            descriptionField.layer.borderColor = invalidFieldStrokeColor.cgColor
         } else {    // Otherwise de-highlight it, just in case
-            descriptionField.layer.borderColor = backgroundColor.CGColor
+            descriptionField.layer.borderColor = backgroundColor.cgColor
         }
         
         // An array of UITextFields to check through
@@ -213,9 +213,9 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
         for field in fields {
             if (field.text == nil || field.text == "") {    // If the field is empty then change output to false and highlight it
                 fieldsAreValid = false
-                field.layer.borderColor = invalidFieldStrokeColor.CGColor
+                field.layer.borderColor = invalidFieldStrokeColor.cgColor
             } else {    // Otherwise de-highlight it, just in case
-                field.layer.borderColor = backgroundColor.CGColor
+                field.layer.borderColor = backgroundColor.cgColor
             }
         }
         // Return the final output
@@ -225,10 +225,10 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
     // To make screen move up, when editing the lower textfields
     // Code credit to: Boris at http://stackoverflow.com/a/31124676
     // Modified by: Inal Gotov
-    func keyboardWillShow(notification: NSNotification) {
+    func keyboardWillShow(_ notification: Notification) {
         // If the teacher credential field or the location field are being edited, and are blocked by the keyboard, then shift the screen up
-        if (teacherCredential.editing || locationField.editing) {
-            if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+        if (teacherCredential.isEditing || locationField.isEditing) {
+            if let keyboardSize = ((notification as NSNotification).userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
                 if view.frame.origin.y == 0{
                     self.scrollView.frame.origin.y -= keyboardSize.height
                 }
@@ -238,15 +238,15 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
             }
         }
         // If the description UITextView is being edited then hide the place holder
-        if (!teacherCredential.editing && !locationField.editing && !titleField.editing) {
-            descriptionPlaceHolder.hidden = true    // It doesn't have a .editing property :(
+        if (!teacherCredential.isEditing && !locationField.isEditing && !titleField.isEditing) {
+            descriptionPlaceHolder.isHidden = true    // It doesn't have a .editing property :(
         }
     }
     
-    func keyboardWillHide(notification: NSNotification) {
+    func keyboardWillHide(_ notification: Notification) {
         // If the teacher credential field or the location field have been edited, while they would be blocked by the keyboard, shift the screen down
-        if (teacherCredential.editing || locationField.editing) {
-            if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+        if (teacherCredential.isEditing || locationField.isEditing) {
+            if let keyboardSize = ((notification as NSNotification).userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
                 if view.frame.origin.y != 0 {
                     self.scrollView.frame.origin.y += keyboardSize.height
                 }
@@ -256,9 +256,9 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
             }
         }
         // If the description UITextView has been edited and it does not have any text in it, show the placeholder
-        if (!teacherCredential.editing && !locationField.editing && !titleField.editing) {
+        if (!teacherCredential.isEditing && !locationField.isEditing && !titleField.isEditing) {
             if descriptionField.text == "" {
-                descriptionPlaceHolder.hidden = false   // It doesn't have a .editing property :(
+                descriptionPlaceHolder.isHidden = false   // It doesn't have a .editing property :(
                 
             }
         }
@@ -270,13 +270,13 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
 struct BigNumber: Equatable {
     var value:String
     // To implement for future use: negativity
-    func multiply (right: BigNumber) -> BigNumber {
+    func multiply (_ right: BigNumber) -> BigNumber {
         // If any of the multiplicants are zero then return zero
         if value == "0" || right.value == "0" { return BigNumber(value: "0") }
         // Convert the left multiplicant into an array of digits
-        var a1 = value.characters.reverse().map { Int(String($0))! }
+        var a1 = value.characters.reversed().map { Int(String($0))! }
         // Convert the right multiplicant into an array of digits
-        var a2 = right.value.characters.reverse().map { Int(String($0))! }
+        var a2 = right.value.characters.reversed().map { Int(String($0))! }
         // Declare the product as an array of digits
         var product = [Int]()
         // Declare an index counter
@@ -311,16 +311,16 @@ struct BigNumber: Equatable {
             product.removeLast()
         }
         // Flip the array frontwards
-        product = Array(product.reverse())
+        product = Array(product.reversed())
         // Convert the array of digits into BigInt type and return
-        return BigNumber(value: product.map { String($0) }.joinWithSeparator(""))
+        return BigNumber(value: product.map { String($0) }.joined(separator: ""))
     }
     // To implement for future use: negativity
-    func add(right:BigNumber) -> BigNumber {
+    func add(_ right:BigNumber) -> BigNumber {
         // Convert this BigInt to an array of integers, with each item containing a single digit. The whole array is reversed
-        var a1 = value.characters.reverse().map { Int(String($0))! }
+        var a1 = value.characters.reversed().map { Int(String($0))! }
         // Convert the to be added BigInt to an array of integers, with each item containing a single digit. The whole array is reversed
-        var a2 = right.value.characters.reverse().map { Int(String($0))! }
+        var a2 = right.value.characters.reversed().map { Int(String($0))! }
         // Declare the result
         var result = [Int]()
         // Declare an index counter for the result
@@ -364,8 +364,8 @@ struct BigNumber: Equatable {
             result.removeLast()
         }
         
-        result = Array(result.reverse())    // Reverse the array to be in human deciaml direction
-        return BigNumber(value: result.map { String($0) }.joinWithSeparator(""))   // Convert to BigInt and return
+        result = Array(result.reversed())    // Reverse the array to be in human deciaml direction
+        return BigNumber(value: result.map { String($0) }.joined(separator: ""))   // Convert to BigInt and return
     }
 }
 

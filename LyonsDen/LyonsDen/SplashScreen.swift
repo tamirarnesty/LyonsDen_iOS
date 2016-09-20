@@ -13,7 +13,7 @@ import Firebase
 
 class SplashScreen: UIViewController {
     
-    var timer:NSTimer?
+    var timer:Timer?
     var time = 0
     
     @IBOutlet var splash: UIView!
@@ -26,17 +26,17 @@ class SplashScreen: UIViewController {
         if (time == 3) {
             timer!.invalidate()
             // Auto login
-            if let username = NSUserDefaults.standardUserDefaults().objectForKey("uID") as! String?,    // If a username has been pre-saved and
-                password = NSUserDefaults.standardUserDefaults().objectForKey("Pass") as! String? {     // a password has been pre-saved then
-                if password.compare("SignedOut") == .OrderedSame {
-                    self.performSegueWithIdentifier ("SplashScreenSegue", sender: self)
+            if let username = UserDefaults.standard.object(forKey: "uID") as! String?,    // If a username has been pre-saved and
+                let password = UserDefaults.standard.object(forKey: "Pass") as! String? {     // a password has been pre-saved then
+                if password.compare("SignedOut") == .orderedSame {
+                    self.performSegue (withIdentifier: "SplashScreenSegue", sender: self)
                     return
                 }
                 // Authenticate
-                FIRAuth.auth()?.signInWithEmail(username, password: password, completion: { (user, error) in
+                FIRAuth.auth()?.signIn(withEmail: username, password: password, completion: { (user, error) in
                     if user != nil {
                         //Log in succesful
-                        self.performSegueWithIdentifier("AutoLogInSegue", sender: self)
+                        self.performSegue(withIdentifier: "AutoLogInSegue", sender: self)
                         print()
                         print("Log In: Auto-Login Success!")
                         print()
@@ -46,15 +46,15 @@ class SplashScreen: UIViewController {
                     }
                 })
             } else {
-            self.performSegueWithIdentifier ("SplashScreenSegue", sender: self)
+            self.performSegue (withIdentifier: "SplashScreenSegue", sender: self)
             }
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.copyright.bringSubviewToFront(splash)
-        timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(SplashScreen.increaseTimer), userInfo: nil, repeats: true)
+        self.copyright.bringSubview(toFront: splash)
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(SplashScreen.increaseTimer), userInfo: nil, repeats: true)
     }
     
     

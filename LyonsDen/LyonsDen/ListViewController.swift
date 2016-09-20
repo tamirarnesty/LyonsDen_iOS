@@ -27,7 +27,7 @@ class ListViewController: UITableViewController {
                         //       Title        Description  Date&Time    Location
     var eventData:[[String?]] = [[String?](), [String?](), [String?](), [String?]()]
     var clubKeys:[String] = [String]()
-    var loadingWheel:UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.White)
+    var loadingWheel:UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.white)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,7 +57,7 @@ class ListViewController: UITableViewController {
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if ListViewController.contentChanged {
             ListViewController.contentChanged = false
@@ -66,33 +66,33 @@ class ListViewController: UITableViewController {
         }
     }
     
-    static func formatTime (time:NSString) -> String {
+    static func formatTime (_ time:NSString) -> String {
         var output:NSString = ""
-        output = output.stringByAppendingString(time.substringToIndex(4)) + "-"
-        output = output.stringByAppendingString(time.substringWithRange(NSMakeRange(4, 2)) + "-")
-        output = output.stringByAppendingString(time.substringWithRange(NSMakeRange(6, 2)))
-        if time.substringWithRange(NSMakeRange(8, 4)) != "2400" {
-            output = output.stringByAppendingString(" " + time.substringWithRange(NSMakeRange(8, 2)) + ":")
-            output = output.stringByAppendingString(time.substringWithRange(NSMakeRange(10, 2)))
+        output = (output.appending(time.substring(to: 4)) + "-") as NSString
+        output = output.appending(time.substring(with: NSMakeRange(4, 2)) + "-") as NSString
+        output = output.appending(time.substring(with: NSMakeRange(6, 2))) as NSString
+        if time.substring(with: NSMakeRange(8, 4)) != "2400" {
+            output = output.appending(" " + time.substring(with: NSMakeRange(8, 2)) + ":") as NSString
+            output = output.appending(time.substring(with: NSMakeRange(10, 2))) as NSString
         }
         return output as String
     }
     
     func webContentWillLoad () {
-        self.tableView.hidden = true
+        self.tableView.isHidden = true
         self.clubKeys.removeAll()
         for h in 0..<eventData.count { eventData[h].removeAll() }
         loadingWheel.startAnimating()
     }
     
     func webContentDidLoad () {
-        self.tableView.hidden = false
+        self.tableView.isHidden = false
         loadingWheel.stopAnimating()
     }
     
-    func parseForEvents (reference:FIRDatabaseReference) {
+    func parseForEvents (_ reference:FIRDatabaseReference) {
         // Navigate to and download the Events data
-        reference.observeSingleEventOfType(FIRDataEventType.Value, withBlock: { (snapshot) in
+        reference.observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
             if snapshot.exists() {
                 // Create an NSDictionary instance of the data
                 let data = snapshot.value as! NSDictionary
@@ -102,7 +102,7 @@ class ListViewController: UITableViewController {
                 let key = ["title", "description", "dateTime", "location"]
                 for h in 0..<dataContent.count {
                     for j in 0..<key.count {
-                        self.eventData[j].append(dataContent.objectAtIndex(h).objectForKey(key[j])?.description!)
+                        self.eventData[j].append(((dataContent.object(at: h) as AnyObject).object(forKey: key[j]) as! NSString).description)
                     }
                     self.images.append(nil) // Will be implemented later
                 }
@@ -118,7 +118,7 @@ class ListViewController: UITableViewController {
     
     func parseForClubs () {
         // Navigate to and download the Clubs data
-        self.ref.child("clubs").queryOrderedByKey().observeSingleEventOfType(FIRDataEventType.Value, withBlock: { (snapshot) in
+        self.ref.child("clubs").queryOrderedByKey().observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
             if snapshot.exists() {
                 // Create an NSDictionary instance of the data
                 let data = snapshot.value as! NSDictionary
@@ -126,10 +126,10 @@ class ListViewController: UITableViewController {
                 // Record each field of the clubs
                 let key = ["title", "description", "leads"]
                 for h in 0...dataContent.count - 1 {
-                    self.clubKeys.append(dataContent.objectAtIndex(h).objectForKey("key")! as! String)
+                    self.clubKeys.append((dataContent.object(at: h) as AnyObject).object(forKey: "key")! as! String)
                     
                     for j in 0..<key.count {
-                        self.eventData[j].append(dataContent.objectAtIndex(h).objectForKey(key[j])! as! String)
+                        self.eventData[j].append((dataContent.object(at: h) as AnyObject).object(forKey: key[j])! as! String)
                     }
                     
                     self.images.append(nil)
@@ -145,53 +145,53 @@ class ListViewController: UITableViewController {
     }
     
     // Set the number of cell the table will display
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return eventData[0].count
     }
     
     // Set the height of each cell
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100.0
     }
     
     // Configure each cell
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .Subtitle, reuseIdentifier: "ListCell")   // Declare the cell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "ListCell")   // Declare the cell
         cell.backgroundColor = foregroundColor                              // Set the Background Color
-        cell.imageView?.image = images[indexPath.row]                       // Set the Cell Image
+        cell.imageView?.image = images[(indexPath as NSIndexPath).row]                       // Set the Cell Image
         
-        cell.textLabel?.text = eventData[0][indexPath.row]!              // Set the Title Text
+        cell.textLabel?.text = eventData[0][(indexPath as NSIndexPath).row]!              // Set the Title Text
         cell.textLabel?.textColor = accentColor                             // Set the Title Text Color
         cell.textLabel?.font = UIFont(name: "Hapna Mono", size: 20)         // Set the Title Text Font
         
-        cell.detailTextLabel?.text = eventData[1][indexPath.row]!        // Set the Description Text
+        cell.detailTextLabel?.text = eventData[1][(indexPath as NSIndexPath).row]!        // Set the Description Text
         cell.detailTextLabel?.textColor = accentColor                       // Set the Description Text Color
         cell.detailTextLabel?.font = UIFont(name: "Hapna Mono", size: 16)   // Set the Description Text Font
         return cell                                                         // Return the cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Deselect the selected cell
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
         // Segue into the appropriate ViewController
         if ListViewController.displayContent == 3 {
             // Prepare ClubViewController, if nil is passed for image, then constraints are remade appropriately
-            ClubViewController.setupClubViewController(withTitle: self.eventData[0][indexPath.row]!,    // Club Title
-                                                       description: self.eventData[1][indexPath.row]!,  // Club Description
-                                                       clubLeads: self.eventData[2][indexPath.row]!,    // Club Leaders
-                                                       clubImage: self.images[indexPath.row],           // Club Image
-                                                       andEvents: self.ref.child("clubs").child(clubKeys[indexPath.row]))   // Database reference to the club
+            ClubViewController.setupClubViewController(withTitle: self.eventData[0][(indexPath as NSIndexPath).row]!,    // Club Title
+                                                       description: self.eventData[1][(indexPath as NSIndexPath).row]!,  // Club Description
+                                                       clubLeads: self.eventData[2][(indexPath as NSIndexPath).row]!,    // Club Leaders
+                                                       clubImage: self.images[(indexPath as NSIndexPath).row],           // Club Image
+                                                       andEvents: self.ref.child("clubs").child(clubKeys[(indexPath as NSIndexPath).row]))   // Database reference to the club
             // Segue into ClubViewController
-            performSegueWithIdentifier("ClubSegue", sender: nil)
+            performSegue(withIdentifier: "ClubSegue", sender: nil)
         } else {
             // Prepare InfoViewController, if nil is passed for either date, location or image, constraints are remade appropriately
-            InfoViewController.setupViewController(title: eventData[0][indexPath.row]!,          // Give it a title to display
-                                                   info: eventData[1][indexPath.row]!,           // Give it a description to display
-                                                   date: eventData[2][indexPath.row],        // Give it a date to display
-                                                   location: eventData[3][indexPath.row],    // Give it a location to display
-                                                   image: images[indexPath.row])                    // Give it an image to display
+            InfoViewController.setupViewController(title: eventData[0][(indexPath as NSIndexPath).row]!,          // Give it a title to display
+                                                   info: eventData[1][(indexPath as NSIndexPath).row]!,           // Give it a description to display
+                                                   date: eventData[2][(indexPath as NSIndexPath).row],        // Give it a date to display
+                                                   location: eventData[3][(indexPath as NSIndexPath).row],    // Give it a location to display
+                                                   image: images[(indexPath as NSIndexPath).row])                    // Give it an image to display
             // Segue into InfoViewController
-            performSegueWithIdentifier("InfoSegue", sender: nil)
+            performSegue(withIdentifier: "InfoSegue", sender: nil)
         }
     }
 }

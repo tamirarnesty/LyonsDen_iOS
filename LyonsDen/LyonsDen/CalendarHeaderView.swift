@@ -17,7 +17,7 @@ class CalendarHeaderView: UIView {
     // The label that represent the month
     lazy var monthLabel : UILabel = {
         let lbl = UILabel()                                 // Create label
-        lbl.textAlignment = NSTextAlignment.Center          // Center the text allignment
+        lbl.textAlignment = NSTextAlignment.center          // Center the text allignment
         lbl.font = UIFont(name: "Helvetica", size: 20.0)    // Helvetica the font with size 20
         lbl.textColor = cellTextColor                       // Paint the text gray
         
@@ -28,16 +28,16 @@ class CalendarHeaderView: UIView {
     // The label that represents the days of the week
     lazy var dayLabelContainerView : UIView = {
         let v = UIView()                                        // Create the day's view
-        let formatter : NSDateFormatter = NSDateFormatter()     // Create a day's formatter
+        let formatter : DateFormatter = DateFormatter()     // Create a day's formatter
         
         for index in 1...7 {
             let day : NSString = formatter.weekdaySymbols[index % 7] as NSString    // Create the string containing the day's letter
             let weekdayLabel = UILabel()                                    // Create the label the will hold the day of the week
             
             weekdayLabel.font = UIFont(name: "Helvetica", size: 14.0)       // Helvetica the label's font with size 14
-            weekdayLabel.text = day.substringToIndex(2).uppercaseString     // Set the text of the label to the first two letters of the weekday in caps
+            weekdayLabel.text = day.substring(to: 2).uppercased()     // Set the text of the label to the first two letters of the weekday in caps
             weekdayLabel.textColor = cellTextColor                          // Paint the text gray
-            weekdayLabel.textAlignment = NSTextAlignment.Center             // Center the text allignment
+            weekdayLabel.textAlignment = NSTextAlignment.center             // Center the text allignment
             v.addSubview(weekdayLabel)                                      // Add the label to the day's view
         }
         
@@ -84,10 +84,10 @@ class CalendarHeaderView: UIView {
     lazy var leftButton : UIButton = {
         let button = UIButton()
 
-        button.setImage(UIImage(named: "LeftButton"), forState: .Normal)
+        button.setImage(UIImage(named: "LeftButton"), for: UIControlState())
         button.imageView?.tintColor = borderColor
         button.alpha = 0.7  // Visuals
-        button.addTarget(CalendarView(), action: #selector(CalendarView.changeMonth), forControlEvents: .TouchUpInside)
+        button.addTarget(CalendarView(), action: #selector(CalendarView.changeMonth), for: .touchUpInside)
         
         self.addSubview(button)
         return button
@@ -96,10 +96,10 @@ class CalendarHeaderView: UIView {
     lazy var rightButton : UIButton = {
         let button = UIButton()
         
-        button.setImage(UIImage(named: "RightButton"), forState: .Normal)
+        button.setImage(UIImage(named: "RightButton"), for: UIControlState())
         button.imageView?.tintColor = borderColor
         button.alpha = 0.7  // Visuals
-        button.addTarget(CalendarView(), action: #selector(CalendarView.changeMonth), forControlEvents: .TouchUpInside)
+        button.addTarget(CalendarView(), action: #selector(CalendarView.changeMonth), for: .touchUpInside)
         
         self.addSubview(button)
         return button

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class InputtedCoursesViewController: UIViewController {
-    @IBAction func myUnwindAction (unwindSegue: UIStoryboardSegue) {}
+    @IBAction func myUnwindAction (_ unwindSegue: UIStoryboardSegue) {}
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -30,7 +30,7 @@ class ClubViewController: UIViewController, UITableViewDelegate {
     var userIsLead = false {
         didSet {
             if userIsLead {
-                navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .Plain, target: self, action: #selector(enterEditMode))
+                navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(enterEditMode))
             }
         }
     }
@@ -64,7 +64,7 @@ class ClubViewController: UIViewController, UITableViewDelegate {
     override func viewDidLayoutSubviews() {
         // If there is no image to display, then hide the UIImageView and shift the title and description to its place
         if clubImageView.image == nil {
-            clubImageView.hidden = true     // Hide the image just in case
+            clubImageView.isHidden = true     // Hide the image just in case
             let fields:[UIView] = [clubTitleView, titleField, clubInfoView, descriptionField]
             for field in fields {
                 field.frame.origin.x = clubImageView.frame.origin.x
@@ -75,10 +75,10 @@ class ClubViewController: UIViewController, UITableViewDelegate {
     
     func enterEditMode () {
         // Switch the fields' and labels' visibility states
-        clubTitleView.hidden = !clubTitleView.hidden
-        clubInfoView.hidden = !clubInfoView.hidden
-        titleField.hidden = !titleField.hidden
-        descriptionField.hidden = !descriptionField.hidden
+        clubTitleView.isHidden = !clubTitleView.isHidden
+        clubInfoView.isHidden = !clubInfoView.isHidden
+        titleField.isHidden = !titleField.isHidden
+        descriptionField.isHidden = !descriptionField.isHidden
         // If editing is being initiated, then make preparations for editing
         if navigationItem.rightBarButtonItem?.title == "Edit" {
             navigationItem.rightBarButtonItem?.title = "Done"
@@ -115,12 +115,12 @@ class ClubViewController: UIViewController, UITableViewDelegate {
     }
     
     // This is used to make the keyboard go away, when a tap outside of the keyboard has been made
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
     
     // This is used to make the keyboard go away, when the return key is pressed
-    func textFieldShouldReturn(textField: UITextField) -> Bool{
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         textField.resignFirstResponder()
         return true
     }
@@ -128,7 +128,7 @@ class ClubViewController: UIViewController, UITableViewDelegate {
     // This method check whether the current user has permission to edit this page
     func checkForClubLeadership () {
         let userID = FIRAuth.auth()?.currentUser?.uid
-        ClubViewController.ref.child("leaders").observeEventType(.Value, withBlock: { (snapshot) in
+        ClubViewController.ref.child("leaders").observe(.value, with: { (snapshot) in
             let leaderIDs:[String: String] = snapshot.value as! Dictionary
             if (leaderIDs.values.contains(userID!)) {
                 self.userIsLead = true
@@ -137,9 +137,9 @@ class ClubViewController: UIViewController, UITableViewDelegate {
     }
     
     // Downloads club announcements data
-    func parseForEvents (reference:FIRDatabaseReference) {
+    func parseForEvents (_ reference:FIRDatabaseReference) {
         // Navigate to and download the Events data
-        reference.observeSingleEventOfType(FIRDataEventType.Value, withBlock: { (snapshot) in
+        reference.observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
             if snapshot.exists() {
                 // Create an NSDictionary instance of the data
                 let data = snapshot.value as! NSDictionary
@@ -147,10 +147,10 @@ class ClubViewController: UIViewController, UITableViewDelegate {
                 let dataContent = data.allValues as NSArray
                 // Record each field of the events
                 for h in 0...dataContent.count-1 {
-                    self.eventData[0].append(dataContent.objectAtIndex(h).objectForKey("title")! as! String)
-                    self.eventData[1].append(dataContent.objectAtIndex(h).objectForKey("description")! as! String)
-                    self.eventData[2].append(ListViewController.formatTime(((dataContent.objectAtIndex(h).objectForKey("dateTime")! as! NSNumber).description) as NSString))
-                    self.eventData[3].append(dataContent.objectAtIndex(h).objectForKey("location")! as! String)
+                    self.eventData[0].append((dataContent.object(at: h) as AnyObject).object(forKey: "title")! as! String)
+                    self.eventData[1].append((dataContent.object(at: h) as AnyObject).object(forKey: "description")! as! String)
+                    self.eventData[2].append(ListViewController.formatTime((((dataContent.object(at: h) as AnyObject).object(forKey: "dateTime")! as! NSNumber).description) as NSString))
+                    self.eventData[3].append((dataContent.object(at: h) as AnyObject).object(forKey: "location")! as! String)
                     self.images.append(nil) // Will be implemented later
                 }
                 // Reload the tableView to display the loaded data
@@ -172,48 +172,48 @@ class ClubViewController: UIViewController, UITableViewDelegate {
     }
     
     // This method is called whenever the MemberList button is pressed
-    @IBAction func displayMembers(sender: UIButton) {
+    @IBAction func displayMembers(_ sender: UIButton) {
         // Prepare the PeopleList View Controller for displaying this club's members
         PeopleList.listRef = ClubViewController.ref.child("members")
         PeopleList.title = "Members"
         PeopleList.editEnabled = userIsLead
         // Segue into the prepared PeopleList
-        self.performSegueWithIdentifier("MemberListSegue", sender: self)
+        self.performSegue(withIdentifier: "MemberListSegue", sender: self)
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return eventData[0].count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .Subtitle, reuseIdentifier: "ListCell")   // Declare the cell
+    func tableView(_ tableView: UITableView, cellForRowAtIndexPath indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "ListCell")   // Declare the cell
         cell.backgroundColor = foregroundColor                              // Set the Background Color
-        cell.imageView?.image = images[indexPath.row]                       // Set the Cell Image
+        cell.imageView?.image = images[(indexPath as NSIndexPath).row]                       // Set the Cell Image
         
-        cell.textLabel?.text = eventData[0][indexPath.row]              // Set the Title Text
+        cell.textLabel?.text = eventData[0][(indexPath as NSIndexPath).row]              // Set the Title Text
         cell.textLabel?.textColor = accentColor                             // Set the Title Text Color
         cell.textLabel?.font = UIFont(name: "Hapna Mono", size: 20)         // Set the Title Text Font
         
-        cell.detailTextLabel?.text = eventData[1][indexPath.row]        // Set the Description Text
+        cell.detailTextLabel?.text = eventData[1][(indexPath as NSIndexPath).row]        // Set the Description Text
         cell.detailTextLabel?.textColor = accentColor                       // Set the Description Text Color
         cell.detailTextLabel?.font = UIFont(name: "Hapna Mono", size: 16)   // Set the Description Text Font
         return cell
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100.0
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Prepare InfoViewController, if nil is passed for either date, location or image, constraints are remade appropriately
-        InfoViewController.setupViewController(title: eventData[0][indexPath.row]!,          // Give it a title to display
-            info: eventData[1][indexPath.row]!,           // Give it a description to display
-            date: eventData[2][indexPath.row],        // Give it a date to display
-            location: eventData[3][indexPath.row],    // Give it a location to display
-            image: images[indexPath.row])                    // Give it an image to display
+        InfoViewController.setupViewController(title: eventData[0][(indexPath as NSIndexPath).row]!,          // Give it a title to display
+            info: eventData[1][(indexPath as NSIndexPath).row]!,           // Give it a description to display
+            date: eventData[2][(indexPath as NSIndexPath).row],        // Give it a date to display
+            location: eventData[3][(indexPath as NSIndexPath).row],    // Give it a location to display
+            image: images[(indexPath as NSIndexPath).row])                    // Give it an image to display
         // Deselect the selected cell
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
         // Segue into InfoViewController
-        performSegueWithIdentifier("ClubInfoSegue", sender: nil)
+        performSegue(withIdentifier: "ClubInfoSegue", sender: nil)
     }
 }

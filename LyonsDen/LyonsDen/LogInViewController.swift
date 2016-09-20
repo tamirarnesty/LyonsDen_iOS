@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import FirebaseAuth
+import Firebase
 
 // TODO: AUTO_LOGIN PERFORMS TWICE FROM TIME TO TIME< WHICH CAUSES A THROW BACK INTO HOME SCREEN, PUT AUTO_LOG IN A DIFFERENT PLACE
 
@@ -30,30 +30,30 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     var username = ""
     let signUpKey = "MacLyonsRule"  // idk, this should be something symbolic or patriotic... or secretive
     
-    @IBAction func optionSwitched(sender: UISegmentedControl) {
+    @IBAction func optionSwitched(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
         case 0: // sign up
             entranceOption = 0
             print(entranceOption)
             self.view.layoutIfNeeded()
             
-            UIView.animateWithDuration(0.5, animations: {
+            UIView.animate(withDuration: 0.5, animations: {
                 self.signUpKeyField.alpha = 1
                 self.logInButton.frame.origin.y += self.signUpKeyField.frame.height/2
                 self.view.layoutIfNeeded()
                 }, completion: { (completed) in
-                    self.signUpKeyField.hidden = false // textfield shows up
+                    self.signUpKeyField.isHidden = false // textfield shows up
             })
         case 1: // log in
             entranceOption = 1
             print(entranceOption)
             self.view.layoutIfNeeded()
-            UIView.animateWithDuration(0.5, animations: {
+            UIView.animate(withDuration: 0.5, animations: {
                 self.signUpKeyField.alpha = 0
                 self.logInButton.frame.origin.y -= self.signUpKeyField.frame.height/2
                 self.view.layoutIfNeeded()
                 }, completion: { (completed) in
-                    self.signUpKeyField.hidden = true // textfield disappears
+                    self.signUpKeyField.isHidden = true // textfield disappears
             })
         default:
             break
@@ -64,47 +64,60 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         
         let gradient: CAGradientLayer = CAGradientLayer()
         gradient.frame = self.view.bounds
-        gradient.colors = [UIColor.whiteColor().CGColor, accentColor.CGColor]
-        self.view.layer.insertSublayer(gradient, atIndex: 0)
+        gradient.colors = [UIColor.white.cgColor, accentColor.cgColor]
+        self.view.layer.insertSublayer(gradient, at: 0)
         self.userNameField.delegate = self
         self.passwordField.delegate = self
         
         // To make screen move up, when editing the lower textfields
         // Code credit to: Dan Beaulieu at http://stackoverflow.com/a/32915049
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillShow), name:UIKeyboardWillShowNotification, object: self.view.window)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillHide), name:UIKeyboardWillHideNotification, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:NSNotification.Name.UIKeyboardWillHide, object: self.view.window)
         // End of Dan's code
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool{
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         textField.resignFirstResponder()
         return true
     }
     
     
-    @IBAction func buttonPressed(sender: AnyObject) {
+    @IBAction func buttonPressed(_ sender: AnyObject) {
         self.password = passwordField.text!
         self.username = userNameField.text!
-    
+        var alert:LyonsAlert = LyonsAlert(withTitle: "", subtitle: "", style: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        
         if (passwordField.text?.isEmpty)! || (userNameField.text?.isEmpty)! {
-            (UIApplication.sharedApplication().delegate as! AppDelegate).displayError("Missing Information", errorMsg: "Please fill in all the requirements.")
+            alert = LyonsAlert(withTitle: "Missing Information", subtitle: "Please fill in all the requirements.", style: .alert)
+            alert.showIn(self)
+//                (UIApplication.shared.delegate as! AppDelegate).displayError("Missing Information", errorMsg: "Please fill in all the requirements.")
             return
         }
         
         if entranceOption == 0 {
-            if signUpKeyField.text == signUpKey {
-                FIRAuth.auth()?.createUserWithEmail(self.username, password: self.password, completion: {(user, error) in
+            if signUpKeyField.text == "MacLyonsTeacher" { // TEACHER CHECK
+                let ref:FIRDatabaseReference = FIRDatabase.database().reference()
+                ref.child("users/teacherIDs/").childByAutoId().setValue(password)
+                
+            } else {
+                if signUpKeyField.text == signUpKey {
+                FIRAuth.auth()?.createUser(withEmail: self.username, password: self.password, completion: {(user, error) in
                     if error != nil {
-                        if let code = FIRAuthErrorCode(rawValue: error!.code) {
+                        if let code = FIRAuthErrorCode(rawValue: error!._code) {
                             switch code {
-                            case .ErrorCodeEmailAlreadyInUse: // user exists
-                                (UIApplication.sharedApplication().delegate as! AppDelegate).displayError("Sorry!", errorMsg: "This email is already in use. Please log in, or use another email to sign up.")
-                            case .ErrorCodeInvalidEmail: // self explanatory
-                                (UIApplication.sharedApplication().delegate as! AppDelegate).displayError("Invalid Email", errorMsg: "Please make sure your email is typed in correctly.")
+                            case .errorCodeEmailAlreadyInUse: // user exists
+                                alert = LyonsAlert(withTitle: "Sorry!", subtitle: "This email is already in use. Please log in, or use another email to sign up.", style: .alert)
+                                alert.showIn(self)
+//                                (UIApplication.shared.delegate as! AppDelegate).displayError("Sorry!", errorMsg: "This email is already in use. Please log in, or use another email to sign up.")
+                            case .errorCodeInvalidEmail: // self explanatory
+                                alert = LyonsAlert(withTitle: "Invalid Email", subtitle: "Please make sure your email is typed in correctly.", style: .alert)
+                                alert.showIn(self)
+//                                (UIApplication.shared.delegate as! AppDelegate).displayError("Invalid Email", errorMsg: "Please make sure your email is typed in correctly.")
                             default:
                                 break
                             }
@@ -112,23 +125,25 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
                     } else {
                         if user != nil {
                             //Log in succesfull
-                            NSUserDefaults.standardUserDefaults().setValue(self.password, forKey: "Pass")   // Memorize the password for next login
-                            NSUserDefaults.standardUserDefaults().setValue(self.username, forKey: "uID")    // Memorize the username for next login
-                            self.performSegueWithIdentifier("LogInSuccess", sender: self)
+                            UserDefaults.standard.setValue(self.password, forKey: "Pass")   // Memorize the password for next login
+                            UserDefaults.standard.setValue(self.username, forKey: "uID")    // Memorize the username for next login
+                            self.performSegue(withIdentifier: "LogInSuccess", sender: self)
                         }
                     }
                 }) // createUserWithEmail close
             } else {
-                (UIApplication.sharedApplication().delegate as! AppDelegate).displayError("Incorrect Sign Up Key", errorMsg: "Please try again.")
-            } // first if close
+                (UIApplication.shared.delegate as! AppDelegate).displayError("Incorrect Sign Up Key", errorMsg: "Please try again.")
+            } // close of else { if {
+            }// close of TEACHER CHECK
         } else if entranceOption == 1 {
             // Authentication
-            FIRAuth.auth()?.signInWithEmail(self.username, password: self.password, completion: { (user, error) in
+            FIRAuth.auth()?.signIn(withEmail: username, password: self.password) { (user, error) in
+                // ...
                 if error != nil {
-                    if let code = FIRAuthErrorCode(rawValue: error!.code) {
+                    if let code = FIRAuthErrorCode(rawValue: error!._code) {
                         switch code {
-                        case .ErrorCodeWrongPassword: // wrong password
-                            (UIApplication.sharedApplication().delegate as! AppDelegate).displayError("Invalid Password", errorMsg: "The password you entered is incorrect. Please try again.")
+                        case .errorCodeWrongPassword: // wrong password
+                            (UIApplication.shared.delegate as! AppDelegate).displayError("Invalid Password", errorMsg: "The password you entered is incorrect. Please try again.")
                         default:
                             break
                         }
@@ -136,12 +151,12 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
                 } else {
                     if user != nil {
                         //Log in succesfull
-                        NSUserDefaults.standardUserDefaults().setValue(self.password, forKey: "Pass")   // Memorize the password for next login
-                        NSUserDefaults.standardUserDefaults().setValue(self.username, forKey: "uID")    // Memorize the username for next login
-                        self.performSegueWithIdentifier("LogInSuccess", sender: self)
+                        UserDefaults.standard.setValue(self.password, forKey: "Pass")   // Memorize the password for next login
+                        UserDefaults.standard.setValue(self.username, forKey: "uID")    // Memorize the username for next login
+                        self.performSegue(withIdentifier: "LogInSuccess", sender: self)
                     }
                 }
-            }) // signInWIthEmail close
+            } // signInWIthEmail close
         } else {
             print("Something is very wrong...")
         }
@@ -150,10 +165,10 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     // To make screen move up, when editing the lower textfields
     // Code credit to: Boris at http://stackoverflow.com/a/31124676
     // Modified by: Inal Gotov
-    func keyboardWillShow(notification: NSNotification) {
+    func keyboardWillShow(_ notification: Notification) {
         // If the teacher credential field or the location field are being edited, and are blocked by the keyboard, then shift the screen up
-        if (userNameField.editing || passwordField.editing || signUpKeyField.editing) {
-            if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+        if (userNameField.isEditing || passwordField.isEditing || signUpKeyField.isEditing) {
+            if let keyboardSize = ((notification as NSNotification).userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
                 if self.mainView.frame.origin.y == 0{
                     self.mainView.frame.origin.y -= keyboardSize.height
                 }
@@ -164,10 +179,10 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    func keyboardWillHide(notification: NSNotification) {
+    func keyboardWillHide(_ notification: Notification) {
         // If the teacher credential field or the location field have been edited, while they would be blocked by the keyboard, shift the screen down
-        if (userNameField.editing || passwordField.editing || signUpKeyField.editing) {
-            if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+        if (userNameField.isEditing || passwordField.isEditing || signUpKeyField.isEditing) {
+            if let keyboardSize = ((notification as NSNotification).userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
                 if self.mainView.frame.origin.y != 0 {
                     self.mainView.frame.origin.y = 0
                     self.segmentedController.frame.origin.y += 20

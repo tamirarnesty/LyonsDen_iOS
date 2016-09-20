@@ -29,7 +29,7 @@ class ContactViewController: UIViewController {
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if ContactViewController.displayToast {
             toast = ToastView(inView: self.view, withText: "Proposal Submitted!")
@@ -38,17 +38,17 @@ class ContactViewController: UIViewController {
         }
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if let toastView = toast {
             toastView.initiate()
         }
     }
     
-    @IBAction func displayTeacherList(sender: UIButton) {
-        PeopleList.listRef = FIRDatabase.database().referenceWithPath("users").child("teachers")
+    @IBAction func displayTeacherList(_ sender: UIButton) {
+        PeopleList.listRef = FIRDatabase.database().reference(withPath: "users").child("teachers")
         PeopleList.title = "Teachers"
-        performSegueWithIdentifier("TeacherListSegue", sender: self)
+        performSegue(withIdentifier: "TeacherListSegue", sender: self)
     }
     
     override func didReceiveMemoryWarning() {
@@ -57,12 +57,12 @@ class ContactViewController: UIViewController {
     }
     
     // This is required for a successful unwind to this View Controller
-    @IBAction func myUnwindAction (unwindSegue: UIStoryboardSegue) {
+    @IBAction func myUnwindAction (_ unwindSegue: UIStoryboardSegue) {
         
     }
     
     // for contacts
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         AppDelegate.getAppDelegate().requestForAccess { (accessGranted) -> Void in
             if accessGranted {
                 //let predicate = CNContact.predicateForContactsMatchingName(self.txtLastName.text!)
@@ -76,29 +76,29 @@ class ContactViewController: UIViewController {
     }
     
 
-    @IBAction func hotlineSelected(sender: AnyObject) {
-        let options = UIAlertController(title: "Emergency Hotline", message: "Who would you like to talk to?", preferredStyle: .ActionSheet)
-        options.addAction(UIAlertAction(title: "Student Emergency Hotline", style: .Default, handler: { action in
-            self.phoneCall(NSURL(string: "telprompt://1-800-668-6868")!) // kids help phone
+    @IBAction func hotlineSelected(_ sender: AnyObject) {
+        let options = UIAlertController(title: "Emergency Hotline", message: "Who would you like to talk to?", preferredStyle: .actionSheet)
+        options.addAction(UIAlertAction(title: "Student Emergency Hotline", style: .default, handler: { action in
+            self.phoneCall(URL(string: "telprompt://1-800-668-6868")!) // kids help phone
         }))
-        options.addAction(UIAlertAction(title: "Emergency Contact", style: .Default, handler: { action in
+        options.addAction(UIAlertAction(title: "Emergency Contact", style: .default, handler: { action in
             // for now
-            self.phoneCall(NSURL(string: "telprompt://647-300-9301")!) // rachels
+            self.phoneCall(URL(string: "telprompt://647-300-9301")!) // rachels
         })) // set emergency contact from contacts in phone. save to NSDefaults. figure out how
-        options.addAction(UIAlertAction(title: "WLMCI", style: .Default, handler: { action in
-            self.phoneCall(NSURL(string: "telprompt://416-395-3330")!) // school's phone
+        options.addAction(UIAlertAction(title: "WLMCI", style: .default, handler: { action in
+            self.phoneCall(URL(string: "telprompt://416-395-3330")!) // school's phone
         }))
-        options.addAction(UIAlertAction(title: "911", style: .Default, handler: { action in
-            self.phoneCall(NSURL(string: "telprompt://911")!) // obvious
+        options.addAction(UIAlertAction(title: "911", style: .default, handler: { action in
+            self.phoneCall(URL(string: "telprompt://911")!) // obvious
 
         }))
-        options.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
-        self.presentViewController(options, animated: true, completion: nil)
+        options.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(options, animated: true, completion: nil)
     }
     
-    private func phoneCall (phoneNumber: NSURL) {
-        if UIApplication.sharedApplication().canOpenURL(phoneNumber) {
-            UIApplication.sharedApplication().openURL(phoneNumber)
+    fileprivate func phoneCall (_ phoneNumber: URL) {
+        if UIApplication.shared.canOpenURL(phoneNumber) {
+            UIApplication.shared.openURL(phoneNumber)
         }
     }
 }
@@ -107,10 +107,10 @@ class ContactViewController: UIViewController {
 class ToastView: UIView {
     var displayText:String
     
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         let label = UILabel()
-        label.textColor = UIColor.whiteColor()
-        label.font = label.font.fontWithSize(22)
+        label.textColor = UIColor.white
+        label.font = label.font.withSize(22)
         label.text = displayText
         label.sizeToFit()
         self.frame.size.width = label.frame.width + 16
@@ -126,17 +126,17 @@ class ToastView: UIView {
     }
     
     func initiate () {
-        UIView.animateWithDuration(0.1) { self.alpha = 1 }
-        UIView.animateWithDuration(0.1, delay: 1.1, options: .AllowAnimatedContent, animations: { self.alpha = 0 }, completion: { (completed) in if completed { self.removeFromSuperview() } })
+        UIView.animate(withDuration: 0.1, animations: { self.alpha = 1 }) 
+        UIView.animate(withDuration: 0.1, delay: 1.1, options: .allowAnimatedContent, animations: { self.alpha = 0 }, completion: { (completed) in if completed { self.removeFromSuperview() } })
     }
     
     convenience init(inView view:UIView, withText text:String) {
-        self.init(frame: CGRectZero, inView: view, withText: text)
+        self.init(frame: CGRect.zero, inView: view, withText: text)
     }
     
     init(frame: CGRect, inView view:UIView, withText text:String) {
         displayText = text
-        super.init(frame: CGRectMake((view.center.x - (135/2)), (view.center.y - (45/2)), 135, 45))
+        super.init(frame: CGRect(x: (view.center.x - (135/2)), y: (view.center.y - (45/2)), width: 135, height: 45))
     }
     
     required init?(coder aDecoder: NSCoder) {

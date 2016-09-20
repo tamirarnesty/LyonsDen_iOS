@@ -10,7 +10,7 @@
 import UIKit
 
 // The colour of a default cell
-let cellColorDefault = backgroundColor.colorWithAlphaComponent(0.5)
+let cellColorDefault = backgroundColor.withAlphaComponent(0.5)
 // The colour of today's cell
 let cellColorToday = backgroundColor
 // The colour of the border of a cell
@@ -61,10 +61,10 @@ class CalendarDayCell: UICollectionViewCell {
     }
     
     // The value representing whether the dayCell is selected
-    override var selected : Bool {
+    override var isSelected : Bool {
         // Changes the border whenever it is selected
         didSet {
-            if selected == true {
+            if isSelected == true {
                 self.pBackgroundView.layer.borderWidth = 2.0
             }
             else {
@@ -76,11 +76,11 @@ class CalendarDayCell: UICollectionViewCell {
     // lazy - allocated and processed only when used, not when created. (Efficiency)
     // The background view of the dayCell
     lazy var pBackgroundView : UIView = {
-        var vFrame = CGRectInset(self.frame, 3.0, 3.0)  // The frame of the view
+        var vFrame = self.frame.insetBy(dx: 3.0, dy: 3.0)  // The frame of the view
         let view = UIView(frame: vFrame)                // The view
         
         view.layer.cornerRadius = 4.0                   // The round radious of the view's rectangle
-        view.layer.borderColor = borderColor.CGColor    // The border color of the view's rectangle
+        view.layer.borderColor = borderColor.cgColor    // The border color of the view's rectangle
         view.layer.borderWidth = 0.0                    // The border width of the view's rectangle
         
         view.center = CGPoint(x: self.bounds.size.width * 0.5, y: self.bounds.size.height * 0.5)    // Position of the view's center (set in according to the parent)
@@ -92,7 +92,7 @@ class CalendarDayCell: UICollectionViewCell {
     // The UILabel that appears on the dayCell
     lazy var textLabel : UILabel = {
         let lbl = UILabel()     // Text Label
-        lbl.textAlignment = NSTextAlignment.Center  // Text Allignment
+        lbl.textAlignment = NSTextAlignment.center  // Text Allignment
         lbl.textColor = cellTextColor     // TEXT COLOR!!!!
         
         return lbl

@@ -20,7 +20,7 @@ class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDele
     @IBOutlet weak var extraCurricularLabel: UILabel!
     
     //------------ fix constraints and make it work
-    var displayNameText:String! = nil
+    var defaultDisplayName = "User"
     var identityData = ["None Of The Above", "Student", "Teacher", "Administrator"]
     var departmentData = ["None Of The Above", "Switch"]
     var clubsData = [""]
@@ -33,7 +33,7 @@ class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDele
         self.departmentPicker.dataSource = self
         self.identityPicker.delegate = self
         self.departmentPicker.delegate = self
-        self.departmentPicker.hidden = true
+        self.departmentPicker.isHidden = true
         
         self.identityPicker.setValue(accentColor, forKey: "textColor")
         self.departmentPicker.setValue(accentColor, forKey: "textColor")
@@ -46,58 +46,54 @@ class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDele
         }
         
         for text in userInfo {
-            text.editable = false
+            text.isEditable = false
             text.layer.borderWidth = 0.5
-            text.layer.borderColor = UIColor.yellowColor().CGColor
+            text.layer.borderColor = UIColor.yellow.cgColor
         }
         
-        
-        if let displayName = NSUserDefaults.standardUserDefaults().objectForKey("displayName") as? String {
-            displayNameText = displayName
-        }
-        userInfo[0].text = (FIRAuth.auth()?.currentUser?.displayName != nil) ? FIRAuth.auth()?.currentUser?.displayName : displayNameText
+        userInfo[0].text = (FIRAuth.auth()?.currentUser?.displayName != nil) ? FIRAuth.auth()?.currentUser?.displayName : defaultDisplayName
         userInfo[1].text = FIRAuth.auth()?.currentUser?.email
     }
     
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
     
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if pickerView == departmentPicker {
             return departmentData.count
         }
         return identityData.count
     }
     
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if pickerView == departmentPicker {
             return departmentData[row]
         }
         return identityData[row]
     }
     
-    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
     {
         if pickerView == identityPicker {
         switch row {
         case 0:
-            departmentPicker.hidden = true
-            identityPicker.hidden = false
+            departmentPicker.isHidden = true
+            identityPicker.isHidden = false
             userInfo[userInfo.count-1].text = "Nil"
         case 1: // student
-            departmentPicker.hidden = false
-            identityPicker.hidden = true
+            departmentPicker.isHidden = false
+            identityPicker.isHidden = true
             userInfo[userInfo.count-1].text = identityData[row]
             departmentData += ["Club President", "Student Council Member"]
         case 2: // teacher
-            departmentPicker.hidden = false
-            identityPicker.hidden = true
+            departmentPicker.isHidden = false
+            identityPicker.isHidden = true
             userInfo[userInfo.count-1].text = identityData[row]
             departmentData += ["Math", "English", "Social Science", "Science", "Arts"]
         case 3: // admin
-            departmentPicker.hidden = false
-            identityPicker.hidden = true
+            departmentPicker.isHidden = false
+            identityPicker.isHidden = true
             userInfo[userInfo.count-1].text = identityData[row]
             departmentData += ["Principal", "Vice Principal"]
         default:
@@ -105,51 +101,50 @@ class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDele
         }
         } else {
             if row == 1 {
-                departmentPicker.hidden = true
-                identityPicker.hidden = false
+                departmentPicker.isHidden = true
+                identityPicker.isHidden = false
             }
             print("extra picker")
         }
         
     }
     
-    @IBAction func signOutPressed(sender: AnyObject) {
+    @IBAction func signOutPressed(_ sender: AnyObject) {
         try! FIRAuth.auth()?.signOut()
-        NSUserDefaults.standardUserDefaults().setValue("SignedOut", forKey: "Pass") // reset password key to prevent automatic log in.
+        UserDefaults.standard.setValue("SignedOut", forKey: "Pass") // reset password key to prevent automatic log in.
         updatePeriods!.invalidate()
-        self.performSegueWithIdentifier("signOutSegue", sender: self)
+        self.performSegue(withIdentifier: "signOutSegue", sender: self)
     }
 
-    @IBAction func deleteAccount(sender: AnyObject) {
-        FIRAuth.auth()?.currentUser?.deleteWithCompletion { error in
+    @IBAction func deleteAccount(_ sender: AnyObject) {
+        FIRAuth.auth()?.currentUser?.delete { error in
             if error != nil {
                 print("Something went wrong")
             } else {
-               (UIApplication.sharedApplication().delegate as! AppDelegate).displayError("Success", errorMsg: "\(FIRAuth.auth()?.currentUser?.displayName) has been deleted.")
+               (UIApplication.shared.delegate as! AppDelegate).displayError("Success", errorMsg: "\(FIRAuth.auth()?.currentUser?.displayName) has been deleted.")
             }
         }
     }
     
-    @IBAction func resetPassword(sender: AnyObject) {
-        FIRAuth.auth()?.sendPasswordResetWithEmail((FIRAuth.auth()?.currentUser?.email)!) { error in
+    @IBAction func resetPassword(_ sender: AnyObject) {
+        FIRAuth.auth()?.sendPasswordReset(withEmail: (FIRAuth.auth()?.currentUser?.email)!) { error in
             if error != nil {
                 print ("Something went wrong")
             } else {
-                (UIApplication.sharedApplication().delegate as! AppDelegate).displayError("Success", errorMsg: "A password reset email was sent to \(FIRAuth.auth()?.currentUser?.displayName)")
+                (UIApplication.shared.delegate as! AppDelegate).displayError("Success", errorMsg: "A password reset email was sent to \(FIRAuth.auth()?.currentUser?.displayName)")
             }
         }
     }
     
-    @IBAction func updateUser(sender: AnyObject) {
+    @IBAction func updateUser(_ sender: AnyObject) {
         let user = FIRAuth.auth()?.currentUser
         if let user = user {
             let changeRequest = user.profileChangeRequest()
             changeRequest.displayName = userInfo[0].text!
-            changeRequest.commitChangesWithCompletion { error in
+            changeRequest.commitChanges { error in
                 if let error = error {
                     print("Something went wrong.")
                 } else {
-                    NSUserDefaults.standardUserDefaults().setValue(self.userInfo[0].text, forKey: "displayName")
                     print("Successful name update.")
                 }
             }
@@ -157,7 +152,7 @@ class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDele
                 if let error = error {
                     print("Something went wrong.")
                 } else {
-                    NSUserDefaults.standardUserDefaults().setValue(self.userInfo[1].text, forKey: "uID")
+                    UserDefaults.standard.setValue(self.userInfo[1].text, forKey: "uID")
                     print("Successful email update.")
                 }
             }
@@ -166,14 +161,14 @@ class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDele
                 if let error = error {
                     print("Something went wrong.")
                 } else {
-                    NSUserDefaults.standardUserDefaults().setObject(self.userInfo[2].text, forKey: "Pass")
+                    UserDefaults.standard.set(self.userInfo[2].text, forKey: "Pass")
                     print("Successful password update.")
                 }
             }
             }
             
             for text in userInfo {
-                text.editable = false
+                text.isEditable = false
             }
             self.rightBarButton.title = "Edit"
             
@@ -185,7 +180,7 @@ class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDele
         }
     }
     
-    @IBAction func editInfo(sender: AnyObject) {
+    @IBAction func editInfo(_ sender: AnyObject) {
         // make edit have to verify with touchID or current password.
         self.rightBarButton.title = "Done"
         if self.rightBarButton.title == "Done" {
@@ -195,20 +190,20 @@ class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDele
             }
         }
         for text in userInfo {
-            text.editable = true
+            text.isEditable = true
         }
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
     
-    func textFieldShouldReturn(textView: UITextView) -> Bool{
+    func textFieldShouldReturn(_ textView: UITextView) -> Bool{
         textView.resignFirstResponder()
         return true
     }
     
-    func applyClubLeaderWithKey (key:String) {
+    func applyClubLeaderWithKey (_ key:String) {
         print ("Attempting to apply club leader")
         print ("Failed! Not Supported!")
         print (key)
@@ -221,13 +216,13 @@ class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDele
     }
     
     // This is universality example
-    @IBAction func clubLeadershipApplication(sender: UIButton) {
-        let alert:LyonsAlert = LyonsAlert(withTitle: "Club Leadership", subtitle: "Enter the club code to be assigned as its leader", style: UIAlertControllerStyle.Alert)
+    @IBAction func clubLeadershipApplication(_ sender: UIButton) {
+        let alert:LyonsAlert = LyonsAlert(withTitle: "Club Leadership", subtitle: "Enter the club code to be assigned as its leader", style: UIAlertControllerStyle.alert)
         
-        alert.addAction(UIAlertAction(title: "Submit", style: UIAlertActionStyle.Default) { (action) in
+        alert.addAction(UIAlertAction(title: "Submit", style: UIAlertActionStyle.default) { (action) in
             self.applyClubLeaderWithKey((alert.alertView.textFields?.first?.text!)!)
             })
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
         alert.addTextFieldWithPlaceHolder("Enter club code here")
         alert.showIn(self)
     }
@@ -245,14 +240,14 @@ class LyonsAlert {
         alertView.view.layer.cornerRadius = 15
         alertView.view.layer.masksToBounds = true
         // Change text colors (you can change font too!)
-        alertView.setValue(NSAttributedString(string: title, attributes: [NSFontAttributeName : UIFont.systemFontOfSize(17), NSForegroundColorAttributeName : accentColor]), forKey: "attributedTitle")
-        alertView.setValue(NSAttributedString(string: subtitle, attributes: [NSFontAttributeName : UIFont.systemFontOfSize(14), NSForegroundColorAttributeName : accentColor]), forKey: "attributedMessage")
+        alertView.setValue(NSAttributedString(string: title, attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 17), NSForegroundColorAttributeName : accentColor]), forKey: "attributedTitle")
+        alertView.setValue(NSAttributedString(string: subtitle, attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 14), NSForegroundColorAttributeName : accentColor]), forKey: "attributedMessage")
         
         
     }
 
-    func showIn (initiator:UIViewController) {
-        initiator.presentViewController(alertView, animated: true, completion:  nil)
+    func showIn (_ initiator:UIViewController) {
+        initiator.present(alertView, animated: true, completion:  nil)
         // Change text color of buttons, has to be done after added, otherwise color changes back after first press
         alertView.view.tintColor = accentColor
         
@@ -262,25 +257,25 @@ class LyonsAlert {
                 let container:UIView! = textField.superview!
                 let effectView = container.superview?.subviews.first
                 if effectView is UIVisualEffectView {
-                    container.backgroundColor = UIColor.clearColor()
+                    container.backgroundColor = UIColor.clear
                     effectView?.removeFromSuperview()
                 }
             }
         }
     }
     
-    func addAction (action:UIAlertAction) {
+    func addAction (_ action:UIAlertAction) {
         alertView.addAction(action)
     }
     
-    func addTextFieldWithPlaceHolder (placeHolder:String) {
-        alertView.addTextFieldWithConfigurationHandler { (textField) in
-            textField.keyboardAppearance = UIKeyboardAppearance.Dark
-            textField.borderStyle = UITextBorderStyle.None
+    func addTextFieldWithPlaceHolder (_ placeHolder:String) {
+        alertView.addTextField { (textField) in
+            textField.keyboardAppearance = UIKeyboardAppearance.dark
+            textField.borderStyle = UITextBorderStyle.none
             textField.placeholder = placeHolder
-            textField.autocorrectionType = UITextAutocorrectionType.No
+            textField.autocorrectionType = UITextAutocorrectionType.no
             textField.textColor = accentColor
-            textField.textAlignment = NSTextAlignment.Center
+            textField.textAlignment = NSTextAlignment.center
         }
     }
 }

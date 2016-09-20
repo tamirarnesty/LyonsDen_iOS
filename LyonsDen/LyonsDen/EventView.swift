@@ -22,11 +22,11 @@ class EventView: UIView {
     // Instance of the content View of this class
     var contentView: UIView?
     
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         self.layer.cornerRadius = 8
         self.layer.masksToBounds = true
         self.layer.borderWidth = 2
-        self.layer.borderColor = UIColor(red: 0.0078, green: 0.1647, blue: 0.3922, alpha: 1).CGColor    // Could not access it from here
+        self.layer.borderColor = UIColor(red: 0.0078, green: 0.1647, blue: 0.3922, alpha: 1).cgColor    // Could not access it from here
         
         locationLabel.clipsToBounds = true
         timeLabel.clipsToBounds = true
@@ -35,7 +35,7 @@ class EventView: UIView {
     // For creating this view programmatically
     override init(frame: CGRect) {
         // Create the UIView
-        super.init(frame: CGRectMake(frame.origin.x, frame.origin.y, frame.width, 316))
+        super.init(frame: CGRect(x: frame.origin.x, y: frame.origin.y, width: frame.width, height: 316))
         // Create the content View of this UIView
         xibSetup()
     }
@@ -58,7 +58,7 @@ class EventView: UIView {
         // Use bounds not frame or it'll be set off
         contentView!.frame = bounds
         // Make the view stretch with parent view
-        contentView!.autoresizingMask = [UIViewAutoresizing.FlexibleWidth, UIViewAutoresizing.FlexibleHeight]
+        contentView!.autoresizingMask = [UIViewAutoresizing.flexibleWidth, UIViewAutoresizing.flexibleHeight]
         // Add the custom subview on top of our view (over any custom drawing)
         addSubview(contentView!)
     }
@@ -66,11 +66,11 @@ class EventView: UIView {
     // Load content from the .xib
     func loadViewFromNib() -> UIView! {
         // Declare the bundle of the .xib being used
-        let bundle = NSBundle(forClass: self.dynamicType)
+        let bundle = Bundle(for: type(of: self))
         // Declare the xib instance
         let nib = UINib(nibName: nibName, bundle: bundle)
         // Create the view from the previously declared .xib instance
-        let view = nib.instantiateWithOwner(self, options: nil)[0] as! UIView
+        let view = nib.instantiate(withOwner: self, options: nil)[0] as! UIView
         // Return the created view
         return view
     }

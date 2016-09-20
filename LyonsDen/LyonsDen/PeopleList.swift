@@ -27,15 +27,15 @@ class PeopleList: UITableViewController {
     // A clone array containing the edited content
     var newContent = [[String](), [String]()]
     // This holds the titles of the list
-    static var title:String!
+    static var title:String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Set the title of the list
-        self.title = PeopleList.title
+        PeopleList.title = PeopleList.title
         // If the current user has permission to edit thi list, then display the edit button
-        if PeopleList.editEnabled && self.title == "Members" {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .Plain, target: self, action: #selector(enterEditMode))
+        if PeopleList.editEnabled && PeopleList.title == "Members" {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(enterEditMode))
         }
         parseWebData()
     }
@@ -46,7 +46,7 @@ class PeopleList: UITableViewController {
             navigationItem.rightBarButtonItem?.title = "Done"       // Switch edit button
             // Switch back button
             leftSideItemHolder = navigationItem.leftBarButtonItem
-            navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Add", style: .Plain, target: self, action: #selector(addMemberInitiated))
+            navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(addMemberInitiated))
             // Enter editing mode
             self.tableView.setEditing(true, animated: true)
         } else {                                                    // Leaving edit mode
@@ -65,7 +65,7 @@ class PeopleList: UITableViewController {
             // Construct a dictionary of new members added to the list
             if self.content[0].count < self.newContent[0].count {
                 for h in self.content[0].count..<self.newContent[0].count {
-                    childrenToUpdate[PeopleList.listRef.childByAutoId().key as! String] = self.newContent[0][h]
+                    childrenToUpdate[PeopleList.listRef.childByAutoId().key ] = self.newContent[0][h]
                 }
             }
             // Add the new members to the database
@@ -75,7 +75,7 @@ class PeopleList: UITableViewController {
                     print ("Update Success!")
                 } else {            // If operation failed then, notify the user
                     print ("Update Failed!")
-                    print (error?.description)
+                    print (error)
                     toast.displayText = "Update Failed!"
                 }
                 self.view.addSubview(toast)
@@ -84,13 +84,13 @@ class PeopleList: UITableViewController {
         }
         
         // Remove any removed users, from the database
-        PeopleList.listRef.observeSingleEventOfType(FIRDataEventType.Value, withBlock: { (snapshot) in
+        PeopleList.listRef.observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
             let snapshots = snapshot.children.allObjects as! [FIRDataSnapshot]
             for h in 0..<snapshots.count {
                 if (!self.newContent[0].contains(snapshots[h].value as! String)) {
                     snapshots[h].ref.removeValue()
-                    self.content[0].removeAtIndex(h)
-                    self.content[1].removeAtIndex(h)
+                    self.content[0].remove(at: h)
+                    self.content[1].remove(at: h)
                 }
             }
             // Add any new users to the database
@@ -101,17 +101,17 @@ class PeopleList: UITableViewController {
     // This is called whenever the user pressed the "Add" button
     func addMemberInitiated () {
         // Display an alert view, where the user will enter the name of the new user
-        let alert:LyonsAlert = LyonsAlert(withTitle: "Add new member", subtitle: "Enter the name of the new member", style: .Alert)
-        alert.addAction(UIAlertAction(title: "Submit", style: UIAlertActionStyle.Default) { (action) in
+        let alert:LyonsAlert = LyonsAlert(withTitle: "Add new member", subtitle: "Enter the name of the new member", style: .alert)
+        alert.addAction(UIAlertAction(title: "Submit", style: UIAlertActionStyle.default) { (action) in
             self.addMember((alert.alertView.textFields?.first?.text!)!)
         })
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
         alert.addTextFieldWithPlaceHolder("Enter name here")
         alert.showIn(self)
     }
     
     // This is called whenever the user enters a name into the alert view
-    func addMember (name:String) {
+    func addMember (_ name:String) {
         // Add the new member to the list
         newContent[0].append(name)
         newContent[1].append("")
@@ -127,8 +127,8 @@ class PeopleList: UITableViewController {
                 let dataContent = data.allValues as NSArray
                 // Record each field of the members
                 for h in 0...dataContent.count-1 {
-                    self.content[0].append(dataContent.objectAtIndex(h) as! String)
-                    self.newContent[0].append(dataContent.objectAtIndex(h) as! String)
+                    self.content[0].append(dataContent.object(at: h) as! String)
+                    self.newContent[0].append(dataContent.object(at: h) as! String)
                     self.content[1].append("")
                     self.newContent[1].append("")
                 }
@@ -143,8 +143,8 @@ class PeopleList: UITableViewController {
                 let dataContent = data.allValues as NSArray
                 // Record each field of the members
                 for h in 0..<data.count {
-                    self.content[0].append(dataContent.objectAtIndex(h).objectForKey("name")! as! String)
-                    let tempHold:String = "\(dataContent.objectAtIndex(h).objectForKey("department")! as! String) \(dataContent.objectAtIndex(h).objectForKey("email")! as! String)"
+                    self.content[0].append((dataContent.object(at: h) as AnyObject).object(forKey: "name")! as! String)
+                    let tempHold:String = "\((dataContent.object(at: h) as AnyObject).object(forKey: "department")! as! String) \((dataContent.object(at: h) as AnyObject).object(forKey: "email")! as! String)"
                     self.content[1].append(tempHold)
                 }
             } else {
@@ -152,11 +152,11 @@ class PeopleList: UITableViewController {
             }
         }
         
-        PeopleList.listRef.observeSingleEventOfType(FIRDataEventType.Value, withBlock: { (snapshot) in
+        PeopleList.listRef.observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
             // Depending on which list has been initiated, call the appropriate parser
-            if self.title == "Teachers" {
+            if PeopleList.title == "Teachers" {
                 parseForTeachers(snapshot)
-            } else if self.title == "Members" {
+            } else if PeopleList.title == "Members" {
                 parseForMembers(snapshot)
             }
             // Reload the displaying list
@@ -164,37 +164,37 @@ class PeopleList: UITableViewController {
         })
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (self.tableView.editing) ? newContent[0].count : content[0].count
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return (self.tableView.isEditing) ? newContent[0].count : content[0].count
     }
     
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // This is used to enable editing
-        if tableView.editing {
+        if tableView.isEditing {
             return true
         }
         return false
     }
     
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         // This is used to allow deleting of cells, (only when editing)
-        if editingStyle == UITableViewCellEditingStyle.Delete {
-            let index = newContent[0].indexOf((tableView.cellForRowAtIndexPath(indexPath)?.textLabel?.text)!)!
-            newContent[0].removeAtIndex(index)
+        if editingStyle == UITableViewCellEditingStyle.delete {
+            let index = newContent[0].index(of: (tableView.cellForRow(at: indexPath)?.textLabel?.text)!)!
+            newContent[0].remove(at: index)
             newContent[1].removeLast()
             self.tableView.reloadData()
         }
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .Subtitle, reuseIdentifier: "TeacherCell")
-        cell.textLabel?.text = (self.tableView.editing) ? newContent[0][indexPath.row] : content[0][indexPath.row]
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "TeacherCell")
+        cell.textLabel?.text = (self.tableView.isEditing) ? newContent[0][(indexPath as NSIndexPath).row] : content[0][(indexPath as NSIndexPath).row]
         cell.textLabel!.textColor = accentColor
-        cell.detailTextLabel?.text = (self.tableView.editing) ? newContent[1][indexPath.row] : content[1][indexPath.row]
+        cell.detailTextLabel?.text = (self.tableView.isEditing) ? newContent[1][(indexPath as NSIndexPath).row] : content[1][(indexPath as NSIndexPath).row]
         cell.detailTextLabel!.textColor = accentColor
         cell.backgroundColor = foregroundColor
 //        cell.textLabel?.font = UIFont(name: "Hapna Mono", size: 12)
-        cell.selectionStyle = .None
+        cell.selectionStyle = .none
         return cell
     }
 }

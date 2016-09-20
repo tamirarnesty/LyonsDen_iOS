@@ -17,7 +17,7 @@ class CoursesViewController: UIViewController {
     @IBOutlet var roomNumber: UITextField!
     @IBOutlet var periodNumber: UILabel!
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         for var i in 0...labels.count-1 {
             if labels[identifierIndex!][i] != defaultLabels[i]
             {
@@ -46,23 +46,23 @@ class CoursesViewController: UIViewController {
         periodNumber.text = "Period " + String(identifierIndex! + 1)
     }
     
-    @IBAction func submitted(sender: AnyObject) {
+    @IBAction func submitted(_ sender: AnyObject) {
         labels[identifierIndex!][0] = courseName.text!
         labels[identifierIndex!][1] = courseCode.text!
         labels[identifierIndex!][2] = teacherName.text!
         labels[identifierIndex!][3] = roomNumber.text!
         
-        NSUserDefaults.standardUserDefaults().setObject(labels, forKey: "labels")
+        UserDefaults.standard.set(labels, forKey: "labels")
         for var i in 0...labels.count-1 {
             print (labels[identifierIndex!][i])
         }
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool{
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         textField.resignFirstResponder()
         return true
     }
