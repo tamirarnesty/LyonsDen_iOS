@@ -58,6 +58,7 @@ class CalendarView: UIView, UICollectionViewDataSource, UICollectionViewDelegate
     lazy var gregorian : Calendar = {
         var cal = Calendar(identifier: Calendar.Identifier.gregorian)   // Create a gregorian calendar
         cal.timeZone = TimeZone(abbreviation: "UTC")!                     // Set it timezone to UTC format
+        print(cal.description)
         return cal
     }()
     

@@ -230,14 +230,15 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         // Set how far back the calendar can be viewed                 //
         /////////////////////////////////////////////////////////////////
         dateComponents.month = -5
-        dateComponents.hour = -6
+        // rewind the clock 4 hours so that it is in our time zone. TEMPORARY FIX
+        dateComponents.hour = -4
         
         // Declare today's date
         let today = Date()
         // Declare the range of the between the start date and today
-        let startDate = (self.calendarView.calendar as NSCalendar).date(byAdding: dateComponents, to: today, options: NSCalendar.Options())
+        let startDate = (self.calendarView.calendar as NSCalendar).date(byAdding: dateComponents, to: today, options: NSCalendar.Options())!
         // Return the start date
-        print(startDate?.description)
+        print(startDate.description)
         return startDate
     }
     
