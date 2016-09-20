@@ -177,6 +177,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
         //individual NSDates for each period. Day is same, time is different.
         // Calendar time zone is currently EDT. CHANGED LATER DUE TO ISSUES
         var lyonsCalendar = Calendar(identifier: Calendar.Identifier.gregorian)
+        lyonsCalendar.timeZone = TimeZone(abbreviation: "EST")!
         var periodOneComponents =  lyonsCalendar.dateComponents([.year, .month, .day, .hour, .minute], from: Date())
         print(periodOneComponents.description)
         periodOneComponents.hour = 8; periodOneComponents.minute = 45
@@ -204,7 +205,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
         // create dates from components
         print(periodOneComponents.description)
         // CALENDAR TIME ZONE IS CHANGED TO GMT TO PREVENT ISSUES
-        lyonsCalendar.timeZone = TimeZone(abbreviation: "GMT")!
+//        lyonsCalendar.timeZone = TimeZone(abbreviation: "EST")!
         let periodOne = lyonsCalendar.date(from: periodOneComponents)!
         print(periodOne.description)
         let periodTwo = lyonsCalendar.date(from: periodTwoComponents)!
@@ -223,8 +224,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
         var before = false; var duringLunch = false; var after = false
         
         var todayComponents = lyonsCalendar.dateComponents([.year, .month, .day, .hour, .minute], from: Date())
-        todayComponents.timeZone = TimeZone(abbreviation: "GMT")!
-        todayComponents.hour = -3
+        todayComponents.timeZone = TimeZone(abbreviation: "EST")!
+//        todayComponents.hour = -3
         let today = lyonsCalendar.date(from: todayComponents)!
         
         print(today.description)
