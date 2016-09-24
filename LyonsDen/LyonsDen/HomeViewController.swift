@@ -156,7 +156,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
         let y:CGFloat = 161.0
         let beforeSchoolView:UIView = UIView(frame: CGRect(x: 3, y: y, width: 4, height: self.courses[0].frame.size.height))
         let lunchView:UIView = UIView(frame: CGRect(x: self.topViews.frame.size.width/2, y: y, width: 0.5, height: self.courses[0].frame.size.height))
-        let afterSchoolView:UIView = UIView(frame: CGRect(x: (self.topViews.frame.size.width/2)*2, y: y, width: 0.5, height: self.courses[0].frame.size.height))
+        let afterSchoolView:UIView = UIView(frame: CGRect(x: self.courses[3].frame.size.width-3, y: 0, width: 0.5, height: self.courses[0].frame.size.height))
         
         // color them
         beforeSchoolView.backgroundColor = accentColor
