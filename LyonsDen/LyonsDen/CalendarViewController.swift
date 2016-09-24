@@ -20,6 +20,9 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
     @IBOutlet var loadingWheel: UIActivityIndicatorView!
     // The menu button on the Navigation Bar
     @IBOutlet weak var menuButton: UIBarButtonItem!
+    // Label when loading data
+    @IBOutlet weak var loadingLabel: UILabel!
+    
     // The scroll view, containing each event
     var scrollView:UIScrollView?
     // An array of events for the currently selected day
@@ -29,12 +32,19 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
     // The label representing a strigified version of the currently selected date
     let dateLabel = UILabel()
     
+    var labelAnimator: Timer?
+    var labelCounter = 4
+    var currentLabelHorizontal:CGFloat = 0
+    
     // Called when the segue initiating button is pressed
     override func viewDidLoad() {
         // Super call
         super.viewDidLoad()
         // Start the animation of the loading wheel
         loadingWheel.startAnimating()
+        labelAnimator = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(changeLoadingLabel), userInfo: nil, repeats: true)
+//        labelAnimator = Timer (timeInterval: 1, target: self, selector: #selector(changeLoadingLabel), userInfo: nil, repeats: true)
+        
         loadingWheel.hidesWhenStopped = true
         
         // Make sidemenu swipeable
@@ -68,6 +78,29 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         self.loadEventsIntoCalendar()
     }
     
+    func changeLoadingLabel () {
+        var currentText = loadingLabel.text
+        print (self.loadingLabel.frame.origin.x)
+        
+        if labelCounter < 3 {
+            currentLabelHorizontal = loadingLabel.frame.origin.x
+            labelCounter += 1
+            currentText? += "."
+            // Add a dot to it
+        } else {    // "Just Loading", "Making sure you're on time", "Loading, just for you", "Unloading"
+            labelCounter = 0
+            // For this we will probably need a file containing them
+            let labelBank = ["Just Loading", "Making sure you're on time", "Loading, just for you", "UnLoading", "I, am your loader!"]
+            // Change the label
+            let index:Int = Int(arc4random_uniform(UInt32(labelBank.count)))
+            currentText = labelBank[index]
+        }
+        
+        DispatchQueue.main.async {
+            self.loadingLabel.text? = currentText!
+        }
+    }
+    
     // Called before apearing
     override func viewDidLayoutSubviews() {
         // Super call
@@ -83,6 +116,13 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
             self.scrollView!.contentSize.height = 37 + (self.currentEvents[0]!.frame.height + 16) * CGFloat(self.currentEvents.count)
         } else {                            // If an event does not exist
             self.scrollView!.contentSize.height = self.scrollView!.frame.height
+        }
+        
+        print (loadingLabel.frame.origin.x)
+        if self.labelCounter < 4 && self.labelCounter != 0 {
+            print ("Applying Location Fix")
+            self.loadingLabel.frame.origin.x = currentLabelHorizontal
+            print (self.loadingLabel.frame.origin.x)
         }
     }
     
@@ -110,8 +150,13 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
                 self.loadingWheel.alpha = 0
             })
             
+            print ("Events finished loading")
             // Stop the loading wheel
             self.loadingWheel.stopAnimating()
+            self.labelAnimator?.invalidate()
+            self.labelAnimator = nil
+            self.loadingLabel.isHidden = true
+            print ("Loading Label Hidden")
         }
     }
     

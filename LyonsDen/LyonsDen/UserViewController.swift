@@ -112,7 +112,7 @@ class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDele
     @IBAction func signOutPressed(_ sender: AnyObject) {
         try! FIRAuth.auth()?.signOut()
         UserDefaults.standard.setValue("SignedOut", forKey: "Pass") // reset password key to prevent automatic log in.
-        updatePeriods!.invalidate()
+        HomeViewController.updatePeriods!.invalidate()
         self.performSegue(withIdentifier: "signOutSegue", sender: self)
     }
 

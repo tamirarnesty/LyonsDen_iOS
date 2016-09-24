@@ -39,7 +39,6 @@
 		8F7324C21D2F37020097036D /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F7324C11D2F37020097036D /* Launch Screen.storyboard */; };
 		8F7324C41D31C1CE0097036D /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7324C31D31C1CE0097036D /* LogInViewController.swift */; };
 		8FA355561D6ADBD4007E5BA4 /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FA355551D6ADBD4007E5BA4 /* UserViewController.swift */; };
-		8FD393F91D62C23900DE3F4F /* InputtedCoursesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD393F81D62C23900DE3F4F /* InputtedCoursesViewController.swift */; };
 		A1FD9A06A9A5FCD92B1339F2 /* Pods_LyonsDen.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 276479845EC2B5B3C8017578 /* Pods_LyonsDen.framework */; };
 /* End PBXBuildFile section */
 
@@ -83,7 +82,6 @@
 		8F7324C11D2F37020097036D /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		8F7324C31D31C1CE0097036D /* LogInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
 		8FA355551D6ADBD4007E5BA4 /* UserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
-		8FD393F81D62C23900DE3F4F /* InputtedCoursesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputtedCoursesViewController.swift; sourceTree = "<group>"; };
 		DF74D495A453CDFA2735E79F /* Pods-LyonsDen.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LyonsDen.release.xcconfig"; path = "Pods/Target Support Files/Pods-LyonsDen/Pods-LyonsDen.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -194,7 +192,6 @@
 			children = (
 				2D8AC7CE1D25D7D900367326 /* HomeViewController.swift */,
 				8F2D32571D52AF2500B7A4B8 /* CoursesViewController.swift */,
-				8FD393F81D62C23900DE3F4F /* InputtedCoursesViewController.swift */,
 			);
 			name = "Home Screen & Courses";
 			sourceTree = "<group>";
@@ -372,7 +369,6 @@
 				2DC27BC51D386A1D002A5ADF /* CalendarFlowLayout.swift in Sources */,
 				2D8AC7E11D25D96800367326 /* CalendarViewController.swift in Sources */,
 				2D8AC7CF1D25D7D900367326 /* HomeViewController.swift in Sources */,
-				8FD393F91D62C23900DE3F4F /* InputtedCoursesViewController.swift in Sources */,
 				2D8AC8241D25E23000367326 /* SWRevealViewController.m in Sources */,
 				2D72245B1D441D2A00C327D3 /* LoginScreenSegue.swift in Sources */,
 				2D6706171D4AE28300C52860 /* ClubViewController.swift in Sources */,

@@ -111,7 +111,7 @@ class CalendarView: UIView, UICollectionViewDataSource, UICollectionViewDelegate
                 // Get the distance of the event from the start of the month
                 let distanceFromStartComponent = (self.gregorian as NSCalendar).components( flags, from:startOfMonthCache, to: startDate as Date, options: NSCalendar.Options() )
                 // Create the indexPath of the event
-                let indexPath = IndexPath(item: distanceFromStartComponent.day!, section: distanceFromStartComponent.month!)
+                let indexPath = IndexPath(item: distanceFromStartComponent.day! + 1, section: distanceFromStartComponent.month!)
                 // If there are already events in the created indexPath then
                 if var eventsList : [Event] = eventsByIndexPath[indexPath] {
                     eventsList.append(event) // Simply append them to the dictionary of eventsByindexPaths

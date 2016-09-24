@@ -8,6 +8,7 @@
 
 // TODO: FIX ALL DATEVIEW ISSUES
 // TODO: IMPLEMENT ALL INTERNET BASED ISSUE HANDLERS
+// TODO: iPhone 5S SCROLLS ABOVE (0,0) TO DESCRIPTION
 
 import UIKit
 import FirebaseDatabase
@@ -191,9 +192,75 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
     }
     
     // This is called whenever the submit button is pressed
-    @IBAction func submitProposal(_ sender: UIButton) {
-        print ("Whoops! Seems like the proper method is not here 8(")
+    @IBAction func submitProposal(sender: UIButton) {
+        // Check for field validity
+        guard fieldsAreValid() else {
+            return
+        }
+    
+        if !proposalValidated { // Approve
+            // Generate the comparison key, from the inputted teacher credential
+            let key =
+                
+                (teacherCredential.text!)
+    
+            if let keyset = teacherIDCache {
+                if keyset.values.contains(key) {
+                    proposalValidated = true
+                    submitProposal(sender: UIButton())
+                    print ("Approval: Success! Key Found!")
+                } else {
+                    print ("Approval: Failed!")
+                }
+            } else {
+                // Create a reference to the teacherID dictionary
+                let ref = database.reference(withPath: "users").child("teacherIDs")
+                // Initiate the download for the teacherID dictionary
+                ref.observe(.value, with: { (snapshot) in
+                    if (snapshot.exists()) {
+                        self.teacherIDCache = snapshot.value as? Dictionary
+                        guard self.teacherIDCache != nil else {
+                            print ("There has been an error")
+                            print ("Snapshot contents")
+                            print (snapshot.description)
+                            return
+                        }
+                        if self.teacherIDCache!.values.contains(key) {
+                            self.proposalValidated = true
+                            self.submitProposal(sender: UIButton())
+                            print ("Approval: Success! Key Found!")
+                        } else {
+                            print ("Approval: Failed!")
+                        }
+                    }
+                })
+            }
+        } else { // Submit
+            let ref = database.reference(withPath: "announcements").childByAutoId()
+    
+            let format = DateFormatter()
+            format.dateFormat = "yyyyMMddHHmmss"
+            let dateTime = format.string(from: datePicker.date)
+    
+            ref.child("title").setValue(titleField.text)
+            ref.child("description").setValue(descriptionField.text)
+            ref.child("dateTime").setValue(dateTime)
+            if locationField.text == nil {
+                ref.child("location").setValue("")
+            } else {
+                ref.child("location").setValue(locationField.text)
+            }
+            
+            ContactViewController.displayToast = true
+            performSegue(withIdentifier: "AnnouncementsUnwind", sender: self)
+            print ("Submission: Success! Announcement Sumbitted!")
+        }
     }
+    
+//    // This is called whenever the submit button is pressed
+//    @IBAction func submitProposal(_ sender: UIButton) {
+//        print ("Whoops! Seems like the proper method is not here 8(")
+//    }
 
     // This is used for checking if all the input fields are valid, returns true if they are
     func fieldsAreValid () -> Bool {

@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 import Firebase
 
+
+// TODO: FIX LOGO WHEN TEXTFIELD PRESSED
 // TODO: AUTO_LOGIN PERFORMS TWICE FROM TIME TO TIME< WHICH CAUSES A THROW BACK INTO HOME SCREEN, PUT AUTO_LOG IN A DIFFERENT PLACE
 
 class LogInViewController: UIViewController, UITextFieldDelegate {
@@ -100,13 +102,11 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         }
         
         if entranceOption == 0 {
-            if signUpKeyField.text == "MacLyonsTeacher" { // TEACHER CHECK
-                let ref:FIRDatabaseReference = FIRDatabase.database().reference()
-                ref.child("users/teacherIDs/").childByAutoId().setValue(password)
-                
-            } else {
-                if signUpKeyField.text == signUpKey {
+                if signUpKeyField.text == signUpKey || signUpKeyField.text == "MacLyonsTeacher"{
                 FIRAuth.auth()?.createUser(withEmail: self.username, password: self.password, completion: {(user, error) in
+                    if self.signUpKeyField.text == "MacLyonsTeacher" { // TEACHER CHECK
+                        FIRDatabase.database().reference(withPath: "users").child("teacherIDs").childByAutoId().setValue(self.password) // adds a teachers password to the database for announcements proof
+                    }
                     if error != nil {
                         if let code = FIRAuthErrorCode(rawValue: error!._code) {
                             switch code {
@@ -134,7 +134,6 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             } else {
                 (UIApplication.shared.delegate as! AppDelegate).displayError("Incorrect Sign Up Key", errorMsg: "Please try again.")
             } // close of else { if {
-            }// close of TEACHER CHECK
         } else if entranceOption == 1 {
             // Authentication
             FIRAuth.auth()?.signIn(withEmail: username, password: self.password) { (user, error) in

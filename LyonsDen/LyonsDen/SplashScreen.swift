@@ -7,6 +7,8 @@
 //  Copyright © 2016 Tamir Arnesty. All rights reserved.
 //
 
+// TODO: CHECK IF FIREBASE CAN PING (ish) A NETWORK
+
 import Foundation
 import UIKit
 import Firebase
@@ -23,8 +25,9 @@ class SplashScreen: UIViewController {
     
     func increaseTimer () {
         time += 1
-        if (time == 3) {
+        if (time == 2) {
             timer!.invalidate()
+            //                          ------------ HERE -----------
             // Auto login
             if let username = UserDefaults.standard.object(forKey: "uID") as! String?,    // If a username has been pre-saved and
                 let password = UserDefaults.standard.object(forKey: "Pass") as! String? {     // a password has been pre-saved then

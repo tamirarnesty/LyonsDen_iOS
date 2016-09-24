@@ -24,6 +24,8 @@ class ListViewController: UITableViewController {
     var images = [UIImage?]()
     // Reference to the database
     var ref:FIRDatabaseReference!
+    // Refresh Controller to update data in screen
+    var refreshController: UIRefreshControl!
                         //       Title        Description  Date&Time    Location
     var eventData:[[String?]] = [[String?](), [String?](), [String?](), [String?]()]
     var clubKeys:[String] = [String]()
@@ -31,6 +33,13 @@ class ListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Initialize refresh controller
+        refreshController = UIRefreshControl()
+        refreshController.frame.size.height = 5
+        refreshController.addTarget(self, action: #selector(reloadHome), for: .valueChanged)
+        self.tableView.addSubview(refreshController)
+        
         // Initialize the database
         ref = FIRDatabase.database().reference()
         
@@ -66,6 +75,21 @@ class ListViewController: UITableViewController {
         }
     }
     
+    func reloadHome () {
+        
+        print ("refreshed")
+        // Clear events array to enter new Data
+        self.eventData = [[String?](), [String?](), [String?](), [String?]()]
+        // Reload data into events array
+        if ListViewController.displayContent == 3 {
+            parseForClubs()
+        } else {
+            parseForEvents(self.ref.child((ListViewController.displayContent == 1) ? "announcements" : "events"))    // Download events data
+        }        // Quit refreshing animation
+        self.refreshController.endRefreshing()
+    }
+
+    
     static func formatTime (_ time:NSString) -> String {
         var output:NSString = ""
         output = (output.appending(time.substring(to: 4)) + "-") as NSString
@@ -92,7 +116,7 @@ class ListViewController: UITableViewController {
     
     func parseForEvents (_ reference:FIRDatabaseReference) {
         // Navigate to and download the Events data
-        reference.observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
+        reference.queryOrdered(byChild: "dateTime").observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
             if snapshot.exists() {
                 // Create an NSDictionary instance of the data
                 let data = snapshot.value as! NSDictionary
@@ -102,9 +126,13 @@ class ListViewController: UITableViewController {
                 let key = ["title", "description", "dateTime", "location"]
                 for h in 0..<dataContent.count {
                     for j in 0..<key.count {
-                        self.eventData[j].append(((dataContent.object(at: h) as AnyObject).object(forKey: key[j]) as! NSString).description)
+                        self.eventData[j].append(((dataContent.object(at: h) as AnyObject!).object(forKey: key[j]) as AnyObject!).description)
                     }
                     self.images.append(nil) // Will be implemented later
+                }
+                // Reverse data in array so it is by newest created date
+                for var i in 0..<self.eventData.count {
+                    self.eventData[i].reverse()
                 }
                 // Reload the tableView to display the loaded data
                 self.tableView.reloadData()

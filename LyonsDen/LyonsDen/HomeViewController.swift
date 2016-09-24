@@ -10,19 +10,17 @@
 //
 
 
+// TODO: Table goes off screen in iPhone 5
 import UIKit
 import Firebase
-var identifier:String?
+
 var identifierIndex:Int?
-var coursesData: [UIView]!
+
 var labels:[[String]] = [["Name", "Code", "Teacher", "Room"],
                          ["Name", "Code", "Teacher", "Room"],
                          ["Name", "Code", "Teacher", "Room"],
                          ["Name", "Code", "Teacher", "Room"]]
-var labelsDict:[String: [String]] = ["period1" : ["Name", "Code", "Teacher", "Room"]]
 var defaultLabels = ["Name", "Code", "Teacher", "Room"]
-var different = false
-var updatePeriods:Timer?
 
 class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecognizerDelegate {
     @IBOutlet weak var menuButton: UIBarButtonItem! // Menu button
@@ -31,13 +29,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
     @IBOutlet var tableList: UITableView!           // The table list holding all the announcements
     @IBOutlet var topViews: UIView!                 // The top views, above the table
     @IBOutlet var courses: [UIView]!                // The four period courses views
-    @IBAction func returnToHome(_ returnSegue: UIStoryboardSegue) {}
-    @IBOutlet var periodOneLabels: [UILabel]!
-    @IBOutlet var periodTwoLabels: [UILabel]!
-    @IBOutlet var periodThreeLabels: [UILabel]!
-    @IBOutlet var periodFourLabels: [UILabel]!
+    @IBOutlet var periodOneLabels: [UILabel]!       // Labels for period 1 course
+    @IBOutlet var periodTwoLabels: [UILabel]!       // Labels for period 2 course
+    @IBOutlet var periodThreeLabels: [UILabel]!     // Labels for period 3 course
+    @IBOutlet var periodFourLabels: [UILabel]!      // Labels for period 4 course
     
     
+    static var updatePeriods:Timer?
     var refreshController:UIRefreshControl!
     var eventData:[[String?]] = [[String?](), [String?](), [String?](), [String?]()]
     var dayText = ""
@@ -54,11 +52,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // tap & hold gesture recognizers for courses views to segue to specific controllers.
-//        var longTaps = [UILongPressGestureRecognizer(target: self, action: #selector(HomeViewController.handleLongTap(_:))),
-//                        UILongPressGestureRecognizer(target: self, action: #selector(HomeViewController.handleLongTap(_:))),
-//                        UILongPressGestureRecognizer(target: self, action: #selector(HomeViewController.handleLongTap(_:))),
-//                        UILongPressGestureRecognizer(target: self, action: #selector(HomeViewController.handleLongTap(_:)))]
+        
         for var i in 0...courses.count-1 {
             self.courses[i].addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(HomeViewController.handleLongTap(_:))))
         }
@@ -82,9 +76,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
         
         // Initialize refresh controller
         refreshController = UIRefreshControl()
-        refreshController.frame.size.height = 10
+        refreshController.frame.size.height = 5
         refreshController.addTarget(self, action: #selector(reloadHome), for: .valueChanged)
-
+        self.tableList.addSubview(refreshController)
+        
         // set date label to current day 1/2
         //self.parseForDay()
         self.parseForEvents(self.ref.child("announcements")) // download events data
@@ -95,12 +90,14 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
         }
         loadLabelsForViews()
         
-        updatePeriods = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(periodUpdater), userInfo: nil, repeats: true)
+        HomeViewController.updatePeriods = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(periodUpdater), userInfo: nil, repeats: true)
         
         // Set the size of the scrollView
         scrollView.frame = view.bounds
         // Set the table's height to fill the screen, subtract 64pt for nav. bar
         tableList.constraints[0].constant = view.bounds.height - 64
+        tableList.frame.size.height = view.bounds.height - topViews!.bounds.height
+        
         // Set the scrollable are size
         scrollView.contentSize = CGSize(width: view.bounds.width, height: tableList.bounds.height + topViews.bounds.height)
         scrollView.isScrollEnabled = false
@@ -131,14 +128,18 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
     func reloadHome () {
         
         print ("refreshed")
-        
+        // Clear events array to enter new Data
+        self.eventData = [[String?](), [String?](), [String?](), [String?]()]
+        // Reload data into events array
+        self.parseForEvents(self.ref.child("announcements"))
+        // Quit refreshing animation
         self.refreshController.endRefreshing()
     }
     
     func layoutTableView () {
         // set up tableview
-        tableList.autoresizingMask = [ UIViewAutoresizing.flexibleWidth, UIViewAutoresizing.flexibleHeight]
-        tableList.tableFooterView = UIView(frame: CGRect.zero)
+        //tableList.autoresizingMask = [ UIViewAutoresizing.flexibleWidth, UIViewAutoresizing.flexibleHeight]
+        //tableList.tableFooterView = UIView(frame: CGRect.zero)
         
         let contentSize:CGSize = self.tableList.contentSize
         let boundsSize:CGSize = self.tableList.bounds.size
@@ -204,8 +205,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
         
         // create dates from components
         print(periodOneComponents.description)
-        // CALENDAR TIME ZONE IS CHANGED TO GMT TO PREVENT ISSUES
-//        lyonsCalendar.timeZone = TimeZone(abbreviation: "EST")!
+        
         let periodOne = lyonsCalendar.date(from: periodOneComponents)!
         print(periodOne.description)
         let periodTwo = lyonsCalendar.date(from: periodTwoComponents)!
@@ -308,7 +308,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
     func handleLongTap (_ recognizer: UILongPressGestureRecognizer) {
         print("to edit")
         identifierIndex = getIndex(recognizer)
-        performSegue(withIdentifier: "periodEditorSegue", sender: self)
+        print("once/twice")
+        performSegue(withIdentifier: "periodEditorSegue", sender: nil)
     }
     
     // Set number of items in table
@@ -409,12 +410,113 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
         }
     }
     
-    // day formats
-    // DTSTART;VALUE=DATE:20170613
-    // DTSTART:20130410T230000Z
-    // DTSTART;TZID=America/Toronto:20110524T100000
+//    // day formats
+//    // DTSTART;VALUE=DATE:20170613
+//    // DTSTART:20130410T230000Z
+//    // DTSTART;TZID=America/Toronto:20110524T100000
+//    
+//    func parseForDay () {
+//        var day = "3"
+//        // The link from which the calendar is downloaded
+//        let url = URL (string: "https://calendar.google.com/calendar/ical/wlmacci%40gmail.com/public/basic.ics")!
+//        
+//        // The process of downloading and parsing the calendar
+//        let task = URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+//            
+//            let formats:[String] = [";VALUE=DATE:", ":", ";TZID=America/Toronto:"]
+//            // closures
+//            let formatDate:(NSString, Int) -> String = {(noFormat:NSString, index:Int) -> String in
+//                // fix dates yyyymmdd
+//                let formattedDate = noFormat.substring(with: NSMakeRange(0, 4)) + noFormat.substring(with: NSMakeRange(5, 2)) + noFormat.substring(with: NSMakeRange(8, 2))
+//                let finalDate = formats[index] + formattedDate
+//                
+//                return finalDate
+//            }
+//            
+//            
+//            // The following is simply a declaration and will not execute without the line 'task.resume()'
+//            if let URlContent = data {  // If Data has been loaded
+//                // If you got to this point then you've downloaded the calendar so...
+//                // Calendar File parsing starts here!!!
+//                // The string that holds the contents of the calendar's events
+//                let webContent:NSString = NSString(data: URlContent, encoding: String.Encoding.utf8.rawValue)!
+//                
+//                // An array of flags used for locating the event fields
+//                // [h][0] - The flag that marks the begining of a field, [h][1] - The flag that marks the end of a field
+//                var searchTitles:[[String]] = [["DTSTART", "DTEND"], ["SUMMARY:", "TRANSP:"]]
+//                
+//                // The range of "webContent's" content that is to be scanned
+//                // Must be decreased after each event is scanned
+//                var range:NSRange = NSMakeRange(0, webContent.length - 1)
+//                // Inside function that will be used to determine the 'difference' range between the begining and end flag ranges.
+//                let findDifference:(NSRange, NSRange) -> NSRange = {(first:NSRange, second:NSRange) -> NSRange in
+//                    let location = first.location + first.length, length = second.location - location   // Determine the start position and length of our new range
+//                    return NSMakeRange(location, length)                                                // Create and return the new range
+//                }
+//                // Inside function that will be used to move the searching range to the next event
+//                // Returns an NSNotFound range (NSNotFound, 0) if there are not more events
+//                let updateRange:(NSRange) -> NSRange = {(oldRange:NSRange) -> NSRange in
+//                    let beginingDeclaration = webContent.range(of: "BEGIN:VEVENT", options: NSString.CompareOptions.literal, range: oldRange)
+//                    // If the "BEGIN:VEVENT" was not found in webContent (no more events)
+//                    if NSEqualRanges(beginingDeclaration, NSMakeRange(NSNotFound, 0)) {
+//                        return beginingDeclaration  // Return an 'NSNotFound' range (Named it myself;)
+//                    }
+//                    // Calculate the index of the last character of 'beginingDeclaration' flag
+//                    let endOfBeginingDeclaration = beginingDeclaration.location + beginingDeclaration.length
+//                    // Calculate the length of the new range
+//                    let length = oldRange.length - endOfBeginingDeclaration + oldRange.location
+//                    // Calculate the starting location of the new range
+//                    let location = endOfBeginingDeclaration
+//                    // Create and return the new range
+//                    return NSMakeRange(location, length)
+//                }
+//                
+//                // A holder for the begining and end flags for each event field
+//                var fieldBoundaries:[NSRange]
+//                
+//                // Parse section to find event day info (1/2)
+//                OUTER:
+//                    for var i in 0...formats.count-1 {
+//                        searchTitles[0][0] += formatDate(Date().description as NSString, i)
+//                        INNER:
+//                            repeat {
+//                                range = updateRange(range)
+//                                // if end of file is reached
+//                                if NSEqualRanges(range, NSMakeRange(NSNotFound, 0)) {   // If there are no more events in the searching range
+//                                    if i == formats.count-1 {
+//                                        day = String(0)
+//                                        break OUTER;
+//                                    } else {
+//                                        break INNER; }                                            // Then no more shall be added (break from the loop)
+//                                }
+//                                
+//                                for x in 0...searchTitles.count-1 {
+//                                    fieldBoundaries = [NSRange]()
+//                                    fieldBoundaries.append(webContent.range(of: searchTitles[x][0], options: NSString.CompareOptions.literal, range: range))   // Find the begining flag
+//                                    fieldBoundaries.append(webContent.range(of: searchTitles[x][1], options: NSString.CompareOptions.literal, range: range))   // Find the ending flag
+//                                    var tempHold:NSString = webContent.substring(with: findDifference(fieldBoundaries[0], fieldBoundaries[1]))                         // Create a new string from whatever is in between the two flags. This will be the current field of the event
+//                                    tempHold = tempHold.trimmingCharacters(in: CharacterSet.newlines) as NSString                                           // Remove all /r /n and other 'new line' characters from the event field
+//                                    tempHold = tempHold.replacingOccurrences(of: "\u{005C}", with: "", options: .literal, range: NSMakeRange(0, tempHold.length-1)) as NSString           // Replace all backslashes from the event field
+//                                    if x == 1 && tempHold.hasPrefix("DAY") {
+//                                        day = tempHold.substring(with: NSMakeRange(4, 1))
+//                                        print(day)
+//                                        break OUTER;
+//                                    }
+//                                }
+//                                
+//                        } while (true)
+//                        
+//                }
+//                self.dayText = day
+//                self.labelDidLoad()
+//            } else {
+//                //                let noDataAlert = UIAlertController () // tell them they have no data
+//                print("connect to data pls")
+//            }
+//        })
+//        task.resume()
+//    }
     
-        
     /* The parseForEvents method loads announcements specifically from Firebase.
      The announcement events are loaded into eventData which is used to enter information into the UITableView
      
@@ -422,7 +524,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
      */
     func parseForEvents (_ reference:FIRDatabaseReference) {
         // Navigate to and download the Events data
-        reference.observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
+        reference.queryOrdered(byChild: "dateTime").observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
             if snapshot.exists() {
                 // Create an NSDictionary instance of the data
                 let data = snapshot.value as! NSDictionary
@@ -435,6 +537,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
                         self.eventData[j].append(((dataContent.object(at: h) as AnyObject).object(forKey: key[j]) as! NSString).description)
                     }
                     self.images.append(nil) // Will be implemented later
+                }
+                // Reverse data in array so it is by newest created date
+                for var i in 0..<self.eventData.count {
+                    self.eventData[i].reverse()
                 }
                 // Reload the tableView to display the loaded data
                 try! self.tableList.reloadData()
