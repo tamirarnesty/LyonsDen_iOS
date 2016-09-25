@@ -131,7 +131,7 @@ class ListViewController: UITableViewController {
                     self.images.append(nil) // Will be implemented later
                 }
                 // Reverse data in array so it is by newest created date
-                for var i in 0..<self.eventData.count {
+                for i in 0..<self.eventData.count {
                     self.eventData[i].reverse()
                 }
                 // Reload the tableView to display the loaded data

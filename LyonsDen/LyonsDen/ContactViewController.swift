@@ -51,24 +51,32 @@ class ContactViewController: UIViewController {
         performSegue(withIdentifier: "TeacherListSegue", sender: self)
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     // This is required for a successful unwind to this View Controller
+    // It just needs to be present, so don't mind it at all
     @IBAction func myUnwindAction (_ unwindSegue: UIStoryboardSegue) {
         
+    }
+    
+    // This is called whenever people get too curious
+    @IBAction func curiosityWon(_ sender: UIButton) {
+        let anim = CAKeyframeAnimation( keyPath:"transform" )
+        anim.values = [NSValue(caTransform3D:CATransform3DMakeTranslation(-5, 0, 0)), NSValue(caTransform3D: CATransform3DMakeTranslation(5, 0, 0))]
+        anim.autoreverses = true
+        anim.repeatCount = 2
+        anim.duration = 7/100
+        for view in self.view.subviews {
+            view.layer.add(anim, forKey: nil)
+        }
     }
     
     // for contacts
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         AppDelegate.getAppDelegate().requestForAccess { (accessGranted) -> Void in
             if accessGranted {
-                //let predicate = CNContact.predicateForContactsMatchingName(self.txtLastName.text!)
-                let keys = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactEmailAddressesKey, CNContactPhoneNumbersKey]
-                var contacts = [CNContact]()
-                var message: String!
+//                let predicate = CNContact.predicateForContactsMatchingName(self.txtLastName.text!)
+//                let keys = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactEmailAddressesKey, CNContactPhoneNumbersKey]
+//                var contacts = [CNContact]()
+//                var message: String!
             }
         }
         

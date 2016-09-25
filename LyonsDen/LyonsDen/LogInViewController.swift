@@ -181,7 +181,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     func keyboardWillHide(_ notification: Notification) {
         // If the teacher credential field or the location field have been edited, while they would be blocked by the keyboard, shift the screen down
         if (userNameField.isEditing || passwordField.isEditing || signUpKeyField.isEditing) {
-            if let keyboardSize = ((notification as NSNotification).userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            if (((notification as NSNotification).userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue) != nil {
                 if self.mainView.frame.origin.y != 0 {
                     self.mainView.frame.origin.y = 0
                     self.segmentedController.frame.origin.y += 20

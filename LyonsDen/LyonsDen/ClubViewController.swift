@@ -35,7 +35,8 @@ class ClubViewController: UIViewController, UITableViewDelegate {
         }
     }
     
-    @IBOutlet var titleField: UITextField!      // Title UITextField for editing the club title
+    //@IBOutlet var titleField: UITextField!
+    @IBOutlet var titleField: UITextView!       // Title UITextField for editing the club title
     @IBOutlet var descriptionField: UITextView! // Description UITextView for editing the club description
     @IBOutlet var clubImageView: UIImageView!   // UIImageView for the club
     @IBOutlet var clubTitleView: UILabel!       // Title UILabel for the club
@@ -185,7 +186,7 @@ class ClubViewController: UIViewController, UITableViewDelegate {
         return eventData[0].count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAtIndexPath indexPath: IndexPath) -> UITableViewCell {
+    private func tableView(_ tableView: UITableView, cellForRowAtIndexPath indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "ListCell")   // Declare the cell
         cell.backgroundColor = foregroundColor                              // Set the Background Color
         cell.imageView?.image = images[(indexPath as NSIndexPath).row]                       // Set the Cell Image

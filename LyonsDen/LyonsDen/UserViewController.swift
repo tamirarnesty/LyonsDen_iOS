@@ -9,15 +9,10 @@
 import Foundation
 import FirebaseAuth
 
-class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
+class UserViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var menuButton: UIBarButtonItem!
     @IBOutlet var userInfo: [UITextView]!
     @IBOutlet weak var rightBarButton: UIBarButtonItem!
-    @IBOutlet weak var identityPicker: UIPickerView!
-    @IBOutlet weak var departmentPicker: UIPickerView!
-    @IBOutlet weak var extraCurricularPicker: UIPickerView!
-    @IBOutlet weak var departmentLabel: UILabel!
-    @IBOutlet weak var extraCurricularLabel: UILabel!
     
     //------------ fix constraints and make it work
     var defaultDisplayName = "User"
@@ -27,17 +22,6 @@ class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // set up picker views
-        self.identityPicker.dataSource = self
-        self.departmentPicker.dataSource = self
-        self.identityPicker.delegate = self
-        self.departmentPicker.delegate = self
-        self.departmentPicker.isHidden = true
-        
-        self.identityPicker.setValue(accentColor, forKey: "textColor")
-        self.departmentPicker.setValue(accentColor, forKey: "textColor")
-        
         // Make sidemenu swipeable
         if self.revealViewController() != nil {
             menuButton.target = self.revealViewController()
@@ -53,60 +37,6 @@ class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDele
         
         userInfo[0].text = (FIRAuth.auth()?.currentUser?.displayName != nil) ? FIRAuth.auth()?.currentUser?.displayName : defaultDisplayName
         userInfo[1].text = FIRAuth.auth()?.currentUser?.email
-    }
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if pickerView == departmentPicker {
-            return departmentData.count
-        }
-        return identityData.count
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        if pickerView == departmentPicker {
-            return departmentData[row]
-        }
-        return identityData[row]
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
-    {
-        if pickerView == identityPicker {
-        switch row {
-        case 0:
-            departmentPicker.isHidden = true
-            identityPicker.isHidden = false
-            userInfo[userInfo.count-1].text = "Nil"
-        case 1: // student
-            departmentPicker.isHidden = false
-            identityPicker.isHidden = true
-            userInfo[userInfo.count-1].text = identityData[row]
-            departmentData += ["Club President", "Student Council Member"]
-        case 2: // teacher
-            departmentPicker.isHidden = false
-            identityPicker.isHidden = true
-            userInfo[userInfo.count-1].text = identityData[row]
-            departmentData += ["Math", "English", "Social Science", "Science", "Arts"]
-        case 3: // admin
-            departmentPicker.isHidden = false
-            identityPicker.isHidden = true
-            userInfo[userInfo.count-1].text = identityData[row]
-            departmentData += ["Principal", "Vice Principal"]
-        default:
-            break;
-        }
-        } else {
-            if row == 1 {
-                departmentPicker.isHidden = true
-                identityPicker.isHidden = false
-            }
-            print("extra picker")
-        }
-        
     }
     
     @IBAction func signOutPressed(_ sender: AnyObject) {
@@ -144,6 +74,7 @@ class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDele
             changeRequest.commitChanges { error in
                 if let error = error {
                     print("Something went wrong.")
+                    print(error.localizedDescription)
                 } else {
                     print("Successful name update.")
                 }
@@ -151,6 +82,7 @@ class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDele
             user.updateEmail(userInfo[1].text!) { error in
                 if let error = error {
                     print("Something went wrong.")
+                    print(error.localizedDescription)
                 } else {
                     UserDefaults.standard.setValue(self.userInfo[1].text, forKey: "uID")
                     print("Successful email update.")
@@ -160,6 +92,7 @@ class UserViewController: UIViewController, UITextViewDelegate, UIPickerViewDele
             user.updatePassword(userInfo[2].text!) { error in
                 if let error = error {
                     print("Something went wrong.")
+                    print(error.localizedDescription)
                 } else {
                     UserDefaults.standard.set(self.userInfo[2].text, forKey: "Pass")
                     print("Successful password update.")
