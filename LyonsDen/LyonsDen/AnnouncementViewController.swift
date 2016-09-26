@@ -39,17 +39,25 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet var teacherCredential: UITextField!
     // The description UITextView placeholder
     @IBOutlet var descriptionPlaceHolder: UILabel!
+    // An instance of the submit button
+    @IBOutlet var submitButton: UIButton!
     
     // States whether the date drawer is open or not
-    var dateViewOpen = false
+    var dateViewOpen = true
+    
+    
     // Holder for the height of the date drawer in its opened state
     var dateViewOpenHeight:CGFloat = 0
+    // Holder for the height of the date drawer in its closed state
+    var dateViewClosedHeight:CGFloat = 0
     // Holder for the defualt vertical position of the bottom views container
-    var bottomViewDefaultY:CGFloat = 0
+    var bottomViewOpenY:CGFloat = 0
     // Holder for the content height of the scroll view
-    var scrollViewContentHeight:CGFloat = 0
+    var scrollViewOpenContentHeight:CGFloat = 0
+    
+    
     // States whether the proposal has been validated
-    var proposalValidated = false
+    var proposalLocked = false
     // Holder for the database
     let database = FIRDatabase.database()
     // Cache of teacher IDs (for now redownloading it every time)
@@ -75,17 +83,11 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
         // Make it so that, whenever the user taps on the date view, switchDateCell() function is called
         dateView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(switchDateCell)))
         
-        // Instantiate the 'default date cell height' holder, for the 'open' state of the date cell
-        dateViewOpenHeight = dateView.frame.height
-        
-        // Instantiate the 'default vertical position of the bottom views' holder, for the 'open' state of the date cell
-        bottomViewDefaultY = bottomViews.frame.origin.y
-        
-        // Instantiate the scrollView's defualt content height
-        scrollViewContentHeight = titleField.frame.height + descriptionLabel.frame.height + descriptionField.frame.height + dateViewOpenHeight + bottomViews.frame.height + 40
-        
         // Set the initial text for the dateLabel
         datePickerValueChanged(datePicker)
+        
+        submitButton.isEnabled = false
+        submitButton.alpha = 0
         
         // Make each appropriate view's borders rounded and coloured
         let fields:[UIView] = [titleField, descriptionField, locationField, teacherCredential, dateView]
@@ -105,12 +107,36 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
 
     override func viewDidLayoutSubviews() {
         if !dateViewOpen {  // If the drawer should be closed then close it!
-            dateView.frame.size.height = dateViewOpenHeight - 216
-            bottomViews.frame.origin.y = bottomViewDefaultY - 216
-            scrollView.contentSize.height = scrollViewContentHeight - 216
+            self.scrollView.contentSize.height = self.scrollViewOpenContentHeight - (self.dateViewOpenHeight - self.dateViewClosedHeight)
+            self.dateView.frame.size.height = self.dateViewClosedHeight
+            self.bottomViews.frame.origin.y = self.bottomViewOpenY - (self.dateViewOpenHeight - self.dateViewClosedHeight)
         }
     }
     
+// MARK: DEBUGGING HERE
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if self.dateViewOpenHeight == 0 {
+            // Instantiate the 'default date cell height' holder, for the 'open' state of the date cell
+            dateViewOpenHeight = dateView.frame.height
+//            print ("dateViewOpenHeight: \(dateViewOpenHeight)")
+            
+            dateViewClosedHeight = dateViewOpenHeight - 216
+//            print ("dateViewClosedHeight: \(dateViewClosedHeight)")
+            
+            // Instantiate the 'default vertical position of the bottom views' holder, for the 'open' state of the date cell
+            bottomViewOpenY = bottomViews.frame.origin.y
+//            print ("bottomViewOpenY: \(bottomViewOpenY)")
+            
+            // Instantiate the scrollView's defualt content height
+            scrollViewOpenContentHeight = titleField.frame.height + descriptionLabel.frame.height + descriptionField.frame.height + dateViewOpenHeight + bottomViews.frame.height + 48
+//            print ("scrollVoewOpenContentHeight: \(scrollViewOpenContentHeight)")
+            
+            switchDateCell()
+        }
+    }
+
     // Called whenever the description's placeholder is tapped
     func descriptionPlaceHolderAction () {
         descriptionField.becomeFirstResponder()     // Initiate the editing of description's UITextView
@@ -119,55 +145,99 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if !dateViewOpen {  // If the drawer should be closed then close it!
             scrollView.layoutSubviews()
-            self.dateView.frame.size.height = dateViewOpenHeight - 216
-            self.bottomViews.frame.origin.y = bottomViewDefaultY - 216
-            scrollView.contentSize.height = scrollViewContentHeight - 216
+            self.scrollView.contentSize.height = self.scrollViewOpenContentHeight - (self.dateViewOpenHeight - self.dateViewClosedHeight)
+            self.dateView.frame.size.height = self.dateViewClosedHeight
+            self.bottomViews.frame.origin.y = self.bottomViewOpenY - (self.dateViewOpenHeight - self.dateViewClosedHeight)
         }
     }
-    
+
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         if !dateViewOpen {  // If the drawer should be closed then close it!
             scrollView.layoutSubviews()
-            self.dateView.frame.size.height = dateViewOpenHeight - 216
-            self.bottomViews.frame.origin.y = bottomViewDefaultY - 216
-            scrollView.contentSize.height = scrollViewContentHeight - 216
+            self.scrollView.contentSize.height = self.scrollViewOpenContentHeight - (self.dateViewOpenHeight - self.dateViewClosedHeight)
+            self.dateView.frame.size.height = self.dateViewClosedHeight
+            self.bottomViews.frame.origin.y = self.bottomViewOpenY - (self.dateViewOpenHeight - self.dateViewClosedHeight)
         }
     }
    
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         if !dateViewOpen {  // If the drawer should be closed then close it!
             scrollView.layoutSubviews()
-            self.dateView.frame.size.height = dateViewOpenHeight - 216
-            self.bottomViews.frame.origin.y = bottomViewDefaultY - 216
-            scrollView.contentSize.height = scrollViewContentHeight - 216
+            self.scrollView.contentSize.height = self.scrollViewOpenContentHeight - (self.dateViewOpenHeight - self.dateViewClosedHeight)
+            self.dateView.frame.size.height = self.dateViewClosedHeight
+            self.bottomViews.frame.origin.y = self.bottomViewOpenY - (self.dateViewOpenHeight - self.dateViewClosedHeight)
         }
     }
     
+// MARK: DEBUGGING HERE
     // Called whenever the dateView is tapped
     func switchDateCell () {
+//        print ()
+//        print ("Date Cell Switch Initiated")
         // Switch the state of the dateView
         dateViewOpen = !dateViewOpen
         
-        // These sequences used to make sense to me, now they don't, but now they work exactly they way I wanted them to (something I didn't have before :)
+        // SEQUENCE:
+        // What needs to change
+        //     - Scroll View content height
+        //     - Date view height
+        //     - Date picker alpha
+        //     - Bottom views position?
         
-        if !dateViewOpen {  // If the view should be closed, then close it
-            // Close the view
+        
+        if !dateViewOpen {  // If the new state of the dateView is closed, then close it
+//            print ()
+//            print ("Date Cell Open, Closing now!")
+//            print ("Stats!")
+//            print ("               Date Cell Y: \(self.dateView.frame.origin.y)")
+//            print ("          Date Cell Height: \(self.dateView.frame.height)")
+//            print ("            Bottom Views Y: \(self.bottomViews.frame.origin.y)")
+//            print ("Scroll View Content Height: \(self.scrollView.contentSize.height)")
+            // Close dateView
             UIView.animate(withDuration: 0.5, animations: {
-                self.dateView.frame.size.height = self.dateViewOpenHeight - 216
-                self.bottomViews.frame.origin.y = self.bottomViewDefaultY - 216
-                self.scrollView.contentSize.height = self.scrollViewContentHeight - 216
+                self.scrollView.contentSize.height = self.scrollViewOpenContentHeight - (self.dateViewOpenHeight - self.dateViewClosedHeight)
+                self.dateView.frame.size.height = self.dateViewClosedHeight
+                self.bottomViews.frame.origin.y = self.bottomViewOpenY - (self.dateViewOpenHeight - self.dateViewClosedHeight)
             })
-            // Hide datePicker
-            UIView.animate(withDuration: 0.2, delay: 0.3, options: .allowAnimatedContent, animations: { self.datePicker.alpha = 0 }, completion: nil)
-        } else {    // Otherwise it must be an opening request, so, open it!
-            // Show datePicker
-            UIView.animate(withDuration: 0.2, animations: { self.datePicker.alpha = 1 })
-            // Open the view
+//            print ("First animation initiated!")
+            // Hide DatePicker
+            UIView.animate(withDuration: 0.2, delay: 0.3, options: .allowAnimatedContent, animations: {
+                self.datePicker.alpha = 0
+                }, completion: nil)
+            
+//            print ("Second animation initiated!")
+//            print ("New Stats!")
+//            print ("               Date Cell Y: \(self.dateView.frame.origin.y)")
+//            print ("          Date Cell Height: \(self.dateView.frame.height)")
+//            print ("            Bottom Views Y: \(self.bottomViews.frame.origin.y)")
+//            print ("Scroll View Content Height: \(self.scrollView.contentSize.height)")
+//            print ()
+        } else {            // Otherwise the state must be open, so open it
+//            print ()
+//            print ("Date Cell Closed, Opening now!")
+//            print ("Stats!")
+//            print ("               Date Cell Y: \(self.dateView.frame.origin.y)")
+//            print ("          Date Cell Height: \(self.dateView.frame.height)")
+//            print ("            Bottom Views Y: \(self.bottomViews.frame.origin.y)")
+//            print ("Scroll View Content Height: \(self.scrollView.contentSize.height)")
+            // Open dateView
             UIView.animate(withDuration: 0.5, animations: {
+                self.scrollView.contentSize.height = self.scrollViewOpenContentHeight
                 self.dateView.frame.size.height = self.dateViewOpenHeight
-                self.bottomViews.frame.origin.y = self.bottomViewDefaultY
-                self.scrollView.contentSize.height = self.scrollViewContentHeight
+                self.bottomViews.frame.origin.y = self.bottomViewOpenY
             })
+//            print ("First animation initiated!")
+            // Show DatePicker
+            UIView.animate(withDuration: 0.2, delay: 0.3, options: .allowAnimatedContent, animations: {
+                self.datePicker.alpha = 1
+                }, completion: nil)
+//            print ("Second animation initiated!")
+//            print ("New Stats!")
+//            print ("               Date Cell Y: \(self.dateView.frame.origin.y)")
+//            print ("          Date Cell Height: \(self.dateView.frame.height)")
+//            print ("            Bottom Views Y: \(self.bottomViews.frame.origin.y)")
+//            print ("Scroll View Content Height: \(self.scrollView.contentSize.height)")
+//            print ()
         }
     }
     
@@ -191,76 +261,109 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
         return true
     }
     
-    // This is called whenever the submit button is pressed
-    @IBAction func submitProposal(sender: UIButton) {
+    // This is called whenever the Approve/Unlock button is pressed
+    @IBAction func validateProposal(_ sender: UIButton) {
+        if proposalLocked {
+            lockUnlockProposal(sender)
+            return
+        }
+        
         // Check for field validity
         guard fieldsAreValid() else {
             return
         }
-    
-        if !proposalValidated { // Approve
-            // Generate the comparison key, from the inputted teacher credential
-            let key =
-                
-                (teacherCredential.text!)
-    
-            if let keyset = teacherIDCache {
-                if keyset.values.contains(key) {
-                    proposalValidated = true
-                    submitProposal(sender: UIButton())
-                    print ("Approval: Success! Key Found!")
-                } else {
-                    print ("Approval: Failed!")
-                }
+        
+// MARK: APPROVE
+        // Generate the comparison key, from the inputted teacher credential
+//        let key = encrypt(teacherCredential.text! as NSString)
+        let key = teacherCredential.text!
+        
+        if let keyset = teacherIDCache {
+            if keyset.values.contains(key) {
+                lockUnlockProposal(sender)
+                let toast = ToastView(inView: self.view, withText: "Proposal Locked")
+                self.view.addSubview(toast)
+                toast.initiate()
+                print ("Approval: Success! Key Found!")
             } else {
-                // Create a reference to the teacherID dictionary
-                let ref = database.reference(withPath: "users").child("teacherIDs")
-                // Initiate the download for the teacherID dictionary
-                ref.observe(.value, with: { (snapshot) in
-                    if (snapshot.exists()) {
-                        self.teacherIDCache = snapshot.value as? Dictionary
-                        guard self.teacherIDCache != nil else {
-                            print ("There has been an error")
-                            print ("Snapshot contents")
-                            print (snapshot.description)
-                            return
-                        }
-                        if self.teacherIDCache!.values.contains(key) {
-                            self.proposalValidated = true
-                            self.submitProposal(sender: UIButton())
-                            print ("Approval: Success! Key Found!")
-                        } else {
-                            print ("Approval: Failed!")
-                        }
+                print ("Approval: Failed!")
+            }
+        } else {
+            // Create a reference to the teacherID dictionary
+            let ref = database.reference(withPath: "users").child("teacherIDs")
+            // Initiate the download for the teacherID dictionary
+            ref.observe(.value, with: { (snapshot) in
+                if (snapshot.exists()) {
+                    self.teacherIDCache = snapshot.value as? Dictionary
+                    guard self.teacherIDCache != nil else {
+                        print ("There has been an error with FIRDataSnapshot")
+                        print ("Snapshot contents")
+                        print (snapshot.description)
+                        return
                     }
-                })
-            }
-        } else { // Submit
-            let ref = database.reference(withPath: "announcements").childByAutoId()
-    
-            let format = DateFormatter()
-            format.dateFormat = "yyyyMMddHHmmss"
-            let dateTime = format.string(from: datePicker.date)
-    
-            ref.child("title").setValue(titleField.text)
-            ref.child("description").setValue(descriptionField.text)
-            ref.child("dateTime").setValue(dateTime)
-            if locationField.text == nil {
-                ref.child("location").setValue("")
-            } else {
-                ref.child("location").setValue(locationField.text)
-            }
-            
-            ContactViewController.displayToast = true
-            performSegue(withIdentifier: "AnnouncementsUnwind", sender: self)
-            print ("Submission: Success! Announcement Sumbitted!")
+                    if self.teacherIDCache!.values.contains(key) {
+                        self.lockUnlockProposal(sender)
+                        let toast = ToastView(inView: self.view, withText: "Proposal Locked")
+                        self.view.addSubview(toast)
+                        toast.initiate()
+                        print ("Approval: Success! Key Found!")
+                    } else {
+                        print ("Approval: Failed!")
+                    }
+                }
+            })
         }
     }
+
+// MARK: DEBUGGING HERE
+    func lockUnlockProposal (_ sender: UIButton) {
+//        print ()
+//        print ((!proposalLocked) ? "Locking the proposal" : "Unlocking the proposal")
+//        
+        // Disable/Enable all components on screen
+        titleField.isEnabled = proposalLocked
+        descriptionField.isEditable = proposalLocked
+        locationField.isEnabled = proposalLocked
+        for recognizer:UIGestureRecognizer in dateView.gestureRecognizers! {
+            recognizer.isEnabled = proposalLocked
+        }
+        teacherCredential.text = ""
+        teacherCredential.isEnabled = proposalLocked
+        // Show/Hide submit button
+        UIView.animate(withDuration: 0.5) {
+            self.submitButton.alpha = (self.proposalLocked) ? 0 : 1
+        }
+        
+        // Switch proposal state
+        proposalLocked = !proposalLocked
+        
+        // Enable/Disable submit button
+        submitButton.isEnabled = proposalLocked
+        // Switch Approve button title
+        sender.setTitle((proposalLocked) ? "Unlock" : "Approve", for: UIControlState.normal)
+    }
     
-//    // This is called whenever the submit button is pressed
-//    @IBAction func submitProposal(_ sender: UIButton) {
-//        print ("Whoops! Seems like the proper method is not here 8(")
-//    }
+    // This is called whenever the Submit button is pressed
+    @IBAction func submitAnnouncement(_ sender: UIButton) {
+        let ref = database.reference(withPath: "announcements").childByAutoId()
+        
+        let format = DateFormatter()
+        format.dateFormat = "yyyyMMddHHmmss"
+        let dateTime = format.string(from: datePicker.date)
+        
+        ref.child("title").setValue(titleField.text)
+        ref.child("description").setValue(descriptionField.text)
+        ref.child("dateTime").setValue(dateTime)
+        if locationField.text == nil {
+            ref.child("location").setValue("")
+        } else {
+            ref.child("location").setValue(locationField.text)
+        }
+        
+        ContactViewController.displayToast = true
+        performSegue(withIdentifier: "AnnouncementsUnwind", sender: self)
+        print ("Submission: Success! Announcement Sumbitted!")
+    }
 
     // This is used for checking if all the input fields are valid, returns true if they are
     func fieldsAreValid () -> Bool {
