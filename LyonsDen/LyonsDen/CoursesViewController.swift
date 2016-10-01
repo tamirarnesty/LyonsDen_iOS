@@ -66,9 +66,4 @@ class CoursesViewController: UIViewController {
         textField.resignFirstResponder()
         return true
     }
-
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
 }

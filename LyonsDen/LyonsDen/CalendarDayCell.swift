@@ -9,20 +9,32 @@
 
 import UIKit
 
-// The colour of a default cell
-let cellColorDefault = backgroundColor.withAlphaComponent(0.5)
-// The colour of today's cell
-let cellColorToday = backgroundColor
-// The colour of the border of a cell
-//let borderColor = UIColor(red: 0.9961, green: 0.7765, blue: 0.2784, alpha: 0.9)
-let borderColor = skyBlueColor
-
-let cellTextColor = accentColor
-
-let eventDotColor = accentColor
+//  Old Color Scheme
+//// The colour of a default cell
+//let cellColorDefault = backgroundColor.withAlphaComponent(0.5)
+//// The colour of today's cell
+//let cellColorToday = backgroundColor
+//// The colour of the border of a cell
+////let borderColor = UIColor(red: 0.9961, green: 0.7765, blue: 0.2784, alpha: 0.9)
+//let borderColor = skyBlueColor
+//
+//let cellTextColor = accentColor
+//
+//let eventDotColor = accentColor
 
 // This class is used for the manipulation of an individual day cell of the calendar
 class CalendarDayCell: UICollectionViewCell {
+    //  New Color Scheme
+    // The colour of a default cell
+    let cellColorDefault = colorEventViewBackground.withAlphaComponent(0.7)
+    // The colour of today's cell
+    let cellColorToday = colorEventViewBackground
+    // The colour of the border of a cell
+    let borderColor = skyBlueColor
+    
+    let cellTextColor = colorNavigationBar
+    
+    let eventDotColor = colorAccent
     
     // The count of events in a day
     var eventsCount = 0 {
@@ -80,11 +92,11 @@ class CalendarDayCell: UICollectionViewCell {
         let view = UIView(frame: vFrame)                // The view
         
         view.layer.cornerRadius = 4.0                   // The round radious of the view's rectangle
-        view.layer.borderColor = borderColor.cgColor    // The border color of the view's rectangle
+        view.layer.borderColor = self.borderColor.cgColor    // The border color of the view's rectangle
         view.layer.borderWidth = 0.0                    // The border width of the view's rectangle
         
         view.center = CGPoint(x: self.bounds.size.width * 0.5, y: self.bounds.size.height * 0.5)    // Position of the view's center (set in according to the parent)
-        view.backgroundColor = cellColorDefault         // The view's background color
+        view.backgroundColor = self.cellColorDefault         // The view's background color
         
         return view
     }()
@@ -93,7 +105,7 @@ class CalendarDayCell: UICollectionViewCell {
     lazy var textLabel : UILabel = {
         let lbl = UILabel()     // Text Label
         lbl.textAlignment = NSTextAlignment.center  // Text Allignment
-        lbl.textColor = cellTextColor     // TEXT COLOR!!!!
+        lbl.textColor = self.cellTextColor     // TEXT COLOR!!!!
         
         return lbl
     }()

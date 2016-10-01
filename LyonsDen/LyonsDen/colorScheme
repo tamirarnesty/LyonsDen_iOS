@@ -1,0 +1,54 @@
+<!-- New Color Scheme
+
+To get swift colors:
+090909 -> 09, 09, 09 (in hex) -> r: 9, g: 9, b: 9 (in decimal) -> r: 9/255 g: 9/255 b: 9/255 -> (r: 0.353, g: 0.353, b:0.353)
+For other colors: 89E546CA -> alpha: 89, r: E5, g: 46, b:CA -> apply same process (but divide alpha by 100)
+
+
+
+MainScreenBackground - ECF0F1
+TextFieldBackground - 2980B9 (Except Announcement proposal)
+- When this is aplied, TextColor - FFFFFF
+NavBar - F1C40F
+NavBarText - 95A5A6
+Labels - 3646A0 (only in: HS (but not timetable), Announcement Proposals, contact, Any list, any info, course, user)
+ButtonsBackground - Labels (3646A0)  (Only in: user, courses,
+- When this is applied, TextColor - FFFFFF
+ListDividers - 607D8B
+
+Calendar:
+TextColor - NavBarText (95A5A6)
+DayCellBackground - EventViewBackground (3498DB)
+EventViewBackground - 3498DB
+EventViewText - FFFFFF
+
+Course:
+PeriodLabel - NavBarText (95A5A6)
+
+Any List Activity: A bit of uncertainty
+CellBackground - 3F51B5
+TextColor - FFFFFF
+
+Contact:
+Icon Text = TextFieldBackground (2980B9)
+Button Text = Labels (3646A0)
+
+Announcement Proposal:
+TextColor - Labels (3646A0)
+
+Home Screen:
+TimeTableDividers - 43555E
+TimeTableBackground - TextFieldBackground (2980B9)
+TimeTableText - FFFFFF
+DayLabel - ListDivider (607D8B)
+
+ECF0F1 (red: 0.9255, green: 0.9412, blue: 0.9451, alpha: 1)
+2980B9 (red: 0.1608, green: 0.5020, blue: 0.7255, alpha: 1)
+F1C40F (red: 0.9451, green: 0.7686, blue: 0.0588, alpha: 1)
+95A5A6 (red: 0.5843, green: 0.6471, blue: 0.6510, alpha: 1)
+3646A0 (red: 0.2118, green: 0.2745, blue: 0.6276, alpha: 1)
+607D8B (red: 0.3765, green: 0.4902, blue: 0.5451, alpha: 1)
+3498DB (red: 0.2019, green: 0.5961, blue: 0.8588, alpha: 1)
+3F51B5 (red: 0.2471, green: 0.3176, blue: 0.7098, alpha: 1)
+43555E (red: 0.2627, green: 0.3333, blue: 0.3686, alpha: 1)
+-->

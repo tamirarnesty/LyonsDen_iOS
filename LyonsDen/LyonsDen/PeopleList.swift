@@ -189,11 +189,10 @@ class PeopleList: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "TeacherCell")
         cell.textLabel?.text = (self.tableView.isEditing) ? newContent[0][(indexPath as NSIndexPath).row] : content[0][(indexPath as NSIndexPath).row]
-        cell.textLabel!.textColor = accentColor
+        cell.textLabel!.textColor = colorWhiteText
         cell.detailTextLabel?.text = (self.tableView.isEditing) ? newContent[1][(indexPath as NSIndexPath).row] : content[1][(indexPath as NSIndexPath).row]
-        cell.detailTextLabel!.textColor = accentColor
-        cell.backgroundColor = foregroundColor
-//        cell.textLabel?.font = UIFont(name: "Hapna Mono", size: 12)
+        cell.detailTextLabel!.textColor = colorWhiteText
+        cell.backgroundColor = colorListBackground
         cell.selectionStyle = .none
         return cell
     }

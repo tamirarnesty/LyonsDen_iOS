@@ -167,22 +167,15 @@ class LyonsAlert {
     init (withTitle title:String, subtitle:String, style:UIAlertControllerStyle) {
         alertView = UIAlertController(title: title, message: subtitle, preferredStyle: style)
     // MARK: VISUAL CUSTOMIZATIONS
-        // Change background color, gets rid of rounded corners
-        (alertView.view.subviews.first!.subviews.first! as UIView).backgroundColor = foregroundColor
-        // Reapply rounded corners
-        alertView.view.layer.cornerRadius = 15
-        alertView.view.layer.masksToBounds = true
         // Change text colors (you can change font too!)
-        alertView.setValue(NSAttributedString(string: title, attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 17), NSForegroundColorAttributeName : accentColor]), forKey: "attributedTitle")
-        alertView.setValue(NSAttributedString(string: subtitle, attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 14), NSForegroundColorAttributeName : accentColor]), forKey: "attributedMessage")
-        
-        
+        alertView.setValue(NSAttributedString(string: title, attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 17), NSForegroundColorAttributeName : colorAccent]), forKey: "attributedTitle")
+        alertView.setValue(NSAttributedString(string: subtitle, attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 14), NSForegroundColorAttributeName : colorAccent]), forKey: "attributedMessage")
     }
 
     func showIn (_ initiator:UIViewController) {
         initiator.present(alertView, animated: true, completion:  nil)
         // Change text color of buttons, has to be done after added, otherwise color changes back after first press
-        alertView.view.tintColor = accentColor
+        alertView.view.tintColor = colorAccent
         
         if let textFields = alertView.textFields {
             for textField in textFields {

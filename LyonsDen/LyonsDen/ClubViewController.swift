@@ -15,6 +15,10 @@ import Firebase
 // TODO: CHANGE BACKGROUND UNDER TABLEVIEW
 // TODO: HIDE KEYBOARD AFTER EDITING IS COMPLETE
 
+/*
+ 2016-09-30 19:25:08.745 LyonsDen[56918:2408636] *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'UITableView (<UITableView: 0x7ff805024c00; frame = (0 286; 375 381); clipsToBounds = YES; autoresize = RM+BM; gestureRecognizers = <NSArray: 0x600000254b80>; layer = <CALayer: 0x600000234720>; contentOffset: {0, 0}; contentSize: {375, 100}>) failed to obtain a cell from its dataSource (<LyonsDen.ClubViewController: 0x7ff800c1b180>)'
+ */
+
 class ClubViewController: UIViewController, UITableViewDelegate {
     static var image:UIImage?       // The image of the club
     static var title:String!        // The title of the club

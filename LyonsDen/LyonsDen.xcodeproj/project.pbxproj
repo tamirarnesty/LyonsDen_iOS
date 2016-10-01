@@ -11,6 +11,7 @@
 		2D22EA051D2D787D001B3A11 /* AnnouncementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D22EA041D2D787D001B3A11 /* AnnouncementViewController.swift */; };
 		2D22EA071D2D8390001B3A11 /* MusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D22EA061D2D8390001B3A11 /* MusicViewController.swift */; };
 		2D22EA091D2ED29C001B3A11 /* MenuTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D22EA081D2ED29C001B3A11 /* MenuTable.swift */; };
+		2D39529E1D9B64DC003D5C4F /* colorScheme in Resources */ = {isa = PBXBuildFile; fileRef = 2D39529D1D9B64DC003D5C4F /* colorScheme */; };
 		2D6706171D4AE28300C52860 /* ClubViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6706161D4AE28300C52860 /* ClubViewController.swift */; };
 		2D7224531D43124000C327D3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D7224521D43124000C327D3 /* GoogleService-Info.plist */; };
 		2D72245B1D441D2A00C327D3 /* LoginScreenSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D72245A1D441D2A00C327D3 /* LoginScreenSegue.swift */; };
@@ -48,6 +49,7 @@
 		2D22EA041D2D787D001B3A11 /* AnnouncementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnnouncementViewController.swift; sourceTree = "<group>"; };
 		2D22EA061D2D8390001B3A11 /* MusicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicViewController.swift; sourceTree = "<group>"; };
 		2D22EA081D2ED29C001B3A11 /* MenuTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTable.swift; sourceTree = "<group>"; };
+		2D39529D1D9B64DC003D5C4F /* colorScheme */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = colorScheme; sourceTree = "<group>"; };
 		2D6706161D4AE28300C52860 /* ClubViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClubViewController.swift; sourceTree = "<group>"; };
 		2D7224521D43124000C327D3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2D72245A1D441D2A00C327D3 /* LoginScreenSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginScreenSegue.swift; path = SegueAnimators/LoginScreenSegue.swift; sourceTree = "<group>"; };
@@ -160,6 +162,7 @@
 				2D8AC7D81D25D7D900367326 /* Info.plist */,
 				2D7224521D43124000C327D3 /* GoogleService-Info.plist */,
 				2D8AC8211D25E22F00367326 /* LyonsDen-Bridging-Header.h */,
+				2D39529D1D9B64DC003D5C4F /* colorScheme */,
 			);
 			path = LyonsDen;
 			sourceTree = "<group>";
@@ -298,6 +301,7 @@
 				2D8AC7D41D25D7D900367326 /* Assets.xcassets in Resources */,
 				8F7324BB1D2F25BB0097036D /* Reckoner_Bold.ttf in Resources */,
 				2D8AC7D21D25D7D900367326 /* Main.storyboard in Resources */,
+				2D39529E1D9B64DC003D5C4F /* colorScheme in Resources */,
 				8F7324BC1D2F25BB0097036D /* Reckoner.ttf in Resources */,
 				8F7324C21D2F37020097036D /* Launch Screen.storyboard in Resources */,
 			);
@@ -497,6 +501,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = VGG5HAF3L7;
 				INFOPLIST_FILE = LyonsDen/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = wlmac.LyonsDen;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -519,6 +524,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = VGG5HAF3L7;
 				INFOPLIST_FILE = LyonsDen/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = wlmac.LyonsDen;
 				PRODUCT_NAME = "$(TARGET_NAME)";

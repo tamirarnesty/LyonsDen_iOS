@@ -15,6 +15,19 @@ let foregroundColor:UIColor = UIColor(red: 0.0118, green: 0.2431, blue: 0.5765, 
 let backgroundColor:UIColor = UIColor(red: 0.0078, green: 0.1647, blue: 0.3922, alpha: 1)
 let accentColor:UIColor = UIColor(red: 0.9961, green: 0.7765, blue: 0.2784, alpha: 1)
 let skyBlueColor:UIColor = UIColor(red: 0.6392, green: 0.7451, blue: 0.8980, alpha: 1)
+
+// New color Scheme: New color scheme will put "color" before name, to uncomplicate things, since color change will be gradual, or so i think... It wasn't 
+let colorBackground:UIColor = UIColor(red: 0.9255, green: 0.9412, blue: 0.9451, alpha: 1)           // ECF0F1
+let colorTextFieldBackground:UIColor = UIColor(red: 0.1608, green: 0.5020, blue: 0.7255, alpha: 1)  // 2980B9
+let colorNavigationBar:UIColor = UIColor(red: 0.9451, green: 0.7686, blue: 0.0588, alpha: 1)        // F1C40F
+let colorNavigationText:UIColor = UIColor(red: 0.5843, green: 0.6471, blue: 0.6510, alpha: 1)       // 95A5A6
+let colorAccent:UIColor = UIColor(red: 0.2118, green: 0.2745, blue: 0.6276, alpha: 1)               // 3646A0        yes this one
+let colorListBackground:UIColor = UIColor(red: 0.2471, green: 0.3176, blue: 0.7098, alpha: 1)       // 3F51B5  <- and ^ are not much different to be honest
+let colorListDivider:UIColor = UIColor(red: 0.3765, green: 0.4902, blue: 0.5451, alpha: 1)          // 607D8B
+let colorEventViewBackground:UIColor = UIColor(red: 0.2019, green: 0.5961, blue: 0.8588, alpha: 1)  // 3498DB
+let colorTimeTableDividers:UIColor = UIColor(red: 0.2627, green: 0.3333, blue: 0.3686, alpha: 1)    // 43555E
+let colorWhiteText:UIColor = UIColor(white: 1, alpha: 1)
+
 var contactStore = CNContactStore()
 
 @UIApplicationMain

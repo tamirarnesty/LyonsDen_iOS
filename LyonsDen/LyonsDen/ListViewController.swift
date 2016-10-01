@@ -185,15 +185,15 @@ class ListViewController: UITableViewController {
     // Configure each cell
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "ListCell")   // Declare the cell
-        cell.backgroundColor = foregroundColor                              // Set the Background Color
+        cell.backgroundColor = colorListBackground                                  // Set the Background Color
         cell.imageView?.image = images[(indexPath as NSIndexPath).row]                       // Set the Cell Image
         
         cell.textLabel?.text = eventData[0][(indexPath as NSIndexPath).row]!              // Set the Title Text
-        cell.textLabel?.textColor = accentColor                             // Set the Title Text Color
+        cell.textLabel?.textColor = colorWhiteText                             // Set the Title Text Color
         cell.textLabel?.font = UIFont(name: "Hapna Mono", size: 20)         // Set the Title Text Font
         
         cell.detailTextLabel?.text = eventData[1][(indexPath as NSIndexPath).row]!        // Set the Description Text
-        cell.detailTextLabel?.textColor = accentColor                       // Set the Description Text Color
+        cell.detailTextLabel?.textColor = colorWhiteText                    // Set the Description Text Color
         cell.detailTextLabel?.font = UIFont(name: "Hapna Mono", size: 16)   // Set the Description Text Font
         return cell                                                         // Return the cell
     }

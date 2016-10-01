@@ -41,31 +41,43 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
     var dayText = ""
     // Reference to the database
     var ref:FIRDatabaseReference!
+    var gestureRecognizersAdded = false
     
     // Didn't let me put it into announcements becuase its optional
     // To implement it, we might need a blank image to act in place of nil
     // -------------------------------------------------------------------------------- WE COULD MAKE IT A TRANSPARENT IMAGE ----------
     var images = [UIImage?]()
-    var lastTableViewOffSet:CGFloat = 0.0
+    var lastTableViewOffset:CGFloat = 0.0
+    var tableViewTouched = false
     var index = -1
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        
-        for var i in 0...courses.count-1 {
-            self.courses[i].addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(HomeViewController.handleLongTap(_:))))
+        print ()
+        print ("view will really appear soon")
+        print ()
+        print (gestureRecognizersAdded)
+        print (self.courses[0].gestureRecognizers?.description)
+        print ("Adding gesture recognizer for")
+        for i in 0...courses.count-1 {
+            print (i)
+            if !gestureRecognizersAdded {
+                print ("Did add recognizer")
+                self.courses[i].addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(HomeViewController.handleLongTap(_:))))
+            }
         }
-        
+        gestureRecognizersAdded = true
+        print ("many views")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // set up screen
-        let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(swipedUp))
-        swipeUp.direction = UISwipeGestureRecognizerDirection.up
-        swipeUp.addTarget(self, action: #selector(swipedUp))
-        self.view.addGestureRecognizer(swipeUp)
+//        let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(swipedUp))
+//        swipeUp.direction = UISwipeGestureRecognizerDirection.up
+//        swipeUp.addTarget(self, action: #selector(swipedUp))
+//        self.view.addGestureRecognizer(swipeUp)
         periodUpdater()
 
         // set up announcements table
@@ -117,13 +129,20 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
                // For proper scrolling, didnt work :(
         //        setupGestures()
         tableList.frame = self.view.bounds;
-
-        
     }
     
-    func swipedUp (_ up: UISwipeGestureRecognizer) {
-        self.view.resignFirstResponder()
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+//        let tableViewHeight = self.view.frame.height - topViews.frame.height
+//        
+//        scrollView.contentSize.height = topViews.frame.height + tableViewHeight
+//        tableList.frame.size.height = tableViewHeight
     }
+    
+//    func swipedUp (_ up: UISwipeGestureRecognizer) {
+//        self.view.resignFirstResponder()
+//    }
     
     func reloadHome () {
         
@@ -326,19 +345,19 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
     func tableView(_ tableView: UITableView, cellForRowAtIndexPath indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: "Cell")
 
-        var bg:UIColor = UIColor(hue: 0.8111, saturation: 0.04, brightness: 0.5, alpha: 1.0) /* #fdf4ff */
-        bg = UIColor(red: 0.9922, green: 0.9569, blue: 1, alpha: 1.0) /* #fdf4ff */
-        cell.backgroundColor = bg
+//        var bg:UIColor = UIColor(hue: 0.8111, saturation: 0.04, brightness: 0.5, alpha: 1.0) /* #fdf4ff */
+//        bg = UIColor(red: 0.9922, green: 0.9569, blue: 1, alpha: 1.0) /* #fdf4ff */
+        cell.backgroundColor = colorTextFieldBackground.withAlphaComponent(0.8)
 
 //cell.backgroundColor = UIColor(red: 0.0118, green: 0.2431, blue: 0.5765, alpha: 1)
         
         cell.textLabel!.text = eventData[0][(indexPath as NSIndexPath).row]!
-        cell.textLabel!.textColor = UIColor.blue
+        cell.textLabel!.textColor = colorWhiteText
         //cell.textLabel!.textColor = UIColor(red: 0.9961, green: 0.7765, blue: 0.2184, alpha: 1)
         cell.textLabel?.font = UIFont(name: "Hapna Mono", size: 12)
 
         cell.detailTextLabel!.text = eventData[1][(indexPath as NSIndexPath).row]!
-        cell.detailTextLabel!.textColor = UIColor.blue
+        cell.detailTextLabel!.textColor = colorWhiteText
         //cell.detailTextLabel!.textColor = UIColor(red: 0.9961, green: 0.7765, blue: 0.2184, alpha: 1)
         cell.detailTextLabel?.font = UIFont(name: "Hapna Mono", size: 12)
         return cell
@@ -357,6 +376,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
         // Segue into InfoViewController
         performSegue(withIdentifier: "AnnouncementSegue", sender: self)
     }
+    
+    
     
     
     
@@ -386,19 +407,44 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
     //        scrollView.contentOffset = CGPoint(x: 0, y: tempHold + offSet)
     //    }
     
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        tableViewTouched = true
+//    }
+//    
+//    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        tableViewTouched = false
+//    }
+    
+    
+// MARK: DEBUGGING
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        //        print ("last off set = \(lastTableViewOffSet)")
-        //
-        //        let topViewsOffSet = self.scrollView.contentOffset.y
-        //        let tableViewOffSet = scrollView.contentOffset.y
-        //        lastTableViewOffSet = tableViewOffSet - lastTableViewOffSet
-        //        self.scrollView.contentOffset = CGPointMake(0, topViewsOffSet - lastTableViewOffSet)
-        //
-        //        print ("top offset   = \(topViewsOffSet)")
-        //        print ("table offset = \(tableViewOffSet)")
-        //        print ("last off set = \(lastTableViewOffSet)")
-        //        print ()
-        //        let max = 0
+//        print ("        TableViewOffset: \(scrollView.contentOffset.y)")
+//        print ("         TopViewsHeight: \(self.topViews.frame.height)")
+//        print ("       ScrollViewOffset: \(self.scrollView.contentOffset.y)")
+//        print ("ScrollViewContentHeight: \(self.scrollView.contentSize.height)")
+//        print ("      ScrollViewYOrigin: \(self.scrollView.frame.origin.y)")
+        
+        // Find the amount by which the tableView was scrolled
+        let deltaTableOffset = lastTableViewOffset - scrollView.contentOffset.y
+        
+        // If tableView is not being overscrolled
+        if scrollView.contentOffset.y > 0 && scrollView.contentOffset.y < scrollView.frame.height {
+            // If scrolling up and not overscrolling scrollView
+            if deltaTableOffset < 0 && self.scrollView.contentOffset.y < self.topViews.frame.height - 64 {   // Swipe down
+//                print ("Scrolling up")
+                // Scroll the scrollView
+                self.scrollView.contentOffset.y -= deltaTableOffset
+                
+            // If scrolling down and not overscrolling scrollView
+            } else if deltaTableOffset > 0 && self.scrollView.contentOffset.y > -64 {    // Swipe up
+//                print ("Scrolling down")
+                // Scroll the scrollView
+                self.scrollView.contentOffset.y -= deltaTableOffset
+            }
+        }
+        // Prepare for next call
+        lastTableViewOffset = scrollView.contentOffset.y
+//        print ()
     }
     
     func labelDidLoad() {
@@ -539,22 +585,23 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
                     self.images.append(nil) // Will be implemented later
                 }
                 // Reverse data in array so it is by newest created date
-                for var i in 0..<self.eventData.count {
+                for i in 0..<self.eventData.count {
                     self.eventData[i].reverse()
                 }
+                
+                for h in 0..<40 {
+                    for j in 0..<key.count {
+                        self.eventData[j].append("This is an extra \(j)")
+                    }
+                }
                 // Reload the tableView to display the loaded data
-                try! self.tableList.reloadData()
+                self.tableList.reloadData()
                 //self.layoutTableView()
             } else {
                 print ("There has been an error")
                 // Handle the error
             }
         })
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 }
 

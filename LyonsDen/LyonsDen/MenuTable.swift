@@ -31,21 +31,28 @@ class MenuTable: UITableViewController {
         return titles.count
     }
     
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.row == 0 {
+            return 100
+        } else {
+            return 43.67
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "MenuCell\((indexPath as NSIndexPath).row)")
         
-        cell.backgroundColor = UIColor(red: 0.0118, green: 0.2431, blue: 0.5765, alpha: 1)
+        cell.backgroundColor = backgroundColor.withAlphaComponent(0.8)
         cell.textLabel?.text = titles[(indexPath as NSIndexPath).row]
-        cell.textLabel?.textColor = UIColor(red: 0.9961, green: 0.7765, blue: 0.2784, alpha: 1)
+        cell.textLabel?.textColor = colorWhiteText
         if (indexPath as NSIndexPath).row == 0 {
             cell.textLabel?.text = nil
-            cell.imageView?.image = UIImage(contentsOfFile: "denLogo.png")
-            cell.textLabel?.font = UIFont(name: "Reckoner", size: 41.0)
+            cell.imageView?.image = #imageLiteral(resourceName: "Den Logo")
             cell.selectionStyle = UITableViewCellSelectionStyle.none
         } else {
             cell.textLabel?.font = UIFont(name: "Reckoner", size: 26.0)
         }
-        if (indexPath as NSIndexPath).row == (titles.count-1) {
+        if indexPath.row == titles.count-1 {
             cell.textLabel?.text = (FIRAuth.auth()?.currentUser?.displayName != nil ? FIRAuth.auth()?.currentUser?.displayName : titles[titles.count-1])
         }
         return cell
