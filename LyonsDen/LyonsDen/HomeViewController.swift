@@ -50,6 +50,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
     var tableViewTouched = false
     var index = -1
     
+// MARK: DEBUGGING!
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -334,8 +335,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
     
     // Loads the text into each of the period views
     func loadLabelsForViews () {
-        for var i in 0...courses.count-1 {
-            for var x in 0...courses.count-1 {
+        for i in 0...courses.count-1 {
+            for x in 0...courses.count-1 {
                 if i == 0 {
                     periodOneLabels[x].text = labels[i][x]
                 } else if i == 1 {
@@ -378,20 +379,18 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
     func tableView(_ tableView: UITableView, cellForRowAtIndexPath indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: "Cell")
 
-//        var bg:UIColor = UIColor(hue: 0.8111, saturation: 0.04, brightness: 0.5, alpha: 1.0) /* #fdf4ff */
-//        bg = UIColor(red: 0.9922, green: 0.9569, blue: 1, alpha: 1.0) /* #fdf4ff */
-        cell.backgroundColor = colorTextFieldBackground.withAlphaComponent(0.8)
+//        var bg:UIColor = UIColor(hue: 0.5722, saturation: 0.07, brightness: 1, alpha: 1.0) /* #edf7ff */
+//        bg = UIColor(red: 0.9294, green: 0.9686, blue: 1, alpha: 1.0) /* #edf7ff */
+        cell.backgroundColor = UIColor(red: 0.9294, green: 0.9686, blue: 1, alpha: 1.0) /* #edf7ff */
 
 //cell.backgroundColor = UIColor(red: 0.0118, green: 0.2431, blue: 0.5765, alpha: 1)
         
         cell.textLabel!.text = eventData[0][(indexPath as NSIndexPath).row]!
-        cell.textLabel!.textColor = colorWhiteText
-        //cell.textLabel!.textColor = UIColor(red: 0.9961, green: 0.7765, blue: 0.2184, alpha: 1)
+        cell.textLabel!.textColor = UIColor.black
         cell.textLabel?.font = UIFont(name: "Hapna Mono", size: 12)
 
         cell.detailTextLabel!.text = eventData[1][(indexPath as NSIndexPath).row]!
-        cell.detailTextLabel!.textColor = colorWhiteText
-        //cell.detailTextLabel!.textColor = UIColor(red: 0.9961, green: 0.7765, blue: 0.2184, alpha: 1)
+        cell.detailTextLabel!.textColor = UIColor.black
         cell.detailTextLabel?.font = UIFont(name: "Hapna Mono", size: 12)
         return cell
     }
@@ -409,6 +408,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
         // Segue into InfoViewController
         performSegue(withIdentifier: "AnnouncementSegue", sender: self)
     }
+
 
 // MARK: DEBUGGING
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -476,12 +476,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
                 for i in 0..<self.eventData.count {
                     self.eventData[i].reverse()
                 }
-                
-                for h in 0..<40 {
-                    for j in 0..<key.count {
-                        self.eventData[j].append("This is an extra \(j)")
-                    }
-                }
+
                 // Reload the tableView to display the loaded data
                 self.tableList.reloadData()
                 //self.layoutTableView()

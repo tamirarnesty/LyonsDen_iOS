@@ -47,7 +47,7 @@ class MenuTable: UITableViewController {
         cell.textLabel?.textColor = colorWhiteText
         if (indexPath as NSIndexPath).row == 0 {
             cell.textLabel?.text = nil
-            cell.imageView?.image = #imageLiteral(resourceName: "Den Logo")
+            cell.imageView?.image = #imageLiteral(resourceName: "denLogo")
             cell.selectionStyle = UITableViewCellSelectionStyle.none
         } else {
             cell.textLabel?.font = UIFont(name: "Reckoner", size: 26.0)

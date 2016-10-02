@@ -26,6 +26,7 @@
 		2D8AC8241D25E23000367326 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8AC8231D25E23000367326 /* SWRevealViewController.m */; };
 		2D8AC82B1D25E86900367326 /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8AC82A1D25E86900367326 /* ContactViewController.swift */; };
 		2D8AC82D1D25EEEB00367326 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8AC82C1D25EEEB00367326 /* InfoViewController.swift */; };
+		2D8F1A261DA1887B002ABA74 /* TeacherFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8F1A251DA1887B002ABA74 /* TeacherFormViewController.swift */; };
 		2DC27BC41D386A1D002A5ADF /* CalendarDayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC27BBF1D386A1D002A5ADF /* CalendarDayCell.swift */; };
 		2DC27BC51D386A1D002A5ADF /* CalendarFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC27BC01D386A1D002A5ADF /* CalendarFlowLayout.swift */; };
 		2DC27BC61D386A1D002A5ADF /* CalendarHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC27BC11D386A1D002A5ADF /* CalendarHeaderView.swift */; };
@@ -33,7 +34,6 @@
 		2DC27BC81D386A1D002A5ADF /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC27BC31D386A1D002A5ADF /* Event.swift */; };
 		2DC48CE91D3C321C00B73361 /* EventVisual.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2DC48CE81D3C321C00B73361 /* EventVisual.xib */; };
 		2DEF28211D39A84000DA921E /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEF28201D39A84000DA921E /* EventView.swift */; };
-		8F1CFA831D5968E8004E9888 /* Den Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F1CFA821D5968E8004E9888 /* Den Logo.png */; };
 		8F2D32581D52AF2500B7A4B8 /* CoursesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2D32571D52AF2500B7A4B8 /* CoursesViewController.swift */; };
 		8F7324B61D2F25A10097036D /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7324B41D2F25A10097036D /* SplashScreen.swift */; };
 		8F7324BA1D2F25BB0097036D /* HapnaMono-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8F7324B71D2F25BB0097036D /* HapnaMono-Light.otf */; };
@@ -70,6 +70,7 @@
 		2D8AC8231D25E23000367326 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
 		2D8AC82A1D25E86900367326 /* ContactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
 		2D8AC82C1D25EEEB00367326 /* InfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
+		2D8F1A251DA1887B002ABA74 /* TeacherFormViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TeacherFormViewController.swift; path = ../../../../../LyonsDen/LyonsDen/TeacherFormViewController.swift; sourceTree = "<group>"; };
 		2DC27BBF1D386A1D002A5ADF /* CalendarDayCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarDayCell.swift; sourceTree = "<group>"; };
 		2DC27BC01D386A1D002A5ADF /* CalendarFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarFlowLayout.swift; sourceTree = "<group>"; };
 		2DC27BC11D386A1D002A5ADF /* CalendarHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarHeaderView.swift; sourceTree = "<group>"; };
@@ -79,7 +80,6 @@
 		2DEF28201D39A84000DA921E /* EventView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
 		5F1B779B2B3C769B56DC9BC2 /* Pods-LyonsDen.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LyonsDen.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LyonsDen/Pods-LyonsDen.debug.xcconfig"; sourceTree = "<group>"; };
 		8F131AF21D8F035600097C97 /* LyonsDen.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LyonsDen.entitlements; sourceTree = "<group>"; };
-		8F1CFA821D5968E8004E9888 /* Den Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Den Logo.png"; sourceTree = "<group>"; };
 		8F2D32571D52AF2500B7A4B8 /* CoursesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoursesViewController.swift; sourceTree = "<group>"; };
 		8F7324B41D2F25A10097036D /* SplashScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashScreen.swift; sourceTree = "<group>"; };
 		8F7324B71D2F25BB0097036D /* HapnaMono-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HapnaMono-Light.otf"; sourceTree = "<group>"; };
@@ -116,6 +116,8 @@
 		2D68F12F1DA02748008EA349 /* Resource Classes */ = {
 			isa = PBXGroup;
 			children = (
+				2D8AC8201D25E20B00367326 /* SWRevealViewController */,
+				2DC27BBE1D3869FC002A5ADF /* Calendar */,
 				2D68F1301DA0275D008EA349 /* ToastView.swift */,
 				2D68F1321DA0289A008EA349 /* LyonsAlert.swift */,
 			);
@@ -154,10 +156,10 @@
 				2D68F12F1DA02748008EA349 /* Resource Classes */,
 				8F131AF21D8F035600097C97 /* LyonsDen.entitlements */,
 				8F7324C11D2F37020097036D /* Launch Screen.storyboard */,
-				2D8AC8201D25E20B00367326 /* SWRevealViewController */,
 				2D8AC7CC1D25D7D900367326 /* AppDelegate.swift */,
 				8F2D32591D52B0E700B7A4B8 /* Home Screen & Courses */,
 				2D8AC7DE1D25D8D700367326 /* ListViewController.swift */,
+				2D8F1A251DA1887B002ABA74 /* TeacherFormViewController.swift */,
 				2D8AC7E01D25D96800367326 /* CalendarViewController.swift */,
 				2D8AC82A1D25E86900367326 /* ContactViewController.swift */,
 				2D6706161D4AE28300C52860 /* ClubViewController.swift */,
@@ -167,12 +169,10 @@
 				8F7324B41D2F25A10097036D /* SplashScreen.swift */,
 				8FA355551D6ADBD4007E5BA4 /* UserViewController.swift */,
 				2D7224571D441C0700C327D3 /* SegueAnimators */,
-				2DC27BBE1D3869FC002A5ADF /* Calendar */,
 				2D22EA031D2D7438001B3A11 /* ContactViews */,
 				8F7324BD1D2F25E70097036D /* Resources */,
 				2D8AC7D01D25D7D900367326 /* Main.storyboard */,
 				2D8AC7D31D25D7D900367326 /* Assets.xcassets */,
-				8F1CFA821D5968E8004E9888 /* Den Logo.png */,
 				2D8AC7D81D25D7D900367326 /* Info.plist */,
 				2D7224521D43124000C327D3 /* GoogleService-Info.plist */,
 				2D8AC8211D25E22F00367326 /* LyonsDen-Bridging-Header.h */,
@@ -310,7 +310,6 @@
 			files = (
 				2DC48CE91D3C321C00B73361 /* EventVisual.xib in Resources */,
 				2D7224531D43124000C327D3 /* GoogleService-Info.plist in Resources */,
-				8F1CFA831D5968E8004E9888 /* Den Logo.png in Resources */,
 				8F7324BA1D2F25BB0097036D /* HapnaMono-Light.otf in Resources */,
 				2D8AC7D41D25D7D900367326 /* Assets.xcassets in Resources */,
 				8F7324BB1D2F25BB0097036D /* Reckoner_Bold.ttf in Resources */,
@@ -379,6 +378,7 @@
 				2DC27BC41D386A1D002A5ADF /* CalendarDayCell.swift in Sources */,
 				8FA355561D6ADBD4007E5BA4 /* UserViewController.swift in Sources */,
 				2DC27BC61D386A1D002A5ADF /* CalendarHeaderView.swift in Sources */,
+				2D8F1A261DA1887B002ABA74 /* TeacherFormViewController.swift in Sources */,
 				8F2D32581D52AF2500B7A4B8 /* CoursesViewController.swift in Sources */,
 				2D22EA091D2ED29C001B3A11 /* MenuTable.swift in Sources */,
 				2DC27BC71D386A1D002A5ADF /* CalendarView.swift in Sources */,

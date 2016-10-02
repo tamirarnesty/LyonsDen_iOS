@@ -13,6 +13,7 @@ class UserViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var menuButton: UIBarButtonItem!
     @IBOutlet var userInfo: [UITextView]!
     @IBOutlet weak var rightBarButton: UIBarButtonItem!
+    @IBOutlet var uiButtons: [UIButton]!
     
     //------------ fix constraints and make it work
     var defaultDisplayName = "User"
@@ -29,8 +30,13 @@ class UserViewController: UIViewController, UITextViewDelegate {
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
         
+        for buttons in uiButtons {
+            buttons.layer.cornerRadius = 10
+        }
+        
         for text in userInfo {
             text.isEditable = false
+            text.layer.cornerRadius = 10
             text.layer.borderWidth = 0.5
             text.layer.borderColor = UIColor.yellow.cgColor
         }
@@ -45,13 +51,12 @@ class UserViewController: UIViewController, UITextViewDelegate {
         HomeViewController.updatePeriods!.invalidate()
         self.performSegue(withIdentifier: "signOutSegue", sender: self)
     }
-
+    
     @IBAction func deleteAccount(_ sender: AnyObject) {
         FIRAuth.auth()?.currentUser?.delete { error in
             if error != nil {
                 print("Something went wrong")
             } else {
-               (UIApplication.shared.delegate as! AppDelegate).displayError("Success", errorMsg: "\(FIRAuth.auth()?.currentUser?.displayName) has been deleted.")
             }
         }
     }
@@ -61,7 +66,6 @@ class UserViewController: UIViewController, UITextViewDelegate {
             if error != nil {
                 print ("Something went wrong")
             } else {
-                (UIApplication.shared.delegate as! AppDelegate).displayError("Success", errorMsg: "A password reset email was sent to \(FIRAuth.auth()?.currentUser?.displayName)")
             }
         }
     }
@@ -89,15 +93,15 @@ class UserViewController: UIViewController, UITextViewDelegate {
                 }
             }
             if userInfo[2].text != "Secure Information" {
-            user.updatePassword(userInfo[2].text!) { error in
-                if let error = error {
-                    print("Something went wrong.")
-                    print(error.localizedDescription)
-                } else {
-                    UserDefaults.standard.set(self.userInfo[2].text, forKey: "Pass")
-                    print("Successful password update.")
+                user.updatePassword(userInfo[2].text!) { error in
+                    if let error = error {
+                        print("Something went wrong.")
+                        print(error.localizedDescription)
+                    } else {
+                        UserDefaults.standard.set(self.userInfo[2].text, forKey: "Pass")
+                        print("Successful password update.")
+                    }
                 }
-            }
             }
             
             for text in userInfo {
@@ -105,11 +109,10 @@ class UserViewController: UIViewController, UITextViewDelegate {
             }
             self.rightBarButton.title = "Edit"
             
-            //(UIApplication.sharedApplication().delegate as! AppDelegate).displayError("Success", errorMsg: "All updates have been submitted.")
             let toast = ToastView(inView: self.view, withText: "All updates have been submitted")
             self.view.addSubview(toast)
             toast.initiate()
-
+            
         }
     }
     
@@ -154,7 +157,7 @@ class UserViewController: UIViewController, UITextViewDelegate {
         
         alert.addAction(UIAlertAction(title: "Submit", style: UIAlertActionStyle.default) { (action) in
             self.applyClubLeaderWithKey((alert.alertView.textFields?.first?.text!)!)
-            })
+        })
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
         alert.addTextFieldWithPlaceHolder("Enter club code here")
         alert.showIn(self)

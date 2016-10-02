@@ -15,22 +15,26 @@ import Firebase
 // TODO: AUTO_LOGIN PERFORMS TWICE FROM TIME TO TIME< WHICH CAUSES A THROW BACK INTO HOME SCREEN, PUT AUTO_LOG IN A DIFFERENT PLACE
 
 class LogInViewController: UIViewController, UITextFieldDelegate {
+    // Input field for account email
     @IBOutlet var userNameField: UITextField!
+    // Input field for account password
     @IBOutlet var passwordField: UITextField!
+    // Segmented controller for Sign Up or Log In
     @IBOutlet var segmentedController: UISegmentedControl!
+    // Input field for Sign Up Key
     @IBOutlet var signUpKeyField: UITextField!
+    // The main view in ViewController
     @IBOutlet var mainView: UIView!
+    // Lyon's Den Logo
     @IBOutlet weak var logo: UIImageView!
-    
-    @IBOutlet weak var logoToSegmentConstraint: NSLayoutConstraint!
-    @IBOutlet var bottomConstraint: NSLayoutConstraint!
-    @IBOutlet var topConstraint: NSLayoutConstraint!
+    // Input button to submit account
     @IBOutlet weak var logInButton: UIButton!
     
     var entranceOption:Int = 0
     var password = ""
     var username = ""
-    let signUpKey = "MacLyonsRule"  // idk, this should be something symbolic or patriotic... or secretive
+    var alert:LyonsAlert = LyonsAlert(withTitle: "", subtitle: "", style: .alert)
+    var loadingWheel = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
     
     @IBAction func optionSwitched(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
@@ -61,13 +65,15 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             break
         }
     }
+    
+    // Sets UITextField delegates and sets keyboard notifier
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let gradient: CAGradientLayer = CAGradientLayer()
-        gradient.frame = self.view.bounds
-        gradient.colors = [UIColor.white.cgColor, accentColor.cgColor]
-        self.view.layer.insertSublayer(gradient, at: 0)
+        //let gradient: CAGradientLayer = CAGradientLayer()
+        //gradient.frame = self.view.bounds
+        //gradient.colors = [UIColor.white.cgColor, accentColor.cgColor]
+        //self.view.layer.insertSublayer(gradient, at: 0)
         self.userNameField.delegate = self
         self.passwordField.delegate = self
         
@@ -78,71 +84,141 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         // End of Dan's code
     }
     
+    // Ends editing of UITextFields when touched anywhere in the screen
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
+        
     }
     
+    // Removes firstResponder attribute to current UITextField when done editing
     func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         textField.resignFirstResponder()
         return true
     }
     
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.beginFloatingCursor(at: CGPoint(x: 0, y: 0))
+    }
+    
+    func createNewUser (keys: [String]) {
+        var alert = self.alert
+        FIRAuth.auth()?.createUser(withEmail: self.username, password: self.password, completion: {(user, error) in
+            if self.signUpKeyField.text == keys[1] { // TEACHER CHECK
+                FIRDatabase.database().reference(withPath: "users").child("teacherIDs").childByAutoId().setValue(self.password) // adds a teachers password to the database for announcements proof
+            }
+            if error != nil {
+                if let code = FIRAuthErrorCode(rawValue: error!._code) {
+                    self.alert.stopAnimating()
+                    switch code {
+                    case .errorCodeEmailAlreadyInUse: // user exists
+                        alert = LyonsAlert(withTitle: "Sorry!", subtitle: "This email is already in use. Please log in, or use another email to sign up.", style: .alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                        alert.showIn(self)
+                    case .errorCodeInvalidEmail: // self explanatory
+                        alert = LyonsAlert(withTitle: "Invalid Email", subtitle: "Please make sure your email is typed in correctly.", style: .alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                        alert.showIn(self)
+                    case .errorCodeWeakPassword:
+                        alert = LyonsAlert(withTitle: "Weak Password", subtitle: "Please come up with a more secure password.", style: .alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                        alert.showIn(self)
+                    default:
+                        break
+                    }
+                }
+            } else {
+                if user != nil {
+                    alert.stopAnimating()
+                    //Log in succesfull
+                    UserDefaults.standard.setValue(self.password, forKey: "Pass")   // Memorize the password for next login
+                    UserDefaults.standard.setValue(self.username, forKey: "uID")    // Memorize the username for next login
+                    if self.signUpKeyField.text == keys[1] {
+                        self.performSegue(withIdentifier: "teacherFormSegue", sender: self)
+                    } else {
+                        self.performSegue(withIdentifier: "LogInSuccess", sender: self)
+                    }
+                }
+            }
+        }) // createUserWithEmail close
+    }
     
     @IBAction func buttonPressed(_ sender: AnyObject) {
+        var signUpKeys = ["", ""]
+        
         self.password = passwordField.text!
         self.username = userNameField.text!
-        var alert:LyonsAlert = LyonsAlert(withTitle: "", subtitle: "", style: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        alert.addLoadingWheel()
+        alert.showIn(self)
         
         if (passwordField.text?.isEmpty)! || (userNameField.text?.isEmpty)! {
             alert = LyonsAlert(withTitle: "Missing Information", subtitle: "Please fill in all the requirements.", style: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             alert.showIn(self)
-//                (UIApplication.shared.delegate as! AppDelegate).displayError("Missing Information", errorMsg: "Please fill in all the requirements.")
             return
         }
         
-        if entranceOption == 0 {
-                if signUpKeyField.text == signUpKey || signUpKeyField.text == "MacLyonsTeacher"{
-                FIRAuth.auth()?.createUser(withEmail: self.username, password: self.password, completion: {(user, error) in
-                    if self.signUpKeyField.text == "MacLyonsTeacher" { // TEACHER CHECK
-                        FIRDatabase.database().reference(withPath: "users").child("teacherIDs").childByAutoId().setValue(self.password) // adds a teachers password to the database for announcements proof
-                    }
-                    if error != nil {
-                        if let code = FIRAuthErrorCode(rawValue: error!._code) {
-                            switch code {
-                            case .errorCodeEmailAlreadyInUse: // user exists
-                                alert = LyonsAlert(withTitle: "Sorry!", subtitle: "This email is already in use. Please log in, or use another email to sign up.", style: .alert)
-                                alert.showIn(self)
-//                                (UIApplication.shared.delegate as! AppDelegate).displayError("Sorry!", errorMsg: "This email is already in use. Please log in, or use another email to sign up.")
-                            case .errorCodeInvalidEmail: // self explanatory
-                                alert = LyonsAlert(withTitle: "Invalid Email", subtitle: "Please make sure your email is typed in correctly.", style: .alert)
-                                alert.showIn(self)
-//                                (UIApplication.shared.delegate as! AppDelegate).displayError("Invalid Email", errorMsg: "Please make sure your email is typed in correctly.")
-                            default:
-                                break
-                            }
-                        }
+        if entranceOption == 0 { // sign up
+            let reference = FIRDatabase.database().reference(withPath: "java")
+            reference.observeSingleEvent(of: .value, with: {(snapshot) in
+                if snapshot.exists() {
+                    let data = (snapshot.value as! NSDictionary).allValues as NSArray
+                    signUpKeys[0] = (data.object(at: 0) as! String)
+                    signUpKeys[1] = (data.object(at: 1) as! String)
+                    if self.signUpKeyField.text == signUpKeys[0] || self.signUpKeyField.text == signUpKeys[1] {
+                        self.createNewUser(keys: signUpKeys)
                     } else {
-                        if user != nil {
-                            //Log in succesfull
-                            UserDefaults.standard.setValue(self.password, forKey: "Pass")   // Memorize the password for next login
-                            UserDefaults.standard.setValue(self.username, forKey: "uID")    // Memorize the username for next login
-                            self.performSegue(withIdentifier: "LogInSuccess", sender: self)
-                        }
-                    }
-                }) // createUserWithEmail close
-            } else {
-                (UIApplication.shared.delegate as! AppDelegate).displayError("Incorrect Sign Up Key", errorMsg: "Please try again.")
-            } // close of else { if {
-        } else if entranceOption == 1 {
+                        self.alert.stopAnimating()
+                        self.alert = LyonsAlert(withTitle: "Incorrect Sign Up Key", subtitle: "Please try again. It is case sensitive.", style: .alert)
+                        self.alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                        self.alert.showIn(self)
+                    } // close of else { if {
+                }
+            })
+            //            if signUpKeyField.text == signUpKeys[0] || signUpKeyField.text == signUpKeys[1] {
+            //                FIRAuth.auth()?.createUser(withEmail: self.username, password: self.password, completion: {(user, error) in
+            //                    if self.signUpKeyField.text == signUpKeys[1] { // TEACHER CHECK
+            //                        FIRDatabase.database().reference(withPath: "users").child("teacherIDs").childByAutoId().setValue(self.password) // adds a teachers password to the database for announcements proof
+            //                    }
+            //                    if error != nil {
+            //                        if let code = FIRAuthErrorCode(rawValue: error!._code) {
+            //                            switch code {
+            //                            case .errorCodeEmailAlreadyInUse: // user exists
+            //                                alert = LyonsAlert(withTitle: "Sorry!", subtitle: "This email is already in use. Please log in, or use another email to sign up.", style: .alert)
+            //                                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            //                                alert.showIn(self)
+            //                            case .errorCodeInvalidEmail: // self explanatory
+            //                                alert = LyonsAlert(withTitle: "Invalid Email", subtitle: "Please make sure your email is typed in correctly.", style: .alert)
+            //                                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            //                                alert.showIn(self)
+            //                            default:
+            //                                break
+            //                            }
+            //                        }
+            //                    } else {
+            //                        if user != nil {
+            //                            //Log in succesfull
+            //                            UserDefaults.standard.setValue(self.password, forKey: "Pass")   // Memorize the password for next login
+            //                            UserDefaults.standard.setValue(self.username, forKey: "uID")    // Memorize the username for next login
+            //                            self.performSegue(withIdentifier: "LogInSuccess", sender: self)
+            //                        }
+            //                    }
+            //                }) // createUserWithEmail close
+            //            } else {
+            //                alert = LyonsAlert(withTitle: "Incorrect Sign Up Key", subtitle: "Please try again. It is case sensitive.", style: .alert)
+            //                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            //                alert.showIn(self)
+            //
+            //            } // close of else { if {
+        } else if entranceOption == 1 { // log in
             // Authentication
             FIRAuth.auth()?.signIn(withEmail: username, password: self.password) { (user, error) in
-                // ...
                 if error != nil {
                     if let code = FIRAuthErrorCode(rawValue: error!._code) {
                         switch code {
                         case .errorCodeWrongPassword: // wrong password
-                            (UIApplication.shared.delegate as! AppDelegate).displayError("Invalid Password", errorMsg: "The password you entered is incorrect. Please try again.")
+                            self.alert = LyonsAlert(withTitle: "Invalid Password", subtitle: "The password you entered is incorrect. Please try again.", style: .alert)
+                            self.alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                            self.alert.showIn(self)
                         default:
                             break
                         }

@@ -10,17 +10,22 @@ import Foundation
 
 class LyonsAlert {
     var alertView:UIAlertController
+    var loadingWheel:UIActivityIndicatorView!
     
     init (withTitle title:String, subtitle:String, style:UIAlertControllerStyle) {
         alertView = UIAlertController(title: title, message: subtitle, preferredStyle: style)
-        // MARK: VISUAL CUSTOMIZATIONS
+        loadingWheel = nil
+    // MARK: VISUAL CUSTOMIZATIONS
         // Change text colors (you can change font too!)
-        alertView.setValue(NSAttributedString(string: title, attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 17), NSForegroundColorAttributeName : colorAccent]), forKey: "attributedTitle")
-        alertView.setValue(NSAttributedString(string: subtitle, attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 14), NSForegroundColorAttributeName : colorAccent]), forKey: "attributedMessage")
+        let font = UIFont(name: "Hapna Mono", size: 17)
+        let font2 = UIFont(name: "Hapna Mono", size: 14)
+        alertView.setValue(NSAttributedString(string: title, attributes: [NSFontAttributeName : font, NSForegroundColorAttributeName : UIColor.black]), forKey: "attributedTitle")
+        alertView.setValue(NSAttributedString(string: subtitle, attributes: [NSFontAttributeName : font2, NSForegroundColorAttributeName : UIColor.black]), forKey: "attributedMessage")
     }
     
     func showIn (_ initiator:UIViewController) {
-        initiator.present(alertView, animated: true, completion:  nil)
+        initiator.present(alertView, animated: true) {}
+//        initiator.present(alertView, animated: true, completion:  )
         // Change text color of buttons, has to be done after added, otherwise color changes back after first press
         alertView.view.tintColor = colorAccent
         
@@ -35,6 +40,21 @@ class LyonsAlert {
                 }
             }
         }
+    }
+    
+    func addLoadingWheel () {
+        let wheel = UIActivityIndicatorView(frame: alertView.view.bounds)
+        wheel.activityIndicatorViewStyle = .gray
+        wheel.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        loadingWheel = wheel
+        alertView.view.addSubview(loadingWheel)
+        loadingWheel.isUserInteractionEnabled = false
+        loadingWheel.startAnimating()
+    }
+    
+    func stopAnimating () {
+        loadingWheel.stopAnimating()
+        loadingWheel.removeFromSuperview()
     }
     
     func addAction (_ action:UIAlertAction) {

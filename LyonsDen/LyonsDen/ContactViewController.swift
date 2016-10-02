@@ -78,21 +78,6 @@ class ContactViewController: UIViewController, MFMailComposeViewControllerDelega
             view.layer.add(anim, forKey: nil)
         }
     }
-    
-    // for contacts
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        AppDelegate.getAppDelegate().requestForAccess { (accessGranted) -> Void in
-            if accessGranted {
-//                let predicate = CNContact.predicateForContactsMatchingName(self.txtLastName.text!)
-//                let keys = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactEmailAddressesKey, CNContactPhoneNumbersKey]
-//                var contacts = [CNContact]()
-//                var message: String!
-            }
-        }
-        
-        return true
-    }
-    
 
     @IBAction func hotlineSelected(_ sender: AnyObject) {
         let title = "Emergency Hotline"

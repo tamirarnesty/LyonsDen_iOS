@@ -31,103 +31,10 @@ let colorWhiteText:UIColor = UIColor(white: 1, alpha: 1)
 let keyCalendarEventBank:String = "calendarEventBank"
 let keyDayDictionary:String = "dayDictionary"
 
-var contactStore = CNContactStore()
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    
-//    func application(application: UIApplication,
-//                     didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-//        
-//        // [START register_for_notifications]
-//        if #available(iOS 10.0, *) {
-//            let authOptions : UNAuthorizationOptions = [.Alert, .Badge, .Sound]
-//            UNUserNotificationCenter.currentNotificationCenter().requestAuthorizationWithOptions(
-//                authOptions,
-//                completionHandler: {_,_ in })
-//            
-//            // For iOS 10 display notification (sent via APNS)
-//            UNUserNotificationCenter.currentNotificationCenter().delegate = self
-//            // For iOS 10 data message (sent via FCM)
-//            FIRMessaging.messaging().remoteMessageDelegate = self
-//            
-//        } else {
-//            let settings: UIUserNotificationSettings =
-//                UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
-//            application.registerUserNotificationSettings(settings)
-//            application.registerForRemoteNotifications()
-//        }
-//        
-//        
-//        // [END register_for_notifications]
-//        
-//        FIRApp.configure()
-//        
-//        // Add observer for InstanceID token refresh callback.
-//        NSNotificationCenter.defaultCenter().addObserver(self,
-//                                                         selector: #selector(self.tokenRefreshNotification),
-//                                                         name: kFIRInstanceIDTokenRefreshNotification,
-//                                                         object: nil)
-//        
-//        return true
-//    }
-    
-    func displayError (_ title: String!, errorMsg: String!) {
-        let alertController = UIAlertController(title: title, message: errorMsg, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        UIApplication.shared.keyWindow?.rootViewController!.present(alertController, animated: true, completion: nil)
-        
-    }
-
-    // for contacts methods. used in ContactViewController for emergency contact setting
-    class func getAppDelegate() -> AppDelegate {
-        return UIApplication.shared.delegate as! AppDelegate
-    }
-    
-    // same here
-    func showMessage(_ message: String) {
-        let alertController = UIAlertController(title: "Birthdays", message: message, preferredStyle: UIAlertControllerStyle.alert)
-        
-        let dismissAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) { (action) -> Void in
-        }
-        
-        alertController.addAction(dismissAction)
-        
-        let pushedViewControllers = (self.window?.rootViewController as! UINavigationController).viewControllers
-        let presentedViewController = pushedViewControllers[pushedViewControllers.count - 1]
-        
-        presentedViewController.present(alertController, animated: true, completion: nil)
-    }
-
-    // and this
-    func requestForAccess(_ completionHandler: @escaping (_ accessGranted: Bool) -> Void) {
-        let authorizationStatus = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
-        
-        switch authorizationStatus {
-        case .authorized:
-            completionHandler(true)
-            
-        case .denied, .notDetermined:
-            contactStore.requestAccess(for: CNEntityType.contacts, completionHandler: { (access, accessError) -> Void in
-                if access {
-                    completionHandler(access)
-                }
-                else {
-                    if authorizationStatus == CNAuthorizationStatus.denied {
-                        DispatchQueue.main.async(execute: { () -> Void in
-                            let message = "\(accessError!.localizedDescription)\n\nPlease allow the app to access your contacts through the Settings."
-                            self.showMessage(message)
-                        })
-                    }
-                }
-            })
-            
-        default:
-            completionHandler(false)
-        }
-    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
