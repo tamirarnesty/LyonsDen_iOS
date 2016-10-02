@@ -9,6 +9,7 @@
 //
 
 import UIKit
+import SystemConfiguration
 
 // TODO: FIX LOCATION LABEL GETTING OUT OF ITS BOUNDS
 
@@ -56,14 +57,17 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         // Set the DataSource and Delegate of the calendar
         calendarView.dataSource = self
         calendarView.delegate = self
+        calendarView.backgroundColor = colorBackground
         // Create a place holder for the calendar's height
-        let calendarHeight = (self.view.frame.size.width - 16.0 * 2) + 20.0
+        let calendarHeight = self.view.frame.size.width + 50.0
+        
+//        createDivider(calendarHeight + 1)
         
         // Setup the scrollView
-        scrollView = UIScrollView(frame: CGRect(x: 0, y: calendarHeight + 16, width: self.view.frame.width, height: self.view.frame.height - calendarHeight))    // Resize and position the scrollView
-        scrollView!.backgroundColor = backgroundColor                           // Set the scrollView's background color
+        scrollView = UIScrollView(frame: CGRect(x: 0, y: calendarHeight + 2, width: self.view.frame.width, height: self.view.frame.height - calendarHeight))
+        scrollView!.backgroundColor = colorBackground                           // Set the scrollView's background color
         dateLabel.frame = CGRect(x: 8, y: 8, width: scrollView!.frame.width - 16, height: 21)    // Resize and position the dateLabel
-        dateLabel.textColor = accentColor                                       // Change the text color of the dateLabel
+        dateLabel.textColor = colorEventViewBackground.withAlphaComponent(0.85)                                       // Change the text color of the dateLabel
         dateLabel.text = ""                                                     // Set a place holder for the text of the dateLabel
         dateLabel.textAlignment = NSTextAlignment.center                        // Center the dateLabel's text on screen
         scrollView!.addSubview(dateLabel)                                       // Add the dateLabel to the scrollView
@@ -78,9 +82,22 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         self.loadEventsIntoCalendar()
     }
     
+    func createDivider (_ y:CGFloat) {
+        let path = UIBezierPath()
+        path.move(to: CGPoint(x: 0, y: y))
+        path.addLine(to: CGPoint(x: self.view.frame.width, y: y))
+        
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.path = path.cgPath
+        shapeLayer.fillColor = colorEventViewBackground.withAlphaComponent(0.85).cgColor
+        shapeLayer.lineWidth = 1.0
+        
+        self.view.layer.addSublayer(shapeLayer)
+    }
+    
     func changeLoadingLabel () {
         var currentText = loadingLabel.text
-        print (self.loadingLabel.frame.origin.x)
+//        print (self.loadingLabel.frame.origin.x)
         
         if labelCounter < 3 {
             currentLabelHorizontal = loadingLabel.frame.origin.x
@@ -113,28 +130,32 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
 
         // If there are any events in the current date, then resize the scrollView's contentSize accordingly
         if self.currentEvents.count > 0 {   // If an event exists
-            self.scrollView!.contentSize.height = 37 + (self.currentEvents[0]!.frame.height + 16) * CGFloat(self.currentEvents.count)
+            var contentHeight:CGFloat = 37
+//            self.scrollView!.contentSize.height = 37 + (self.currentEvents[0]!.frame.height + 16) * CGFloat(self.currentEvents.count)
+            self.scrollView?.contentSize.height = 37
+            for view in self.currentEvents {
+                self.scrollView?.contentSize.height += (view?.frame.height)! + 8
+                contentHeight += (view?.frame.height)! + 8
+            }
         } else {                            // If an event does not exist
             self.scrollView!.contentSize.height = self.scrollView!.frame.height
         }
-        
-        print (loadingLabel.frame.origin.x)
-        if self.labelCounter < 4 && self.labelCounter != 0 {
-            print ("Applying Location Fix")
+
+        // Loading Label Location Fix (...)
+        if !self.loadingLabel.isHidden && self.labelCounter < 4 && self.labelCounter != 0 {
             self.loadingLabel.frame.origin.x = currentLabelHorizontal
-            print (self.loadingLabel.frame.origin.x)
         }
     }
     
     // Called after the view has appeared
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)   // Super call
-        self.calendarView.setDisplayDate(Date(), animated: true)                          // Set the current displayed date on the calendar, to the current date
-        self.calendarView.reloadData()                                                      // Reload the calendar data
+                                                             // Reload the calendar data
     }
     
+// MARK: DEBUGGING
     // Called whenever the events have been loaded
-    func eventsDidLoad() {
+    func eventsDidLoad(loadSuccess:Bool) {
         DispatchQueue.main.async {
             self.calendarView.reloadData()
             
@@ -144,122 +165,179 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
             self.calendarView.isHidden = false
             self.scrollView?.isHidden = false
             
-            UIView.animate(withDuration: 0.2, animations: {
+            UIView.animate(withDuration: 0.3, animations: {
                 self.calendarView.alpha = 1
                 self.scrollView?.alpha = 1
                 self.loadingWheel.alpha = 0
+                self.loadingLabel.alpha = 0
             })
             
-            print ("Events finished loading")
+//            print ("Events finished loading")
             // Stop the loading wheel
             self.loadingWheel.stopAnimating()
             self.labelAnimator?.invalidate()
             self.labelAnimator = nil
             self.loadingLabel.isHidden = true
-            print ("Loading Label Hidden")
+//            print ("Loading Label Hidden")
+            self.createDivider(self.view.frame.size.width + 51)
+            
+            if !loadSuccess {
+                var message = "Calendar Not Available"
+                message += (self.calendarView.events != nil) ? "\nShowing Last Updated\nCalendar" : ""
+                
+                let toast = ToastView(inView: self.view, withText: message, andDuration: 2)
+                self.view.addSubview(toast)
+                toast.initiate()
+            }
+            
+            self.calendarView.setDisplayDate(Date(), animated: true)                          // Set the current displayed date on the calendar, to the current date
+            self.calendarView.reloadData()
         }
+    }
+    
+    func addEventView (view:EventView) {
+        self.currentEvents.append(view)
+        if currentEvents.count > 1 {
+            let newPosition = (currentEvents[currentEvents.count-2]?.frame.origin.y)! + (currentEvents[currentEvents.count-2]?.frame.height)! + 8
+            currentEvents[currentEvents.count - 1]?.frame.origin.y = newPosition
+        }
+        
+        self.scrollView?.addSubview(view)
     }
     
 // MARK: EVENTS
     
-    // This function handles the process of downloading a calendar file from the web and parsing it, to add it to the app's calendar
+    /* This function handles the process of downloading a calendar file from the web and parsing it, to add it to the app's calendar.
+    The Process: Check Internet Connection
+    If available then download new calendar and display
+    If not available then check if cache exists
+        If a cache exists then display that and notify user about calendar's state
+        If no cache exists then display empty calendar and notify user about calendar's state
+    */
     func loadEventsIntoCalendar() {
         // The link from which the calendar is downloaded
         let url = URL (string: "https://calendar.google.com/calendar/ical/wlmacci%40gmail.com/public/basic.ics")!
         
+        
         // The process of downloading and parsing the calendar
         let task = URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
             // The following is simply a declaration and will not execute without the line 'task.resume()'
-            if let URlContent = data {  // If Data has been loaded
+            if let URLContent = data {  // If Data has been loaded
                 // If you got to this point then you've downloaded the calendar so...
                 // Calendar File parsing starts here!!!
                 // The string that holds the contents of the calendar's events
-                let webContent:NSString = NSString(data: URlContent, encoding: String.Encoding.utf8.rawValue)!
+                let webContent:NSString = NSString(data: URLContent, encoding: String.Encoding.utf8.rawValue)!
                 
-                // An array of flags used for locating the event fields
-                // [h][0] - The flag that marks the begining of a field, [h][1] - The flag that marks the end of a field
-                let searchTitles:[[String]] = [["SUMMARY:", "TRANSP:"], ["DESCRIPTION:", "LAST-MODIFIED:"], ["DTSTART", "DTEND"], ["DTEND", "DTSTAMP"], ["LOCATION:", "SEQUENCE:"]]
-                // The set that will contain the events themselves
-                var eventBank:Set<Event> = Set<Event>()
-                // An array of operation for configuring the last added event, operations are in the same order as searchTitles.
-                // The operations automatically modify the last item in the 'events' array.
-                // The actual contents of this array are calculated at the time of access and will be different as defined in the if statement
-                // Read the whole chapter on 'Functions' in the txtbook, there's some interesting stuff there, it'll all make sense
-                
-                var curEvent = Event(calendar: self.calendarView.calendar)
-
-                var eventOperations:[(NSString) -> Void] {
-                        return [curEvent.setTitle, curEvent.setDescription, curEvent.setStartDate, curEvent.setEndDate, curEvent.setLocation]
-                }
-                
-                // The range of "webContent's" content that is to be scanned
-                // Must be decreased after each event is scanned
-                var range:NSRange = NSMakeRange(0, webContent.length - 1)
-                // Inside function that will be used to determine the 'difference' range between the begining and end flag ranges.
-                let findDifference:(NSRange, NSRange) -> NSRange = {(first:NSRange, second:NSRange) -> NSRange in
-                    let location = first.location + first.length, length = second.location - location   // Determine the start position and length of our new range
-                    return NSMakeRange(location, length)                                                // Create and return the new range
-                }
-                // Inside function that will be used to move the searching range to the next event
-                // Returns an NSNotFound range (NSNotFound, 0) if there are not more events
-                let updateRange:(NSRange) -> NSRange = {(oldRange:NSRange) -> NSRange in
-                    let beginingDeclaration = webContent.range(of: "BEGIN:VEVENT", options: NSString.CompareOptions.literal, range: oldRange)
-                    // If the "BEGIN:VEVENT" was not found in webContent (no more events)
-                    if NSEqualRanges(beginingDeclaration, NSMakeRange(NSNotFound, 0)) {
-                        return beginingDeclaration  // Return an 'NSNotFound' range (Named it myself;)
-                    }
-                    // Calculate the index of the last character of 'beginingDeclaration' flag
-                    let endOfBeginingDeclaration = beginingDeclaration.location + beginingDeclaration.length
-                    // Calculate the length of the new range
-                    let length = oldRange.length - endOfBeginingDeclaration + oldRange.location
-                    // Calculate the starting location of the new range
-                    let location = endOfBeginingDeclaration
-                    // Create and return the new range
-                    return NSMakeRange(location, length)
-                }
-                
-                // A holder for the begining and end flags for each event field
-                var fieldBoundaries:[NSRange]
-                // The actual parsing of each event
-                repeat {
-                    range = updateRange(range)  // Move our searching range to the next event
-                    if NSEqualRanges(range, NSMakeRange(NSNotFound, 0)) {   // If there are no more events in the searching range
-                        break;                                              // Then no more shall be added (break from the loop)
-                    }
-                    
-                    // Record each field into our event database
-                    for h in 0...searchTitles.count-1 {
-                        fieldBoundaries = [NSRange]()   // Clear the fieldBoundaries for the new search
-                        fieldBoundaries.append(webContent.range(of: searchTitles[h][0], options: NSString.CompareOptions.literal, range: range))   // Find the begining flag
-                        fieldBoundaries.append(webContent.range(of: searchTitles[h][1], options: NSString.CompareOptions.literal, range: range))   // Find the ending flag
-                        var tempHold:String = webContent.substring(with: findDifference(fieldBoundaries[0], fieldBoundaries[1]))                         // Create a new string from whatever is in between the two flags. This will be the current field of the event
-                        tempHold = tempHold.trimmingCharacters(in: CharacterSet.newlines)                                           // Remove all /r /n and other 'new line' characters from the event field
-                        tempHold = tempHold.replacingOccurrences(of: "\u{005C}", with: "", options: .literal, range: nil)           // Replace all backslashes from the event field
-                        eventOperations[h](tempHold as NSString)                                                                                                        // Add the event field to the current event being recorded
-                    }
-                    eventBank.insert(curEvent)
-                    curEvent = Event(calendar: self.calendarView.calendar)
-                } while (true)
                 // Pass the recorded events to the calendar
-                self.calendarView.events = Array(eventBank)
+                self.calendarView.events = self.parse(webContent, inCalendar: self.calendarView.calendar)
+                
+                // Update the cached calendar
+                UserDefaults.standard.setValue(webContent, forKey: keyCalendarEventBank)
+                
                 // Notify the ViewController that the events have been loaded
-                self.eventsDidLoad()
-            } else if let errorData = error {   // If there has been an error
-                print ("Calendar View: Event Download, Failed!")
-                print ("Printing error description...")
-                print ()
-                print (errorData)
-                print ()
-                // Will, either handle or display the error, whenever i get more experience with this
-            } else {    // If there is no internet
-                print ("Calendar View: Event Download, No Internet!")
-                // Will display an error
+                self.eventsDidLoad(loadSuccess: true)
             }
-        }) 
-        // Initiate the load ing process
-        task.resume()
+        })
+        
+        // Response can be used to further error trap or check what the error is
+        // 'available' will be false if the connection is not perfect (doesn't mean its not there)
+        checkInternet { (available, response) in
+            if available {  // Then proceed
+                // Initiate the calendar loading process
+                task.resume()
+            } else {    // You can try error handling, or just not
+                let content = UserDefaults.standard.string(forKey: keyCalendarEventBank) as NSString?
+                if content != nil {
+                    self.calendarView.events = self.parse(content!, inCalendar: self.calendarView.calendar)
+                }
+                
+                self.eventsDidLoad(loadSuccess: false)
+            }
+        }
     }
     
+    // Calendar Parser for this VC
+    func parse(_ webContent:NSString, inCalendar calendar:Calendar) -> [Event] {
+        var dayDictionary:[String: Int]? = (UserDefaults.standard.dictionary(forKey: keyDayDictionary) == nil) ? [String: Int]() : nil
+        
+        // An array of flags used for locating the event fields
+        // [h][0] - The flag that marks the begining of a field, [h][1] - The flag that marks the end of a field
+        let searchTitles:[[String]] = [["SUMMARY:", "TRANSP:"], ["DESCRIPTION:", "LAST-MODIFIED:"], ["DTSTART", "DTEND"], ["DTEND", "DTSTAMP"], ["LOCATION:", "SEQUENCE:"]]
+        // The set that will contain the events themselves
+        var eventBank:Set<Event> = Set<Event>()
+        // An array of operation for configuring the last added event, operations are in the same order as searchTitles.
+        // The operations automatically modify the last item in the 'events' array.
+        // The actual contents of this array are calculated at the time of access and will be different as defined in the if statement
+        // Read the whole chapter on 'Functions' in the txtbook, there's some interesting stuff there, it'll all make sense
+        
+        var curEvent = Event(calendar: calendar)
+        
+        var eventOperations:[(NSString) -> Void] {
+            return [curEvent.setTitle, curEvent.setDescription, curEvent.setStartDate, curEvent.setEndDate, curEvent.setLocation]
+        }
+        
+        // The range of "webContent's" content that is to be scanned
+        // Must be decreased after each event is scanned
+        var range:NSRange = NSMakeRange(0, webContent.length - 1)
+        // Inside function that will be used to determine the 'difference' range between the begining and end flag ranges.
+        let findDifference:(NSRange, NSRange) -> NSRange = {(first:NSRange, second:NSRange) -> NSRange in
+            let location = first.location + first.length, length = second.location - location   // Determine the start position and length of our new range
+            return NSMakeRange(location, length)                                                // Create and return the new range
+        }
+        // Inside function that will be used to move the searching range to the next event
+        // Returns an NSNotFound range (NSNotFound, 0) if there are not more events
+        let updateRange:(NSRange) -> NSRange = {(oldRange:NSRange) -> NSRange in
+            let beginingDeclaration = webContent.range(of: "BEGIN:VEVENT", options: NSString.CompareOptions.literal, range: oldRange)
+            // If the "BEGIN:VEVENT" was not found in webContent (no more events)
+            if NSEqualRanges(beginingDeclaration, NSMakeRange(NSNotFound, 0)) {
+                return beginingDeclaration  // Return an 'NSNotFound' range (Named it myself;)
+            }
+            // Calculate the index of the last character of 'beginingDeclaration' flag
+            let endOfBeginingDeclaration = beginingDeclaration.location + beginingDeclaration.length
+            // Calculate the length of the new range
+            let length = oldRange.length - endOfBeginingDeclaration + oldRange.location
+            // Calculate the starting location of the new range
+            let location = endOfBeginingDeclaration
+            // Create and return the new range
+            return NSMakeRange(location, length)
+        }
+        
+        // A holder for the begining and end flags for each event field
+        var fieldBoundaries:[NSRange]
+        // The actual parsing of each event
+        repeat {
+            range = updateRange(range)  // Move our searching range to the next event
+            if NSEqualRanges(range, NSMakeRange(NSNotFound, 0)) {   // If there are no more events in the searching range
+                break;                                              // Then no more shall be added (break from the loop)
+            }
+            
+            // Record each field into our event database
+            for h in 0...searchTitles.count-1 {
+                fieldBoundaries = [NSRange]()   // Clear the fieldBoundaries for the new search
+                fieldBoundaries.append(webContent.range(of: searchTitles[h][0], options: NSString.CompareOptions.literal, range: range))   // Find the begining flag
+                fieldBoundaries.append(webContent.range(of: searchTitles[h][1], options: NSString.CompareOptions.literal, range: range))   // Find the ending flag
+                var tempHold:String = webContent.substring(with: findDifference(fieldBoundaries[0], fieldBoundaries[1]))                         // Create a new string from whatever is in between the two flags. This will be the current field of the event
+                tempHold = tempHold.trimmingCharacters(in: CharacterSet.newlines)                                           // Remove all /r /n and other 'new line' characters from the event field
+                tempHold = tempHold.replacingOccurrences(of: "\u{005C}", with: "", options: .literal, range: nil)           // Replace all backslashes from the event field
+                eventOperations[h](tempHold as NSString)                                                                                                        // Add the event field to the current event being recorded
+            }
+            
+            if curEvent.title.lowercased().trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) == "day 1" || curEvent.title.lowercased().trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) == "day 2" {
+                dayDictionary?[((curEvent.startDate?.description)! as NSString).substring(to: 10)] = Int ((curEvent.title as NSString).substring(from: curEvent.title.characters.count - 1))
+            } else {
+                eventBank.insert(curEvent)
+            }
+            curEvent = Event(calendar: calendar)
+        } while (true)
+        
+        if dayDictionary != nil {
+            UserDefaults.standard.set(dayDictionary!, forKey: keyDayDictionary)
+        }
+        
+        return Array(eventBank)
+    }
+    
+
 // MARK: CALENDAR DATASOURCE IMPLEMENTATION
     
     // Set the start date that can be viewed with the calendar
@@ -282,7 +360,6 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         // Declare the range of the between the start date and today
         let startDate = (self.calendarView.calendar as NSCalendar).date(byAdding: dateComponents, to: today, options: NSCalendar.Options())!
         // Return the start date
-        print(startDate.description)
         return startDate
     }
     
@@ -330,7 +407,6 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         
         DispatchQueue.main.async {
             self.currentEvents.removeAll()
-            
             if self.scrollView!.subviews.count > 0 {
                 for subview in self.scrollView!.subviews {
                     if subview != self.dateLabel {
@@ -338,22 +414,22 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
                     }
                 }
             }
-            
             if (events.count > 0) {
                 for h in 0...events.count - 1 {
-                    self.currentEvents.append(EventView(frame: CGRect(x: 8, y: 37 + (320 * CGFloat(h)), width: self.scrollView!.frame.width - 16, height: 316)))
-                    self.scrollView!.addSubview(self.currentEvents[h]!)
-                    self.currentEvents[h]!.titleLabel.text = events[h].title
-                    self.currentEvents[h]!.infoLabel.text = events[h].description
-                    let tempHold = events[h].startDate!.description as NSString
-                    self.currentEvents[h]!.timeLabel.text = tempHold.substring(to: 16) as String
-                    self.currentEvents[h]!.locationLabel.text = events[h].location
-                    
-                    self.currentEvents[h]!.locationLabel.frame.size.width = (self.currentEvents[h]!.frame.width/2) - 16
-                    self.currentEvents[h]!.timeLabel.frame.size.width = (self.currentEvents[h]!.frame.width/2) - 16
+                    var dateTime = (events[h].startDate!.description as NSString).substring(to: 16) as NSString
+                    dateTime = dateTime.substring(from: 11) as NSString
+                    dateTime = (dateTime == "00:00") ? "" : dateTime
+                    let params:[String?] = [events[h].title,
+                                            events[h].description,
+                                            dateTime as String,
+                                            events[h].location]
+                    self.addEventView(view: EventView(withFrame: CGRect(x: 8, y: 37, width: self.scrollView!.frame.width - 16, height: 316), params: params))
                 }
             }
+            let key = (date.description as NSString).substring(to: 10)
+            let dayOfDate = (UserDefaults.standard.dictionary(forKey: keyDayDictionary))?[key] as! Int?
             self.dateLabel.text = NSString(string: date.description).substring(to: 10)
+            if dayOfDate != nil { self.dateLabel.text = self.dateLabel.text! + " Day \(dayOfDate!)"}
         }
     }
 }

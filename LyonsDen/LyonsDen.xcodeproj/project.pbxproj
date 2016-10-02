@@ -13,6 +13,8 @@
 		2D22EA091D2ED29C001B3A11 /* MenuTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D22EA081D2ED29C001B3A11 /* MenuTable.swift */; };
 		2D39529E1D9B64DC003D5C4F /* colorScheme in Resources */ = {isa = PBXBuildFile; fileRef = 2D39529D1D9B64DC003D5C4F /* colorScheme */; };
 		2D6706171D4AE28300C52860 /* ClubViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6706161D4AE28300C52860 /* ClubViewController.swift */; };
+		2D68F1311DA0275D008EA349 /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D68F1301DA0275D008EA349 /* ToastView.swift */; };
+		2D68F1331DA0289A008EA349 /* LyonsAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D68F1321DA0289A008EA349 /* LyonsAlert.swift */; };
 		2D7224531D43124000C327D3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D7224521D43124000C327D3 /* GoogleService-Info.plist */; };
 		2D72245B1D441D2A00C327D3 /* LoginScreenSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D72245A1D441D2A00C327D3 /* LoginScreenSegue.swift */; };
 		2D8AC7CD1D25D7D900367326 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8AC7CC1D25D7D900367326 /* AppDelegate.swift */; };
@@ -51,6 +53,8 @@
 		2D22EA081D2ED29C001B3A11 /* MenuTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTable.swift; sourceTree = "<group>"; };
 		2D39529D1D9B64DC003D5C4F /* colorScheme */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = colorScheme; sourceTree = "<group>"; };
 		2D6706161D4AE28300C52860 /* ClubViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClubViewController.swift; sourceTree = "<group>"; };
+		2D68F1301DA0275D008EA349 /* ToastView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ToastView.swift; path = "Resource Classes/ToastView.swift"; sourceTree = "<group>"; };
+		2D68F1321DA0289A008EA349 /* LyonsAlert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LyonsAlert.swift; path = "Resource Classes/LyonsAlert.swift"; sourceTree = "<group>"; };
 		2D7224521D43124000C327D3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2D72245A1D441D2A00C327D3 /* LoginScreenSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginScreenSegue.swift; path = SegueAnimators/LoginScreenSegue.swift; sourceTree = "<group>"; };
 		2D8AC7C91D25D7D900367326 /* LyonsDen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LyonsDen.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,6 +113,15 @@
 			name = ContactViews;
 			sourceTree = "<group>";
 		};
+		2D68F12F1DA02748008EA349 /* Resource Classes */ = {
+			isa = PBXGroup;
+			children = (
+				2D68F1301DA0275D008EA349 /* ToastView.swift */,
+				2D68F1321DA0289A008EA349 /* LyonsAlert.swift */,
+			);
+			name = "Resource Classes";
+			sourceTree = "<group>";
+		};
 		2D7224571D441C0700C327D3 /* SegueAnimators */ = {
 			isa = PBXGroup;
 			children = (
@@ -138,6 +151,7 @@
 		2D8AC7CB1D25D7D900367326 /* LyonsDen */ = {
 			isa = PBXGroup;
 			children = (
+				2D68F12F1DA02748008EA349 /* Resource Classes */,
 				8F131AF21D8F035600097C97 /* LyonsDen.entitlements */,
 				8F7324C11D2F37020097036D /* Launch Screen.storyboard */,
 				2D8AC8201D25E20B00367326 /* SWRevealViewController */,
@@ -370,11 +384,13 @@
 				2DC27BC71D386A1D002A5ADF /* CalendarView.swift in Sources */,
 				2DEF28211D39A84000DA921E /* EventView.swift in Sources */,
 				2D22EA071D2D8390001B3A11 /* MusicViewController.swift in Sources */,
+				2D68F1331DA0289A008EA349 /* LyonsAlert.swift in Sources */,
 				2DC27BC51D386A1D002A5ADF /* CalendarFlowLayout.swift in Sources */,
 				2D8AC7E11D25D96800367326 /* CalendarViewController.swift in Sources */,
 				2D8AC7CF1D25D7D900367326 /* HomeViewController.swift in Sources */,
 				2D8AC8241D25E23000367326 /* SWRevealViewController.m in Sources */,
 				2D72245B1D441D2A00C327D3 /* LoginScreenSegue.swift in Sources */,
+				2D68F1311DA0275D008EA349 /* ToastView.swift in Sources */,
 				2D6706171D4AE28300C52860 /* ClubViewController.swift in Sources */,
 				2D8AC82D1D25EEEB00367326 /* InfoViewController.swift in Sources */,
 				2DC27BC81D386A1D002A5ADF /* Event.swift in Sources */,

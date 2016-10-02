@@ -33,6 +33,7 @@ class Event: Hashable {
         self.endDate = nil
         self.location = ""
         self.dateCreator.calendar = calendar
+        self.dateCreator.timeZone = TimeZone(abbreviation: "EST")
     }
     
     func setTitle (_ newTitle:NSString) {

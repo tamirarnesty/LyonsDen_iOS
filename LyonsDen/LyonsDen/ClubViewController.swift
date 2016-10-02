@@ -144,7 +144,7 @@ class ClubViewController: UIViewController, UITableViewDelegate {
     // Downloads club announcements data
     func parseForEvents (_ reference:FIRDatabaseReference) {
         // Navigate to and download the Events data
-        reference.observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
+        reference.queryOrdered(byChild: "dateTime").observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
             if snapshot.exists() {
                 // Create an NSDictionary instance of the data
                 let data = snapshot.value as! NSDictionary
@@ -158,6 +158,7 @@ class ClubViewController: UIViewController, UITableViewDelegate {
                     self.eventData[3].append((dataContent.object(at: h) as AnyObject).object(forKey: "location")! as! String)
                     self.images.append(nil) // Will be implemented later
                 }
+                self.eventData.reverse()
                 // Reload the tableView to display the loaded data
                 self.tableView.reloadData()
             } else {

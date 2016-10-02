@@ -9,13 +9,12 @@
 //
 //  Copyright (c) 2015 Karmadust. All rights reserved.
 //
-//  Half-Commented by Inal Gotov
+//  Commented and Modified by Inal Gotov
 
 import UIKit
 import EventKit
 
 // Global Variables
-
 let cellReuseIdentifier = "CalendarDayCell" // The reuse identifier for the cell
 let NUMBER_OF_DAYS_IN_WEEK = 7              // The number of days in a week
 let MAXIMUM_NUMBER_OF_ROWS = 6              // Maximum number of rows in a month
@@ -24,13 +23,6 @@ let FIRST_DAY_INDEX = 0                     // Default index of the first index
 let NUMBER_OF_DAYS_INDEX = 1                // Default ??????????????????????????
 let DATE_SELECTED_INDEX = 2                 // Default selected index
 
-//// Extension of the Event class
-//extension Event {
-//    var isOneDay : Bool {
-//        let components = NSCalendar.currentCalendar().components([.Era, .Year, .Month, .Day], fromDate: self.startDate!, toDate: self.endDate!, options: NSCalendarOptions())
-//        return (components.era == 0 && components.year == 0 && components.month == 0 && components.day == 0)
-//    }
-//}
 
 // The protocol(Interface) that is used to define a DataSource for this Calendar
 protocol CalendarViewDataSource {
@@ -57,8 +49,7 @@ class CalendarView: UIView, UICollectionViewDataSource, UICollectionViewDelegate
     // A gregorian version of this calView's NSCalendar
     lazy var gregorian : Calendar = {
         var cal = Calendar(identifier: Calendar.Identifier.gregorian)   // Create a gregorian calendar
-        cal.timeZone = TimeZone(abbreviation: "UTC")!                     // Set it timezone to UTC format
-        print(cal.description)
+        cal.timeZone = TimeZone(abbreviation: "EST")!                     // Set it timezone to UTC format
         return cal
     }()
     
@@ -140,13 +131,13 @@ class CalendarView: UIView, UICollectionViewDataSource, UICollectionViewDelegate
         let cv = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)  // Creates the collection view itslef
         cv.dataSource = self                        // Sets its Data Source
         cv.delegate = self                          // Sets its Delegate (User Interaction Handler)
-        cv.isPagingEnabled = true                     // Makes it pageable
-        cv.backgroundColor = UIColor.clear   // Makes its background transparent
+        cv.isPagingEnabled = true                   // Makes it pageable
+        cv.backgroundColor = UIColor.clear          // Makes its background transparent
         // Hides scrolling indicators
         cv.showsHorizontalScrollIndicator = false
         cv.showsVerticalScrollIndicator = false
         
-        cv.allowsMultipleSelection = true           // Makes it multiscreen
+        cv.allowsMultipleSelection = true           // Allows users to select multiple items at a time
         return cv
     }()
     
@@ -270,10 +261,10 @@ class CalendarView: UIView, UICollectionViewDataSource, UICollectionViewDelegate
             dayCell.isToday = ((idx as NSIndexPath).section == (indexPath as NSIndexPath).section && (idx as NSIndexPath).item + fdIndex == (indexPath as NSIndexPath).item)
         }
         
-        if let eventsForDay = eventsByIndexPath[fromStartOfMonthIndexPath] {
-            dayCell.eventsCount = eventsForDay.count
+        if eventsByIndexPath[fromStartOfMonthIndexPath] != nil {
+            dayCell.containsEvent = true
         } else {
-            dayCell.eventsCount = 0
+            dayCell.containsEvent = false
         }
         
         return dayCell
@@ -446,7 +437,7 @@ class CalendarView: UIView, UICollectionViewDataSource, UICollectionViewDelegate
     
     // Extra Code from this point on
     func changeMonth (_ sender:UIButton!) {
-        if sender.currentImage == UIImage(named: "LeftButton") {
+        if sender.tag == 0 {
             // Past
             self.setDisplayDate((self.calendar as NSCalendar).date(byAdding: .month, value: -1, to: self.displayDate!, options: NSCalendar.Options.matchFirst)!, animated: true)
         } else {

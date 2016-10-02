@@ -5,56 +5,30 @@
 //  Created by Michael Michailidis on 02/04/2015.
 //  Copyright (c) 2015 Karmadust. All rights reserved.
 //
-//  Commented by Inal Gotov
+//  Commented and Modified by Inal Gotov
 
 import UIKit
 
-//  Old Color Scheme
-//// The colour of a default cell
-//let cellColorDefault = backgroundColor.withAlphaComponent(0.5)
-//// The colour of today's cell
-//let cellColorToday = backgroundColor
-//// The colour of the border of a cell
-////let borderColor = UIColor(red: 0.9961, green: 0.7765, blue: 0.2784, alpha: 0.9)
-//let borderColor = skyBlueColor
-//
-//let cellTextColor = accentColor
-//
-//let eventDotColor = accentColor
-
 // This class is used for the manipulation of an individual day cell of the calendar
 class CalendarDayCell: UICollectionViewCell {
-    //  New Color Scheme
-    // The colour of a default cell
-    let cellColorDefault = colorEventViewBackground.withAlphaComponent(0.7)
-    // The colour of today's cell
-    let cellColorToday = colorEventViewBackground
-    // The colour of the border of a cell
-    let borderColor = skyBlueColor
+    let colorCellDefault = colorEventViewBackground.withAlphaComponent(0.5)
+    let colorCellEvent = colorEventViewBackground.withAlphaComponent(0.85)
+    let colorTodayDot = colorWhiteText
+    let colorBorder = colorNavigationBar
+    let colorCellText = colorWhiteText
     
-    let cellTextColor = colorNavigationBar
     
-    let eventDotColor = colorAccent
+    // New scheme:
+    // Regular cells stay the same
+    // Event cells get less opaque bg
+    // Today's cell gets a dot
+    // Selected get border
     
-    // The count of events in a day
-    var eventsCount = 0 {
-        // didSet - Something that is called right after the value has been set
-        // Horizontally adds dots for each event in the day
+    var containsEvent = false {
         didSet {
-            for sview in self.dotsView.subviews {
-                sview.removeFromSuperview()
-            }
-            
-            let stride = self.dotsView.frame.size.width / 2
-            let viewHeight = self.dotsView.frame.size.height
-            let halfViewHeight = viewHeight / 2.0
-            
-            if eventsCount > 0 {
-                let frm = CGRect(x: (stride+1.0) - halfViewHeight, y: 0.0, width: viewHeight, height: viewHeight)
-                let circle = UIView(frame: frm)
-                circle.layer.cornerRadius = halfViewHeight
-                circle.backgroundColor = eventDotColor
-                self.dotsView.addSubview(circle)
+            pBackgroundView.backgroundColor = colorCellDefault
+            if containsEvent == true {
+                pBackgroundView.backgroundColor = colorCellEvent
             }
         }
     }
@@ -63,11 +37,19 @@ class CalendarDayCell: UICollectionViewCell {
     var isToday : Bool = false {
         // Changes the colour of the cell, to today's colors if true, otherwise default colors
         didSet {
-            if isToday == true {
-                self.pBackgroundView.backgroundColor = cellColorToday
+            for sview in self.dotsView.subviews {
+                sview.removeFromSuperview()
             }
-            else {
-                self.pBackgroundView.backgroundColor = cellColorDefault
+            
+            if isToday == true {
+                let stride = self.dotsView.frame.size.width / 2
+                let viewHeight = self.dotsView.frame.size.height
+                let halfViewHeight = viewHeight / 2.0
+                
+                let circle = UIView(frame: CGRect(x: (stride+1.0) - halfViewHeight, y: 0.0, width: viewHeight, height: viewHeight))
+                circle.layer.cornerRadius = halfViewHeight
+                circle.backgroundColor = colorTodayDot
+                self.dotsView.addSubview(circle)
             }
         }
     }
@@ -77,7 +59,7 @@ class CalendarDayCell: UICollectionViewCell {
         // Changes the border whenever it is selected
         didSet {
             if isSelected == true {
-                self.pBackgroundView.layer.borderWidth = 2.0
+                self.pBackgroundView.layer.borderWidth = 2.5
             }
             else {
                 self.pBackgroundView.layer.borderWidth = 0.0
@@ -91,12 +73,12 @@ class CalendarDayCell: UICollectionViewCell {
         var vFrame = self.frame.insetBy(dx: 3.0, dy: 3.0)  // The frame of the view
         let view = UIView(frame: vFrame)                // The view
         
-        view.layer.cornerRadius = 4.0                   // The round radious of the view's rectangle
-        view.layer.borderColor = self.borderColor.cgColor    // The border color of the view's rectangle
+        view.layer.cornerRadius = (view.frame.height)/2                   // The round radious of the view's rectangle
+        view.layer.borderColor = self.colorBorder.cgColor    // The border color of the view's rectangle
         view.layer.borderWidth = 0.0                    // The border width of the view's rectangle
         
         view.center = CGPoint(x: self.bounds.size.width * 0.5, y: self.bounds.size.height * 0.5)    // Position of the view's center (set in according to the parent)
-        view.backgroundColor = self.cellColorDefault         // The view's background color
+        view.backgroundColor = self.colorCellDefault         // The view's background color
         
         return view
     }()
@@ -105,7 +87,7 @@ class CalendarDayCell: UICollectionViewCell {
     lazy var textLabel : UILabel = {
         let lbl = UILabel()     // Text Label
         lbl.textAlignment = NSTextAlignment.center  // Text Allignment
-        lbl.textColor = self.cellTextColor     // TEXT COLOR!!!!
+        lbl.textColor = self.colorCellText     // TEXT COLOR!!!!
         
         return lbl
     }()
@@ -128,7 +110,7 @@ class CalendarDayCell: UICollectionViewCell {
         self.addSubview(dotsView)               // Add the events dot, if any
     }
 
-    // I still dont know what that is
+    // Intergration with IB, doesnt work?
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }

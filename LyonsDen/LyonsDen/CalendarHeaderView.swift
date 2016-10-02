@@ -8,21 +8,20 @@
 //
 //  Copyright (c) 2015 Karmadust. All rights reserved.
 //
-//  Commented by Inal Gotov
+//  Commented and Modified by Inal Gotov
 
 import UIKit
 
 // This class is used for the manipulation of the header of this calendar
 class CalendarHeaderView: UIView {
-    let textColor = colorNavigationText
-    let arrowButtonTint = colorNavigationText
+    let colorMain = colorNavigationText
     
     // The label that represent the month
     lazy var monthLabel : UILabel = {
         let lbl = UILabel()                                 // Create label
         lbl.textAlignment = NSTextAlignment.center          // Center the text allignment
         lbl.font = UIFont(name: "Helvetica", size: 20.0)    // Helvetica the font with size 20
-        lbl.textColor = self.textColor                      // Paint the text gray
+        lbl.textColor = self.colorMain                      // Paint the text gray
         
         self.addSubview(lbl)                                // Add the label to the header
         return lbl
@@ -39,7 +38,7 @@ class CalendarHeaderView: UIView {
             
             weekdayLabel.font = UIFont(name: "Helvetica", size: 14.0)       // Helvetica the label's font with size 14
             weekdayLabel.text = day.substring(to: 2).uppercased()     // Set the text of the label to the first two letters of the weekday in caps
-            weekdayLabel.textColor = self.textColor                         // Paint the text gray
+            weekdayLabel.textColor = self.colorMain                         // Paint the text gray
             weekdayLabel.textAlignment = NSTextAlignment.center             // Center the text allignment
             v.addSubview(weekdayLabel)                                      // Add the label to the day's view
         }
@@ -75,36 +74,23 @@ class CalendarHeaderView: UIView {
         }
         
         // Extra Code from this point on.
-        
-        let leftButtonFrame = CGRect(x: 5, y: 15, width: 25, height: 25)
-        let rightButtonFrame = CGRect(x: self.frame.width - 30, y: 15, width: 25, height: 25)
-        
-        self.leftButton.frame = leftButtonFrame
-        self.rightButton.frame = rightButtonFrame
+        self.addSubview (createNavigationArrow(withFrame: CGRect(x: 5, y: 15, width: 25, height: 25),
+                                                      image: (UIImage(named: "LeftButton")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate))!,
+                                                      tag: 0))
+        self.addSubview (createNavigationArrow(withFrame: CGRect(x: self.frame.width - 30, y: 15, width: 25, height: 25),
+                                                       image: (UIImage(named: "RightButton")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate))!,
+                                                       tag: 1))
     }
     
-    
-    lazy var leftButton : UIButton = {
-        let button = UIButton()
-
-        button.setImage(UIImage(named: "LeftButton"), for: UIControlState())
-        button.imageView?.tintColor = self.arrowButtonTint
+    func createNavigationArrow(withFrame frame:CGRect, image:UIImage, tag:Int) -> UIButton {
+        let button = UIButton(frame: frame)
+        
+        button.setImage(image, for: UIControlState())
+        button.tintColor = self.colorMain
+        button.tag = tag
         button.alpha = 0.7  // Visuals
         button.addTarget(CalendarView(), action: #selector(CalendarView.changeMonth), for: .touchUpInside)
         
-        self.addSubview(button)
         return button
-    }()
-    
-    lazy var rightButton : UIButton = {
-        let button = UIButton()
-        
-        button.setImage(UIImage(named: "RightButton"), for: UIControlState())
-        button.imageView?.tintColor = self.arrowButtonTint
-        button.alpha = 0.7  // Visuals
-        button.addTarget(CalendarView(), action: #selector(CalendarView.changeMonth), for: .touchUpInside)
-        
-        self.addSubview(button)
-        return button
-    }()
+    }
 }

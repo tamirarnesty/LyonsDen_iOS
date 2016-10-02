@@ -38,7 +38,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
     static var updatePeriods:Timer?
     var refreshController:UIRefreshControl!
     var eventData:[[String?]] = [[String?](), [String?](), [String?](), [String?]()]
-    var dayText = ""
     // Reference to the database
     var ref:FIRDatabaseReference!
     var gestureRecognizersAdded = false
@@ -54,21 +53,21 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        print ()
-        print ("view will really appear soon")
-        print ()
-        print (gestureRecognizersAdded)
-        print (self.courses[0].gestureRecognizers?.description)
-        print ("Adding gesture recognizer for")
+//        print ()
+//        print ("view will really appear soon")
+//        print ()
+//        print (gestureRecognizersAdded)
+//        print (self.courses[0].gestureRecognizers?.description)
+//        print ("Adding gesture recognizer for")
         for i in 0...courses.count-1 {
-            print (i)
+//            print (i)
             if !gestureRecognizersAdded {
-                print ("Did add recognizer")
+//                print ("Did add recognizer")
                 self.courses[i].addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(HomeViewController.handleLongTap(_:))))
             }
         }
         gestureRecognizersAdded = true
-        print ("many views")
+//        print ("many views")
     }
     
     override func viewDidLoad() {
@@ -121,7 +120,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
         
-        for var i in 0...courses.count-1 {
+        for i in 0...courses.count-1 {
             self.courses[i].layer.borderColor = UIColor.black.cgColor
             self.courses[i].layer.borderWidth = 0.5
         }
@@ -129,24 +128,57 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
                // For proper scrolling, didnt work :(
         //        setupGestures()
         tableList.frame = self.view.bounds;
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         
-//        let tableViewHeight = self.view.frame.height - topViews.frame.height
-//        
-//        scrollView.contentSize.height = topViews.frame.height + tableViewHeight
-//        tableList.frame.size.height = tableViewHeight
+        dayLabel.alpha = 0
+        
+        // If a DayDictionary does not exist
+        if UserDefaults.standard.dictionary(forKey: keyDayDictionary) == nil {
+            // Calendar in which the events are going to be aligned in
+            var calendar = Calendar(identifier: Calendar.Identifier.gregorian)
+            calendar.timeZone = TimeZone(abbreviation: "EST")!
+            // The Download Session
+            let task = URLSession.shared.dataTask(with: URL(string: "https://calendar.google.com/calendar/ical/wlmacci%40gmail.com/public/basic.ics")!, completionHandler: { (data, response, error) in
+                if let URLContent = data {
+                    let calendarContent:NSString = NSString(data: URLContent, encoding: String.Encoding.utf8.rawValue)! // Declare downloaded content
+                    CalendarViewController.parse(CalendarViewController())(calendarContent, inCalendar: calendar)       // Pass the content to the CalendarVC parses
+                    self.dayLabelDidLoad(loadSuccess: true)                                                             // Notify about success of operation
+                }
+            })
+            // Check for internet, this is where this method starts
+            checkInternet(completionHandler: { (available, response) in
+                if available {
+                    task.resume()   // If internet is available then, download the dictionary
+                } else {
+                    self.dayLabelDidLoad(loadSuccess: false)    // If it is not, then notify about failure of operation
+                }
+            })
+        } else {    // If a dictionary does exist, then it just does its thing
+            self.dayLabelDidLoad(loadSuccess: true)
+        }
     }
     
-//    func swipedUp (_ up: UISwipeGestureRecognizer) {
-//        self.view.resignFirstResponder()
-//    }
-    
+    // Called when the dayLabel is ready to be displayed
+    func dayLabelDidLoad (loadSuccess:Bool) {
+        DispatchQueue.main.async {
+            if loadSuccess {    // If the Day of the day can be retrieved. then
+                UIView.animate(withDuration: 0.2, animations: {
+                    // Retrieve the Day of the day
+                    var dayOfDay = (UserDefaults.standard.dictionary(forKey: keyDayDictionary))?[(Date().description as NSString).substring(to: 10)] as! String?
+                    // If it is not a day, then declare the Day of the day as Day X
+                    dayOfDay = (dayOfDay == nil) ? "X" : dayOfDay
+                    // Set the day
+                    self.dayLabel.text = dayOfDay
+                    self.dayLabel.alpha = 1
+                })
+            } else {        // If not, then notify the user about it
+                let toast = ToastView(inView: self.view, withText: "Could not retrieve the\nDay of the day!", andDuration: 2)
+                self.view.addSubview(toast)
+                toast.initiate()
+            }
+        }
+    }
+
     func reloadHome () {
-        
-        print ("refreshed")
         // Clear events array to enter new Data
         self.eventData = [[String?](), [String?](), [String?](), [String?]()]
         // Reload data into events array
@@ -199,44 +231,44 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
         var lyonsCalendar = Calendar(identifier: Calendar.Identifier.gregorian)
         lyonsCalendar.timeZone = TimeZone(abbreviation: "EST")!
         var periodOneComponents =  lyonsCalendar.dateComponents([.year, .month, .day, .hour, .minute], from: Date())
-        print(periodOneComponents.description)
+//        print(periodOneComponents.description)
         periodOneComponents.hour = 8; periodOneComponents.minute = 45
         
-        print(periodOneComponents.description)
+//        print(periodOneComponents.description)
         var periodTwoComponents =  lyonsCalendar.dateComponents([.year, .month, .day, .hour, .minute], from: Date())
-        print(periodOneComponents.description)
+//        print(periodOneComponents.description)
         periodTwoComponents.hour = 10; periodTwoComponents.minute = 10
         var periodThreeComponents =  lyonsCalendar.dateComponents([.year, .month, .day, .hour, .minute], from: Date())
-        print(periodOneComponents.description)
+//        print(periodOneComponents.description)
         periodThreeComponents.hour = 12; periodThreeComponents.minute = 30
         var periodFourComponents =  lyonsCalendar.dateComponents([.year, .month, .day, .hour, .minute], from: Date())
-        print(periodOneComponents.description)
+//        print(periodOneComponents.description)
         periodFourComponents.hour = 13; periodFourComponents.minute = 50
-        print(periodOneComponents.description)
+//        print(periodOneComponents.description)
         
         // non-period dates
         var lunchComponents = lyonsCalendar.dateComponents([.year, .month, .day, .hour, .minute], from: Date())
-        print(periodOneComponents.description)
+//        print(periodOneComponents.description)
         lunchComponents.hour = 11; lunchComponents.minute = 30
         var afterSchoolComponents = lyonsCalendar.dateComponents([.year, .month, .day, .hour, .minute], from: Date())
-        print(periodOneComponents.description)
+//        print(periodOneComponents.description)
         afterSchoolComponents.hour = 15; afterSchoolComponents.minute = 05
         
         // create dates from components
-        print(periodOneComponents.description)
+//        print(periodOneComponents.description)
         
         let periodOne = lyonsCalendar.date(from: periodOneComponents)!
-        print(periodOne.description)
+//        print(periodOne.description)
         let periodTwo = lyonsCalendar.date(from: periodTwoComponents)!
-        print(periodTwo.description)
+//        print(periodTwo.description)
         let periodThree = lyonsCalendar.date(from: periodThreeComponents)!
-        print(periodThree.description)
+//        print(periodThree.description)
         let periodFour = lyonsCalendar.date(from: periodFourComponents)!
-        print(periodFour.description)
+//        print(periodFour.description)
         let lunch = lyonsCalendar.date(from: lunchComponents)!
-        print(lunch.description)
+//        print(lunch.description)
         let afterSchool = lyonsCalendar.date(from: afterSchoolComponents)!
-        print(afterSchool.description)
+//        print(afterSchool.description)
         
         
         var period = false
@@ -247,14 +279,14 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
 //        todayComponents.hour = -3
         let today = lyonsCalendar.date(from: todayComponents)!
         
-        print(today.description)
-        print(todayComponents.timeZone)
-        print(today.timeIntervalSince(periodOne))
+//        print(today.description)
+//        print(todayComponents.timeZone)
+//        print(today.timeIntervalSince(periodOne))
         // determines which part of the day it is based on Dates
             if today.timeIntervalSince(periodOne) < 0 { // ----
                 period = false
                 before = true
-                print ("before school")
+//                print ("before school")
             } else if today.timeIntervalSince(periodOne) >= 0 && today.timeIntervalSince(periodTwo) < 0 { // ----
                 period = true
                 index = 0
@@ -262,23 +294,23 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
             } else if today.timeIntervalSince(periodTwo) >= 0 && today.timeIntervalSince(lunch) < 0 { // ----
                 period = true
                 index = 1
-                print ("period two")
+//                print ("period two")
             } else if today.timeIntervalSince(lunch) >= 0 && today.timeIntervalSince(periodThree) < 0 { // ----
                 period = false
                 duringLunch = true
-                print ("lunch")
+//                print ("lunch")
             } else if today.timeIntervalSince(periodThree) >= 0 && today.timeIntervalSince(periodFour) < 0 { // ----
                 period = true
                 index = 2
-                print ("period three")
+//                print ("period three")
             } else if today.timeIntervalSince(periodFour) >= 0 && today.timeIntervalSince(afterSchool) < 0 { // ----
                 period = true
                 index = 3
-                print ("period four")
+//                print ("period four")
             } else if today.timeIntervalSince(periodFour) >= 0 { // ----
                 period = false
                 after = true
-                print ("after school")
+//                print ("after school")
             }
         
         
@@ -294,7 +326,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
                 if before { beforeSchoolView.isHidden = false }
                 else if duringLunch { lunchView.isHidden = false }
                 else { if after { afterSchoolView.isHidden = false }
-                print("done")}
+//                print("done")
+                }
             }
         }
     }
@@ -325,9 +358,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
     
     // Called when there is a long press on one of the period views
     func handleLongTap (_ recognizer: UILongPressGestureRecognizer) {
-        print("to edit")
+//        print("to edit")
         identifierIndex = getIndex(recognizer)
-        print("once/twice")
+//        print("once/twice")
         performSegue(withIdentifier: "periodEditorSegue", sender: nil)
     }
     
@@ -376,46 +409,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
         // Segue into InfoViewController
         performSegue(withIdentifier: "AnnouncementSegue", sender: self)
     }
-    
-    
-    
-    
-    
-    // For proper scrolling, doesn't work all that well thoough :(
-    
-    //    func setupGestures () {
-    //        let swipeUpGesture = UISwipeGestureRecognizer(target: self, action: #selector(swipeUp))
-    //        swipeUpGesture.direction = UISwipeGestureRecognizerDirection.Up
-    //        let swipeDownGesture = UISwipeGestureRecognizer(target: self, action: #selector(swipeDown))
-    //        swipeDownGesture.direction = UISwipeGestureRecognizerDirection.Down
-    //
-    //        tableList.addGestureRecognizer(swipeUpGesture)
-    //        tableList.addGestureRecognizer(swipeDownGesture)
-    //    }
-    //
-    //    func swipeUp () {
-    //        print ("I'm called")
-    //        let offSet = tableList.contentOffset.y - self.offSet
-    //        let tempHold = scrollView.contentOffset.y
-    //        scrollView.contentOffset = CGPoint(x: 0, y: tempHold - offSet)
-    //    }
-    //
-    //    func swipeDown () {
-    //        print ("I'm called too")
-    //        let offSet = tableList.contentOffset.y - self.offSet
-    //        let tempHold = scrollView.contentOffset.y
-    //        scrollView.contentOffset = CGPoint(x: 0, y: tempHold + offSet)
-    //    }
-    
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        tableViewTouched = true
-//    }
-//    
-//    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        tableViewTouched = false
-//    }
-    
-    
+
 // MARK: DEBUGGING
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
 //        print ("        TableViewOffset: \(scrollView.contentOffset.y)")
@@ -433,135 +427,29 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
             if deltaTableOffset < 0 && self.scrollView.contentOffset.y < self.topViews.frame.height - 64 {   // Swipe down
 //                print ("Scrolling up")
                 // Scroll the scrollView
-                self.scrollView.contentOffset.y -= deltaTableOffset
+                if self.scrollView.contentOffset.y - deltaTableOffset > self.topViews.frame.height - 64 {
+//                    print ("Adjusting Overflow")
+                    self.scrollView.contentOffset.y = self.topViews.frame.height - 64
+                } else {
+                    self.scrollView.contentOffset.y -= deltaTableOffset
+                }
                 
             // If scrolling down and not overscrolling scrollView
             } else if deltaTableOffset > 0 && self.scrollView.contentOffset.y > -64 {    // Swipe up
 //                print ("Scrolling down")
                 // Scroll the scrollView
-                self.scrollView.contentOffset.y -= deltaTableOffset
+                if self.scrollView.contentOffset.y - deltaTableOffset < -64 {
+//                    print ("Adjusting Overflow")
+                    self.scrollView.contentOffset.y = -64
+                } else {
+                    self.scrollView.contentOffset.y -= deltaTableOffset
+                }
             }
         }
         // Prepare for next call
         lastTableViewOffset = scrollView.contentOffset.y
 //        print ()
     }
-    
-    func labelDidLoad() {
-        DispatchQueue.main.async {
-            UIView.animate(withDuration: 0.2, animations: {
-                self.dayLabel.text = self.dayText
-                self.dayLabel.alpha = 1
-            })
-        }
-    }
-    
-//    // day formats
-//    // DTSTART;VALUE=DATE:20170613
-//    // DTSTART:20130410T230000Z
-//    // DTSTART;TZID=America/Toronto:20110524T100000
-//    
-//    func parseForDay () {
-//        var day = "3"
-//        // The link from which the calendar is downloaded
-//        let url = URL (string: "https://calendar.google.com/calendar/ical/wlmacci%40gmail.com/public/basic.ics")!
-//        
-//        // The process of downloading and parsing the calendar
-//        let task = URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
-//            
-//            let formats:[String] = [";VALUE=DATE:", ":", ";TZID=America/Toronto:"]
-//            // closures
-//            let formatDate:(NSString, Int) -> String = {(noFormat:NSString, index:Int) -> String in
-//                // fix dates yyyymmdd
-//                let formattedDate = noFormat.substring(with: NSMakeRange(0, 4)) + noFormat.substring(with: NSMakeRange(5, 2)) + noFormat.substring(with: NSMakeRange(8, 2))
-//                let finalDate = formats[index] + formattedDate
-//                
-//                return finalDate
-//            }
-//            
-//            
-//            // The following is simply a declaration and will not execute without the line 'task.resume()'
-//            if let URlContent = data {  // If Data has been loaded
-//                // If you got to this point then you've downloaded the calendar so...
-//                // Calendar File parsing starts here!!!
-//                // The string that holds the contents of the calendar's events
-//                let webContent:NSString = NSString(data: URlContent, encoding: String.Encoding.utf8.rawValue)!
-//                
-//                // An array of flags used for locating the event fields
-//                // [h][0] - The flag that marks the begining of a field, [h][1] - The flag that marks the end of a field
-//                var searchTitles:[[String]] = [["DTSTART", "DTEND"], ["SUMMARY:", "TRANSP:"]]
-//                
-//                // The range of "webContent's" content that is to be scanned
-//                // Must be decreased after each event is scanned
-//                var range:NSRange = NSMakeRange(0, webContent.length - 1)
-//                // Inside function that will be used to determine the 'difference' range between the begining and end flag ranges.
-//                let findDifference:(NSRange, NSRange) -> NSRange = {(first:NSRange, second:NSRange) -> NSRange in
-//                    let location = first.location + first.length, length = second.location - location   // Determine the start position and length of our new range
-//                    return NSMakeRange(location, length)                                                // Create and return the new range
-//                }
-//                // Inside function that will be used to move the searching range to the next event
-//                // Returns an NSNotFound range (NSNotFound, 0) if there are not more events
-//                let updateRange:(NSRange) -> NSRange = {(oldRange:NSRange) -> NSRange in
-//                    let beginingDeclaration = webContent.range(of: "BEGIN:VEVENT", options: NSString.CompareOptions.literal, range: oldRange)
-//                    // If the "BEGIN:VEVENT" was not found in webContent (no more events)
-//                    if NSEqualRanges(beginingDeclaration, NSMakeRange(NSNotFound, 0)) {
-//                        return beginingDeclaration  // Return an 'NSNotFound' range (Named it myself;)
-//                    }
-//                    // Calculate the index of the last character of 'beginingDeclaration' flag
-//                    let endOfBeginingDeclaration = beginingDeclaration.location + beginingDeclaration.length
-//                    // Calculate the length of the new range
-//                    let length = oldRange.length - endOfBeginingDeclaration + oldRange.location
-//                    // Calculate the starting location of the new range
-//                    let location = endOfBeginingDeclaration
-//                    // Create and return the new range
-//                    return NSMakeRange(location, length)
-//                }
-//                
-//                // A holder for the begining and end flags for each event field
-//                var fieldBoundaries:[NSRange]
-//                
-//                // Parse section to find event day info (1/2)
-//                OUTER:
-//                    for var i in 0...formats.count-1 {
-//                        searchTitles[0][0] += formatDate(Date().description as NSString, i)
-//                        INNER:
-//                            repeat {
-//                                range = updateRange(range)
-//                                // if end of file is reached
-//                                if NSEqualRanges(range, NSMakeRange(NSNotFound, 0)) {   // If there are no more events in the searching range
-//                                    if i == formats.count-1 {
-//                                        day = String(0)
-//                                        break OUTER;
-//                                    } else {
-//                                        break INNER; }                                            // Then no more shall be added (break from the loop)
-//                                }
-//                                
-//                                for x in 0...searchTitles.count-1 {
-//                                    fieldBoundaries = [NSRange]()
-//                                    fieldBoundaries.append(webContent.range(of: searchTitles[x][0], options: NSString.CompareOptions.literal, range: range))   // Find the begining flag
-//                                    fieldBoundaries.append(webContent.range(of: searchTitles[x][1], options: NSString.CompareOptions.literal, range: range))   // Find the ending flag
-//                                    var tempHold:NSString = webContent.substring(with: findDifference(fieldBoundaries[0], fieldBoundaries[1]))                         // Create a new string from whatever is in between the two flags. This will be the current field of the event
-//                                    tempHold = tempHold.trimmingCharacters(in: CharacterSet.newlines) as NSString                                           // Remove all /r /n and other 'new line' characters from the event field
-//                                    tempHold = tempHold.replacingOccurrences(of: "\u{005C}", with: "", options: .literal, range: NSMakeRange(0, tempHold.length-1)) as NSString           // Replace all backslashes from the event field
-//                                    if x == 1 && tempHold.hasPrefix("DAY") {
-//                                        day = tempHold.substring(with: NSMakeRange(4, 1))
-//                                        print(day)
-//                                        break OUTER;
-//                                    }
-//                                }
-//                                
-//                        } while (true)
-//                        
-//                }
-//                self.dayText = day
-//                self.labelDidLoad()
-//            } else {
-//                //                let noDataAlert = UIAlertController () // tell them they have no data
-//                print("connect to data pls")
-//            }
-//        })
-//        task.resume()
-//    }
     
     /* The parseForEvents method loads announcements specifically from Firebase.
      The announcement events are loaded into eventData which is used to enter information into the UITableView

@@ -24,9 +24,12 @@ let colorNavigationText:UIColor = UIColor(red: 0.5843, green: 0.6471, blue: 0.65
 let colorAccent:UIColor = UIColor(red: 0.2118, green: 0.2745, blue: 0.6276, alpha: 1)               // 3646A0        yes this one
 let colorListBackground:UIColor = UIColor(red: 0.2471, green: 0.3176, blue: 0.7098, alpha: 1)       // 3F51B5  <- and ^ are not much different to be honest
 let colorListDivider:UIColor = UIColor(red: 0.3765, green: 0.4902, blue: 0.5451, alpha: 1)          // 607D8B
-let colorEventViewBackground:UIColor = UIColor(red: 0.2019, green: 0.5961, blue: 0.8588, alpha: 1)  // 3498DB
+let colorEventViewBackground:UIColor = UIColor(red: 0.0078, green: 0.1647, blue: 0.3922, alpha: 1)
 let colorTimeTableDividers:UIColor = UIColor(red: 0.2627, green: 0.3333, blue: 0.3686, alpha: 1)    // 43555E
 let colorWhiteText:UIColor = UIColor(white: 1, alpha: 1)
+
+let keyCalendarEventBank:String = "calendarEventBank"
+let keyDayDictionary:String = "dayDictionary"
 
 var contactStore = CNContactStore()
 
@@ -152,6 +155,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    }
+}
+
+extension UIViewController {
+    // To use: call, implement completion handler, the parameter in the completion handler will contain result
+    // Completion handler should further handle the result
+    // Inspired by: http://stackoverflow.com/a/32649027/6728099
+    func checkInternet(completionHandler: ((_ internet:Bool, _ response:HTTPURLResponse?) -> Void)?) {
+        let url = URL (string: "https://www.google.ca")!
+        let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+            let rsp = response as! HTTPURLResponse?
+            completionHandler?(rsp?.statusCode == 200, rsp)
+        }
+        task.resume()
     }
 }
 
