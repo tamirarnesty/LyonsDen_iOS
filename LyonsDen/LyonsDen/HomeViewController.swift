@@ -161,17 +161,23 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
     // Called when the dayLabel is ready to be displayed
     func dayLabelDidLoad (loadSuccess:Bool) {
         DispatchQueue.main.async {
-            if loadSuccess {    // If the Day of the day can be retrieved. then
+            if loadSuccess {// If the Day of the day can be retrieved. then
                 UIView.animate(withDuration: 0.2, animations: {
                     // Retrieve the Day of the day
-                    var dayOfDay = (UserDefaults.standard.dictionary(forKey: keyDayDictionary))?[(Date().description as NSString).substring(to: 10)] as! String?
+                    let rawDay:Any? = (UserDefaults.standard.dictionary(forKey: keyDayDictionary))![(Date().description as NSString).substring(to: 10)]
+                    var dayOfDay:String = ""
+                    if rawDay is NSNumber {
+                        dayOfDay = (rawDay as! NSNumber).description
+                    } else if rawDay is NSString || rawDay is String {
+                        dayOfDay = (rawDay as! String).description
+                    }
                     // If it is not a day, then declare the Day of the day as Day X
-                    dayOfDay = (dayOfDay == nil) ? "X" : dayOfDay
+                    dayOfDay = (dayOfDay == nil || dayOfDay == "") ? "X" : dayOfDay
                     // Set the day
-                    self.dayLabel.text = dayOfDay
+                    self.dayLabel.text = dayOfDay as String
                     self.dayLabel.alpha = 1
                 })
-            } else {        // If not, then notify the user about it
+            } else { // If not, then notify the user about it
                 let toast = ToastView(inView: self.view, withText: "Could not retrieve the\nDay of the day!", andDuration: 2)
                 self.view.addSubview(toast)
                 toast.initiate()
