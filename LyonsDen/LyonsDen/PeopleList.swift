@@ -188,11 +188,11 @@ class PeopleList: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "TeacherCell")
+        cell.backgroundColor = UIColor(red: 0.9294, green: 0.9686, blue: 1, alpha: 1.0) /* #edf7ff */
         cell.textLabel?.text = (self.tableView.isEditing) ? newContent[0][(indexPath as NSIndexPath).row] : content[0][(indexPath as NSIndexPath).row]
-        cell.textLabel!.textColor = colorWhiteText
+        cell.textLabel!.textColor = UIColor.black
         cell.detailTextLabel?.text = (self.tableView.isEditing) ? newContent[1][(indexPath as NSIndexPath).row] : content[1][(indexPath as NSIndexPath).row]
-        cell.detailTextLabel!.textColor = colorWhiteText
-        cell.backgroundColor = colorListBackground
+        cell.detailTextLabel!.textColor = UIColor.black
         cell.selectionStyle = .none
         return cell
     }

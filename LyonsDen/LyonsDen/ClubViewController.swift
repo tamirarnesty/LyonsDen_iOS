@@ -143,6 +143,17 @@ class ClubViewController: UIViewController, UITableViewDelegate {
     
     // Downloads club announcements data
     func parseForEvents (_ reference:FIRDatabaseReference) {
+        let parseTime:(String) -> String = { (input) in
+            var output = input
+            output.insert("-", at: output.characters.index(output.startIndex, offsetBy: 4))
+            output.insert("-", at: output.characters.index(output.startIndex, offsetBy: 7))
+            output.insert(" ", at: output.characters.index(output.startIndex, offsetBy: 10))
+            output.insert(":", at: output.characters.index(output.startIndex, offsetBy: 13))
+            output = output.substring(to: output.characters.index(output.startIndex, offsetBy: 16))
+            
+            return output
+        }
+        
         // Navigate to and download the Events data
         reference.queryOrdered(byChild: "dateTime").observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
             if snapshot.exists() {
@@ -151,11 +162,12 @@ class ClubViewController: UIViewController, UITableViewDelegate {
                 // Create an NSArray instance of all the values from the NSDictionary
                 let dataContent = data.allValues as NSArray
                 // Record each field of the events
-                for h in 0...dataContent.count-1 {
-                    self.eventData[0].append((dataContent.object(at: h) as AnyObject).object(forKey: "title")! as! String)
-                    self.eventData[1].append((dataContent.object(at: h) as AnyObject).object(forKey: "description")! as! String)
-                    self.eventData[2].append(ListViewController.formatTime((((dataContent.object(at: h) as AnyObject).object(forKey: "dateTime")! as! NSNumber).description) as NSString))
-                    self.eventData[3].append((dataContent.object(at: h) as AnyObject).object(forKey: "location")! as! String)
+                let key = ["title", "description", "dateTime", "location"]
+                for h in 0..<dataContent.count {
+                    for j in 0..<key.count {
+                        if j == 2 { self.eventData[j].append(parseTime (((dataContent.object(at: h) as AnyObject!).object(forKey: key[j]) as AnyObject!).description)) }
+                        else { self.eventData[j].append(((dataContent.object(at: h) as AnyObject!).object(forKey: key[j]) as AnyObject!).description) }
+                    }
                     self.images.append(nil) // Will be implemented later
                 }
                 self.eventData.reverse()
@@ -191,17 +203,17 @@ class ClubViewController: UIViewController, UITableViewDelegate {
         return eventData[0].count
     }
     
-    private func tableView(_ tableView: UITableView, cellForRowAtIndexPath indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAtIndexPath indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "ListCell")   // Declare the cell
-        cell.backgroundColor = foregroundColor                              // Set the Background Color
+        cell.backgroundColor = UIColor(red: 0.9294, green: 0.9686, blue: 1, alpha: 1.0) /* #edf7ff */
         cell.imageView?.image = images[(indexPath as NSIndexPath).row]                       // Set the Cell Image
         
         cell.textLabel?.text = eventData[0][(indexPath as NSIndexPath).row]              // Set the Title Text
-        cell.textLabel?.textColor = accentColor                             // Set the Title Text Color
+        cell.textLabel?.textColor = UIColor.black                             // Set the Title Text Color
         cell.textLabel?.font = UIFont(name: "Hapna Mono", size: 20)         // Set the Title Text Font
         
         cell.detailTextLabel?.text = eventData[1][(indexPath as NSIndexPath).row]        // Set the Description Text
-        cell.detailTextLabel?.textColor = accentColor                       // Set the Description Text Color
+        cell.detailTextLabel?.textColor = UIColor.black                       // Set the Description Text Color
         cell.detailTextLabel?.font = UIFont(name: "Hapna Mono", size: 16)   // Set the Description Text Font
         return cell
     }

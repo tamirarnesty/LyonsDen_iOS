@@ -463,6 +463,17 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
      @param reference - FIRDatabaseReference to get the events needed.
      */
     func parseForEvents (_ reference:FIRDatabaseReference) {
+        let parseTime:(String) -> String = { (input) in
+            var output = input
+            output.insert("-", at: output.characters.index(output.startIndex, offsetBy: 4))
+            output.insert("-", at: output.characters.index(output.startIndex, offsetBy: 7))
+            output.insert(" ", at: output.characters.index(output.startIndex, offsetBy: 10))
+            output.insert(":", at: output.characters.index(output.startIndex, offsetBy: 13))
+            output = output.substring(to: output.characters.index(output.startIndex, offsetBy: 16))
+            
+            return output
+        }
+        
         // Navigate to and download the Events data
         reference.queryOrdered(byChild: "dateTime").observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
             if snapshot.exists() {
@@ -474,7 +485,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
                 let key = ["title", "description", "dateTime", "location"]
                 for h in 0..<dataContent.count {
                     for j in 0..<key.count {
-                        self.eventData[j].append(((dataContent.object(at: h) as AnyObject).object(forKey: key[j]) as! NSString).description)
+                        if j == 2 { self.eventData[j].append(parseTime (((dataContent.object(at: h) as AnyObject!).object(forKey: key[j]) as AnyObject!).description)) }
+                        else { self.eventData[j].append(((dataContent.object(at: h) as AnyObject!).object(forKey: key[j]) as AnyObject!).description) }
                     }
                     self.images.append(nil) // Will be implemented later
                 }
