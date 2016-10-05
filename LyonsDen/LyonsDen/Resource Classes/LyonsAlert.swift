@@ -17,15 +17,12 @@ class LyonsAlert {
         loadingWheel = nil
     // MARK: VISUAL CUSTOMIZATIONS
         // Change text colors (you can change font too!)
-        let font = UIFont(name: "Hapna Mono", size: 17)
-        let font2 = UIFont(name: "Hapna Mono", size: 14)
-        alertView.setValue(NSAttributedString(string: title, attributes: [NSFontAttributeName : font, NSForegroundColorAttributeName : UIColor.black]), forKey: "attributedTitle")
-        alertView.setValue(NSAttributedString(string: subtitle, attributes: [NSFontAttributeName : font2, NSForegroundColorAttributeName : UIColor.black]), forKey: "attributedMessage")
+        alertView.setValue(NSAttributedString(string: title, attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 17), NSForegroundColorAttributeName : colorAccent]), forKey: "attributedTitle")
+        alertView.setValue(NSAttributedString(string: subtitle, attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 14), NSForegroundColorAttributeName : colorAccent]), forKey: "attributedMessage")
     }
     
     func showIn (_ initiator:UIViewController) {
-        initiator.present(alertView, animated: true) {}
-//        initiator.present(alertView, animated: true, completion:  )
+        initiator.present(alertView, animated: true, completion: nil)
         // Change text color of buttons, has to be done after added, otherwise color changes back after first press
         alertView.view.tintColor = colorAccent
         
