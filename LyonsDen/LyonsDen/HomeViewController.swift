@@ -41,6 +41,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
     // Reference to the database
     var ref:FIRDatabaseReference!
     var gestureRecognizersAdded = false
+    var selectedIndex = 0
     
     // Didn't let me put it into announcements becuase its optional
     // To implement it, we might need a blank image to act in place of nil
@@ -50,34 +51,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
     var tableViewTouched = false
     var index = -1
     
-// MARK: DEBUGGING!
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-//        print ()
-//        print ("view will really appear soon")
-//        print ()
-//        print (gestureRecognizersAdded)
-//        print (self.courses[0].gestureRecognizers?.description)
-//        print ("Adding gesture recognizer for")
-        for i in 0...courses.count-1 {
-//            print (i)
-            if !gestureRecognizersAdded {
-//                print ("Did add recognizer")
-                self.courses[i].addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(HomeViewController.handleLongTap(_:))))
-            }
-        }
-        gestureRecognizersAdded = true
-//        print ("many views")
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // set up screen
-//        let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(swipedUp))
-//        swipeUp.direction = UISwipeGestureRecognizerDirection.up
-//        swipeUp.addTarget(self, action: #selector(swipedUp))
-//        self.view.addGestureRecognizer(swipeUp)
         periodUpdater()
 
         // set up announcements table
@@ -158,13 +135,49 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
         }
     }
     
+    // MARK: DEBUGGING!
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        //        print ()
+        //        print ("view will really appear soon")
+        //        print ()
+        //        print (gestureRecognizersAdded)
+        //        print (self.courses[0].gestureRecognizers?.description)
+        //        print ("Adding gesture recognizer for")
+        for i in 0...courses.count-1 {
+            //            print (i)
+            if !gestureRecognizersAdded {
+                //                print ("Did add recognizer")
+                self.courses[i].addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(HomeViewController.handleLongTap(_:))))
+            }
+        }
+        gestureRecognizersAdded = true
+        //        print ("many views")
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.destination is InfoViewController {
+            let destination = segue.destination as! InfoViewController
+            
+            destination.eventTitle = eventData[0][selectedIndex]!
+            destination.eventInfo = eventData[1][selectedIndex]!
+            destination.eventDate = eventData[2][selectedIndex]!
+            destination.eventLocation = eventData[3][selectedIndex]!
+            destination.eventImage = images[selectedIndex]
+        }
+    }
+    
     // Called when the dayLabel is ready to be displayed
     func dayLabelDidLoad (loadSuccess:Bool) {
         DispatchQueue.main.async {
             if loadSuccess {// If the Day of the day can be retrieved. then
                 UIView.animate(withDuration: 0.2, animations: {
+                    let calendar = Calendar(identifier: .gregorian)
+                    let date = calendar.dateComponents(in: TimeZone(abbreviation: "EST")!, from: Date()).date!
+                    let interval = TimeInterval(-TimeZone(abbreviation: "EST")!.secondsFromGMT(for: date)).negated()
                     // Retrieve the Day of the day
-                    let rawDay:Any? = (UserDefaults.standard.dictionary(forKey: keyDayDictionary))![(Date().description as NSString).substring(to: 10)]
+                    let rawDay:Any? = (UserDefaults.standard.dictionary(forKey: keyDayDictionary))![((date.addingTimeInterval(interval).description) as NSString).substring(to: 10)]
                     var dayOfDay:String = ""
                     if rawDay is NSNumber {
                         dayOfDay = (rawDay as! NSNumber).description
@@ -405,12 +418,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UIGestureRecogn
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Deselct the selected cell
         tableView.deselectRow(at: indexPath, animated: true)
-        // Prepare InfoViewController
-        InfoViewController.setupViewController(title: eventData[0][(indexPath as NSIndexPath).row]!,
-                                               info: eventData[1][(indexPath as NSIndexPath).row],
-                                               date: eventData[0][(indexPath as NSIndexPath).row],
-                                               location: eventData[1][(indexPath as NSIndexPath).row],
-                                               image: images[(indexPath as NSIndexPath).row])
+        self.selectedIndex = indexPath.row
         // Segue into InfoViewController
         performSegue(withIdentifier: "AnnouncementSegue", sender: self)
     }

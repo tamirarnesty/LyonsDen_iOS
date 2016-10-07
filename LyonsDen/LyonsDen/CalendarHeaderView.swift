@@ -23,6 +23,13 @@ class CalendarHeaderView: UIView {
         lbl.font = UIFont(name: "Helvetica", size: 20.0)    // Helvetica the font with size 20
         lbl.textColor = self.colorMain                      // Paint the text gray
         
+        lbl.isUserInteractionEnabled = true
+        
+        let doubleTapListener = UITapGestureRecognizer(target: self, action: #selector(resetDate))
+        doubleTapListener.numberOfTapsRequired = 2
+        doubleTapListener.numberOfTouchesRequired = 1
+        lbl.addGestureRecognizer(doubleTapListener)
+        
         self.addSubview(lbl)                                // Add the label to the header
         return lbl
     }()
@@ -92,5 +99,9 @@ class CalendarHeaderView: UIView {
         button.addTarget(CalendarView(), action: #selector(CalendarView.changeMonth), for: .touchUpInside)
         
         return button
+    }
+    
+    func resetDate () {
+        (superview as! CalendarView).resetDate()
     }
 }

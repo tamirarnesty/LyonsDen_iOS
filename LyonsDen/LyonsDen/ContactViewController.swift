@@ -108,24 +108,26 @@ class ContactViewController: UIViewController, MFMailComposeViewControllerDelega
     }
     
     @IBAction func reportBug(_ sender: UIButton) {
-        if MFMailComposeViewController.canSendMail() {  // We shall send mail
+//        if MFMailComposeViewController.canSendMail() {  // We shall send mail
             let composeVC = MFMailComposeViewController()
-            composeVC.mailComposeDelegate = self
+        let mVC = MFMailComposeViewController(navigationBarClass: nil, toolbarClass: nil)
+        
+//            composeVC.mailComposeDelegate = self
             
             // Configure fields
-            composeVC.setToRecipients(["TheLyonsKeeper@gmail.com"])
-            composeVC.setSubject("Hey Keeper, I found a bug!")
-            composeVC.setMessageBody("Before the bug occured I did this:", isHTML: false)
-            
+//            composeVC.setToRecipients(["TheLyonsKeeper@gmail.com"])
+//            composeVC.setSubject("Hey Keeper, I found a bug!")
+//            composeVC.setMessageBody("Before the bug occured I did this:", isHTML: false)
+        
             // Present VC modally
-            self.present(composeVC, animated: true, completion: nil)
-        } else {    // We shan't send mail
-            print ("Mail services not available on this device")
-            // Present a LyonsAlert notifying the user that he cannot send mail on this device
-            let alert = LyonsAlert(withTitle: "Mail Services Unavailable!", subtitle: "Unfortunately there are no mail services enabled on this device. Please enable mail service and try again.", style: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
-            alert.showIn(self)
-        }
+            self.present(mVC, animated: true, completion: nil)
+//        } else {    // We shan't send mail
+//            print ("Mail services not available on this device")
+//            // Present a LyonsAlert notifying the user that he cannot send mail on this device
+//            let alert = LyonsAlert(withTitle: "Mail Services Unavailable!", subtitle: "Unfortunately there are no mail services enabled on this device. Please enable mail service and try again.", style: .alert)
+//            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
+//            alert.showIn(self)
+//        }
     }
     
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {

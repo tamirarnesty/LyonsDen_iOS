@@ -43,6 +43,8 @@ class CoursesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.navigationController?.navigationBar.tintColor = colorNavigationText
+        
         periodNumber.text = "Period " + String(identifierIndex! + 1)
     }
     

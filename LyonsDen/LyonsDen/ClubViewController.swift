@@ -11,20 +11,16 @@
 import UIKit
 import Firebase
 
-// TODO: IMPLEMENT ANNOUNCEMENT ADDING
-// TODO: CHANGE BACKGROUND UNDER TABLEVIEW
-// TODO: HIDE KEYBOARD AFTER EDITING IS COMPLETE
-
-/*
- 2016-09-30 19:25:08.745 LyonsDen[56918:2408636] *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'UITableView (<UITableView: 0x7ff805024c00; frame = (0 286; 375 381); clipsToBounds = YES; autoresize = RM+BM; gestureRecognizers = <NSArray: 0x600000254b80>; layer = <CALayer: 0x600000234720>; contentOffset: {0, 0}; contentSize: {375, 100}>) failed to obtain a cell from its dataSource (<LyonsDen.ClubViewController: 0x7ff800c1b180>)'
- */
+// FIX TITLE POSITION
 
 class ClubViewController: UIViewController, UITableViewDelegate {
-    static var image:UIImage?       // The image of the club
-    static var title:String!        // The title of the club
-    static var info:String!         // The description of the club
-    static var clubLeads:String!    // A list of club leaders
-    static var ref:FIRDatabaseReference!  // The database reference to the club
+    var clubImage:UIImage?       // The image of the club
+    var clubTitle:String!        // The title of the club
+    var clubInfo:String!         // The description of the club
+    var clubLeads:String!    // A list of club leaders
+    let refreshController = UIRefreshControl()
+    var clubRef:FIRDatabaseReference!  // The database reference to the club
+    var selectedIndex = 0
     // The content of each announcements
     //                           Title        Description  Date&Time    Location
     var eventData:[[String?]] = [[String?](), [String?](), [String?](), [String?]()]
@@ -34,7 +30,7 @@ class ClubViewController: UIViewController, UITableViewDelegate {
     var userIsLead = false {
         didSet {
             if userIsLead {
-                navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(enterEditMode))
+                self.navigationController?.setToolbarHidden(false, animated: true)
             }
         }
     }
@@ -51,31 +47,88 @@ class ClubViewController: UIViewController, UITableViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        // Initialize refresh controller
+        refreshController.frame.size.height = 5
+        refreshController.addTarget(self, action: #selector(refreshAnnouncements), for: .valueChanged)
+        self.tableView.addSubview(refreshController)
+        
+        self.navigationController?.navigationBar.tintColor = colorNavigationText
+        self.navigationController?.setToolbarHidden(true, animated: false)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "membersIcon"), style: .plain, target: self, action: #selector(displayMembers))
+        self.setToolbarItems([UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(enterEditMode)),
+                              UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
+                              UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(newAnnouncement))],
+                             animated: false)
+        self.navigationController?.setToolbarHidden(true, animated: false)
+        
+        // Put all leader button into the toolbar, initially hidden, then show them whenever a leader comes into the scene
         
         // Set all the necessary information before displaying this ViewController
-        clubTitleView.text = ClubViewController.title
-        clubInfoView.text = ClubViewController.info
-        clubLeadsView.text = "Club Leads: " + ClubViewController.clubLeads
-        
-        clubImageView.image = ClubViewController.image       // Set the image
+        clubTitleView.text = clubTitle
+        clubInfoView.text = clubInfo
+        clubLeadsView.text = "Club Leads: " + clubLeads
+        clubImageView.image = clubImage       // Set the image
         
         // Just in case, if the current user has permission to edit this page, then display the edit button
         if userIsLead { userIsLead = true }
         
-        // Download club announcements data
-        parseForEvents(ClubViewController.ref.child("announcements"))
+        checkForClubLeadership()
     }
     
-    override func viewDidLayoutSubviews() {
-        // If there is no image to display, then hide the UIImageView and shift the title and description to its place
-        if clubImageView.image == nil {
+    override func viewWillAppear(_ animated: Bool) {
+        print ("First")
+        print (self.clubTitleView.frame.origin.x)
+        print (self.clubTitleView.frame.width)
+        super.viewWillAppear(animated)
+        // Download club announcements data
+        self.refreshAnnouncements()
+        if clubImage == nil {
             clubImageView.isHidden = true     // Hide the image just in case
-            let fields:[UIView] = [clubTitleView, titleField, clubInfoView, descriptionField]
+            let fields:[UIView] = [clubTitleView, titleField]
             for field in fields {
-                field.frame.origin.x = clubImageView.frame.origin.x
+                field.frame.origin.x = 8
                 field.frame.size.width = self.view.frame.width - 16
             }
         }
+        print ("Second")
+        print (self.clubTitleView.frame.origin.x)
+        print (self.clubTitleView.frame.width)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if clubImage == nil {
+            clubImageView.isHidden = true     // Hide the image just in case
+            let fields:[UIView] = [clubTitleView, titleField]
+            for field in fields {
+                field.frame.origin.x = 8
+                field.frame.size.width = self.view.frame.width - 16
+            }
+        }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        // If there is no image to display, then hide the UIImageView and shift the title and description to its place
+        if clubImage == nil {
+            clubImageView.isHidden = true     // Hide the image just in case
+            let fields:[UIView] = [clubTitleView, titleField]
+            for field in fields {
+                field.frame.origin.x = 8
+                field.frame.size.width = self.view.frame.width - 16
+            }
+        }
+        print ("Third")
+        print (self.clubTitleView.frame.origin.x)
+        print (self.clubTitleView.frame.width)
+    }
+    
+    func refreshAnnouncements () {
+        // Clear events array to enter new Data
+        self.eventData = [[String?](), [String?](), [String?](), [String?]()]
+        // Reload data into events array
+        self.parseForEvents(self.clubRef.child("announcements"))
     }
     
     func enterEditMode () {
@@ -85,13 +138,13 @@ class ClubViewController: UIViewController, UITableViewDelegate {
         titleField.isHidden = !titleField.isHidden
         descriptionField.isHidden = !descriptionField.isHidden
         // If editing is being initiated, then make preparations for editing
-        if navigationItem.rightBarButtonItem?.title == "Edit" {
-            navigationItem.rightBarButtonItem?.title = "Done"
+        if self.toolbarItems?.first?.title == "Edit" {
+            self.toolbarItems?.first?.title = "Done"
             titleField.text = clubTitleView.text
             descriptionField.text = clubInfoView.text
         // If editing is being completed, then finilize all edits
         } else {
-            navigationItem.rightBarButtonItem?.title = "Edit"
+            self.toolbarItems?.first?.title = "Edit"
             finalizeEditing()
         }
     }
@@ -101,7 +154,7 @@ class ClubViewController: UIViewController, UITableViewDelegate {
         if clubTitleView.text != titleField.text { childrenToBeUpdated["title"] = titleField.text! }
         if clubInfoView.text != descriptionField.text { childrenToBeUpdated["description"] = descriptionField.text }
         if childrenToBeUpdated.count > 0 {
-            ClubViewController.ref.updateChildValues(childrenToBeUpdated, withCompletionBlock: { (error, reference) in
+            self.clubRef.updateChildValues(childrenToBeUpdated, withCompletionBlock: { (error, reference) in
                 if error == nil {
                     self.clubTitleView.text = self.titleField.text
                     self.clubInfoView.text = self.descriptionField.text
@@ -132,13 +185,33 @@ class ClubViewController: UIViewController, UITableViewDelegate {
     
     // This method check whether the current user has permission to edit this page
     func checkForClubLeadership () {
-        let userID = FIRAuth.auth()?.currentUser?.uid
-        ClubViewController.ref.child("leaders").observe(.value, with: { (snapshot) in
-            let leaderIDs:[String: String] = snapshot.value as! Dictionary
-            if (leaderIDs.values.contains(userID!)) {
-                self.userIsLead = true
-            }
-        })
+        self.userIsLead = true
+//        let userID = FIRAuth.auth()?.currentUser?.uid
+//        ClubViewController.ref.child("leaders").observe(.value, with: { (snapshot) in
+//            let leaderIDs:[String: String] = snapshot.value as! Dictionary
+//            if (leaderIDs.values.contains(userID!)) {
+//                self.userIsLead = true
+//            }
+//        })
+    }
+    
+    func newAnnouncement () {
+        performSegue(withIdentifier: "ClubAnnouncementSegue", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.destination is AnnouncementViewController {
+            (segue.destination as! AnnouncementViewController).clubAnnouncement = true
+            (segue.destination as! AnnouncementViewController).clubRef = (sender as! ClubViewController).clubRef.child("announcements")
+        } else if segue.destination is InfoViewController {
+            let destination = segue.destination as! InfoViewController
+            
+            destination.eventTitle = eventData[0][selectedIndex]!
+            destination.eventInfo = eventData[1][selectedIndex]!
+            destination.eventDate = eventData[2][selectedIndex]!
+            destination.eventLocation = eventData[3][selectedIndex]!
+            destination.eventImage = images[selectedIndex]
+        }
     }
     
     // Downloads club announcements data
@@ -170,9 +243,14 @@ class ClubViewController: UIViewController, UITableViewDelegate {
                     }
                     self.images.append(nil) // Will be implemented later
                 }
-                self.eventData.reverse()
+                // Reverse data in array so it is by newest created date
+                for i in 0..<self.eventData.count {
+                    self.eventData[i].reverse()
+                }
                 // Reload the tableView to display the loaded data
                 self.tableView.reloadData()
+                // Quit refreshing animation
+                self.refreshController.endRefreshing()
             } else {
                 print ("There has been an error")
                 // Will handle errors
@@ -180,19 +258,16 @@ class ClubViewController: UIViewController, UITableViewDelegate {
         })
     }
     
-    // This method must be called prior to segueing into this class
-    static func setupClubViewController (withTitle title:String, description:String, clubLeads:String, clubImage:UIImage?, andEvents eventsRef:FIRDatabaseReference) {
-        ClubViewController.title = title
-        ClubViewController.info = description
-        ClubViewController.clubLeads = clubLeads
-        ClubViewController.image = clubImage
-        ClubViewController.ref = eventsRef
+    // This is required for a successful unwind to this View Controller
+    // It just needs to be present, so don't mind it at all
+    @IBAction func myUnwindAction (_ unwindSegue: UIStoryboardSegue) {
+        
     }
     
     // This method is called whenever the MemberList button is pressed
-    @IBAction func displayMembers(_ sender: UIButton) {
+    func displayMembers() {
         // Prepare the PeopleList View Controller for displaying this club's members
-        PeopleList.listRef = ClubViewController.ref.child("members")
+        PeopleList.listRef = self.clubRef.child("members")
         PeopleList.title = "Members"
         PeopleList.editEnabled = userIsLead
         // Segue into the prepared PeopleList
@@ -224,11 +299,7 @@ class ClubViewController: UIViewController, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Prepare InfoViewController, if nil is passed for either date, location or image, constraints are remade appropriately
-        InfoViewController.setupViewController(title: eventData[0][(indexPath as NSIndexPath).row]!,          // Give it a title to display
-            info: eventData[1][(indexPath as NSIndexPath).row]!,           // Give it a description to display
-            date: eventData[2][(indexPath as NSIndexPath).row],        // Give it a date to display
-            location: eventData[3][(indexPath as NSIndexPath).row],    // Give it a location to display
-            image: images[(indexPath as NSIndexPath).row])                    // Give it an image to display
+        selectedIndex = indexPath.row
         // Deselect the selected cell
         tableView.deselectRow(at: indexPath, animated: true)
         // Segue into InfoViewController

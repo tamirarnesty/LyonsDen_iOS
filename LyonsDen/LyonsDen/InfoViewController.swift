@@ -17,15 +17,15 @@ import UIKit
 
 class InfoViewController: UIViewController {
     // The text for the title label
-    static var title:String = "This is an announcement"
+    var eventTitle:String = "This is an announcement"
     // The text for the description label
-    static var info:String? = "This is what the announcement is about"
+    var eventInfo:String? = "This is what the announcement is about"
     // The text for the date label
-    static var date:String? = "This is when the announcement is"
+    var eventDate:String? = "This is when the announcement is"
     // The text for the location label
-    static var location:String? = "This is where the announcement is"
+    var eventLocation:String? = "This is where the announcement is"
     // The image for the announcement
-    static var image: UIImage?
+    var eventImage: UIImage?
     // Title label
     @IBOutlet var titleView: UILabel!
     // Description label Text View
@@ -40,9 +40,11 @@ class InfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        titleView.text = InfoViewController.title  // Set title text
-        infoView.text = InfoViewController.info    // Set description text
-        if let img = InfoViewController.image {     // If an announcemnt image is present
+        self.navigationController?.navigationBar.tintColor = colorNavigationText
+        
+        titleView.text = eventTitle  // Set title text
+        infoView.text = eventInfo    // Set description text
+        if let img = eventImage {     // If an announcemnt image is present
             imageView.image = img       // Set the image
             // Move the title label to the side, if not already moved (Removes the additional constraint)
             self.view.removeConstraint(NSLayoutConstraint(item: titleView.superview!, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: titleView, attribute: NSLayoutAttribute.leading, multiplier: 1, constant: -8))
@@ -53,27 +55,19 @@ class InfoViewController: UIViewController {
             self.view.addConstraint(NSLayoutConstraint(item: titleView.superview!, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: titleView, attribute: NSLayoutAttribute.leading, multiplier: 1, constant: -8))
         }
         
-        if let date = InfoViewController.date {
+        if let date = eventDate {
             dateView.isHidden = false     // Just in case
             dateView.text = date
         } else {
             dateView.isHidden = true
         }
         
-        if let location = InfoViewController.location {
+        if let location = eventLocation {
             locationView.isHidden = false     // Just in case
             locationView.text = location
         } else {
             locationView.isHidden = true
         }
-    }
-    
-    static func setupViewController (title:String, info:String?, date:String?, location:String?, image:UIImage?) {
-        InfoViewController.title = title
-        InfoViewController.info = info
-        InfoViewController.date = date
-        InfoViewController.location = location
-        InfoViewController.image = image
     }
     
     override func didReceiveMemoryWarning() {

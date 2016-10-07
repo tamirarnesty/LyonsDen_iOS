@@ -44,8 +44,6 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
     
     // States whether the date drawer is open or not
     var dateViewOpen = true
-    
-    
     // Holder for the height of the date drawer in its opened state
     var dateViewOpenHeight:CGFloat = 0
     // Holder for the height of the date drawer in its closed state
@@ -65,9 +63,15 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
     // The border color of invalid fields
     let invalidFieldStrokeColor = UIColor(red: 1, green: 0, blue: 0.18431373, alpha: 0.5)
     
+    var clubAnnouncement = false
+    var clubRef:FIRDatabaseReference!
+    
     override func viewDidLoad() {
         // Super call
         super.viewDidLoad()
+        
+        self.navigationController?.navigationBar.tintColor = colorNavigationText
+        
         // Set the view title text, at the Navigation Bar
         self.title = "Propose Announcement"
         // Set the scrollView's delegate
@@ -261,6 +265,7 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
         return true
     }
     
+// MARK: APPROVE
     // This is called whenever the Approve/Unlock button is pressed
     @IBAction func validateProposal(_ sender: UIButton) {
         if proposalLocked {
@@ -273,7 +278,6 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
             return
         }
         
-// MARK: APPROVE
         // Generate the comparison key, from the inputted teacher credential
 //        let key = encrypt(teacherCredential.text! as NSString)
         let key = teacherCredential.text!
@@ -315,11 +319,7 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
         }
     }
 
-// MARK: DEBUGGING HERE
     func lockUnlockProposal (_ sender: UIButton) {
-//        print ()
-//        print ((!proposalLocked) ? "Locking the proposal" : "Unlocking the proposal")
-//        
         // Disable/Enable all components on screen
         titleField.isEnabled = proposalLocked
         descriptionField.isEditable = proposalLocked
@@ -343,9 +343,10 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
         sender.setTitle((proposalLocked) ? "Unlock" : "Approve", for: UIControlState.normal)
     }
     
+// MARK: SUBMISSION
     // This is called whenever the Submit button is pressed
     @IBAction func submitAnnouncement(_ sender: UIButton) {
-        let ref = database.reference(withPath: "announcements").childByAutoId()
+        let ref = (clubAnnouncement) ? self.clubRef.childByAutoId() : database.reference(withPath: "announcements").childByAutoId()
         
         let format = DateFormatter()
         format.dateFormat = "yyyyMMddHHmmss"

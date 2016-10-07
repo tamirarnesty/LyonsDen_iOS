@@ -11,13 +11,11 @@
 import UIKit
 import Firebase
 
-// TODO: IMLPEMENT PULL TO REFRESH
-
 class ListViewController: UITableViewController {
     // The menu button
     @IBOutlet weak var menuButton: UIBarButtonItem!
     
-    static var displayContent = 0
+    var displayContent:Int!
     
     static var contentChanged = false
     // Contains Image for each item. Will be implemented later
@@ -30,9 +28,11 @@ class ListViewController: UITableViewController {
     var eventData:[[String?]] = [[String?](), [String?](), [String?](), [String?]()]
     var clubKeys:[String] = [String]()
     var loadingWheel:UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.white)
+    var loadingCurtain:UIView = UIView()
+    var selectedCellIndex = 0
     var expandedCell:ListExpandableCell? = nil {
-        willSet (newValue) {
-            expandedCell?.isExpanded = !(expandedCell?.isExpanded)!
+        willSet {
+            expandedCell?.collapseCell()
         }
     }
     
@@ -59,15 +59,19 @@ class ListViewController: UITableViewController {
         
         loadingWheel.center.x = self.view.center.x
         loadingWheel.center.y = self.view.center.y
+        loadingCurtain.frame = self.view.frame
+        loadingCurtain.backgroundColor = colorBackground
+        self.view.addSubview(loadingCurtain)
+        self.view.addSubview(loadingWheel)
         webContentWillLoad()
         
         
         let titles = ["Announcements", "Events", "Clubs"]
-        self.title = titles[ListViewController.displayContent - 1]
-        if ListViewController.displayContent == 3 {
+        self.title = titles[displayContent - 1]
+        if displayContent == 3 {
             parseForClubs()
         } else {
-            parseForEvents(self.ref.child((ListViewController.displayContent == 1) ? "announcements" : "events"))    // Download events data
+            parseForEvents(self.ref.child((displayContent == 1) ? "announcements" : "events"))    // Download events data
         }
     }
     
@@ -85,10 +89,10 @@ class ListViewController: UITableViewController {
         // Clear events array to enter new Data
         self.eventData = [[String?](), [String?](), [String?](), [String?]()]
         // Reload data into events array
-        if ListViewController.displayContent == 3 {
+        if displayContent == 3 {
             parseForClubs()
         } else {
-            parseForEvents(self.ref.child((ListViewController.displayContent == 1) ? "announcements" : "events"))    // Download events data
+            parseForEvents(self.ref.child((displayContent == 1) ? "announcements" : "events"))    // Download events data
         }        // Quit refreshing animation
         self.refreshController.endRefreshing()
     }
@@ -110,12 +114,38 @@ class ListViewController: UITableViewController {
         self.tableView.isHidden = true
         self.clubKeys.removeAll()
         for h in 0..<eventData.count { eventData[h].removeAll() }
+        
+        if loadingCurtain.alpha == 0 {
+            UIView.animate(withDuration: 0.2, animations: { self.loadingCurtain.alpha = 1 })
+        }
+        
         loadingWheel.startAnimating()
     }
     
     func webContentDidLoad () {
         self.tableView.isHidden = false
+        UIView.animate(withDuration: 0.2, animations: { self.loadingCurtain.alpha = 0 })
         loadingWheel.stopAnimating()
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.destination is ClubViewController {
+            let destination = segue.destination as! ClubViewController
+            
+            destination.clubTitle = self.eventData[0][selectedCellIndex]!
+            destination.clubInfo = self.eventData[1][selectedCellIndex]!
+            destination.clubLeads = self.eventData[2][selectedCellIndex]!
+            destination.clubImage = self.images[selectedCellIndex]
+            destination.clubRef = self.ref.child("clubs").child(self.clubKeys[selectedCellIndex])
+        } else if segue.destination is InfoViewController {
+            let destination = segue.destination as! InfoViewController
+            
+            destination.eventTitle = self.eventData[0][selectedCellIndex]!
+            destination.eventInfo = self.eventData[1][selectedCellIndex]!
+            destination.eventDate = self.eventData[2][selectedCellIndex]!
+            destination.eventLocation = self.eventData[3][selectedCellIndex]!
+            destination.eventImage = self.images[selectedCellIndex]
+        }
     }
     
     func parseForEvents (_ reference:FIRDatabaseReference) {
@@ -195,24 +225,21 @@ class ListViewController: UITableViewController {
     
     // Set the height of each cell
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if ListViewController.displayContent != 3 && expandedCell != nil && tableView.cellForRow(at: indexPath) == expandedCell {
+//        print (displayContent)
+//        print (expandedCell?.description)
+//        print (tableView.cellForRow(at: indexPath)?.description)
+        if displayContent != 3 && expandedCell != nil && expandedCell!.tag == indexPath.row {// && tableView.cellForRow(at: indexPath) == expandedCell {
             return 148.0
         }
         return 44.0
     }
     
-    
     // Configure each cell
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = ListExpandableCell(style: .default, reuseIdentifier: "ListCell", index: indexPath.row, creatorWidth: tableView.frame.width) { (index) in
-            // Prepare InfoViewController, if nil is passed for either date, location or image, constraints are remade appropriately
-            InfoViewController.setupViewController(title: self.eventData[0][index]!,          // Give it a title to display
-                info: self.eventData[1][index]!,           // Give it a description to display
-                date: self.eventData[2][index],        // Give it a date to display
-                location: self.eventData[3][index],    // Give it a location to display
-                image: self.images[index])                    // Give it an image to display
+            self.selectedCellIndex = index
             // Segue into InfoViewController
-            self.performSegue(withIdentifier: "InfoSegue", sender: nil)
+            self.performSegue(withIdentifier: "InfoSegue", sender: self)
         }
         
         cell.tag = indexPath.row
@@ -225,18 +252,20 @@ class ListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         // Segue into the appropriate ViewController
-        if ListViewController.displayContent == 3 {
-            // Prepare ClubViewController, if nil is passed for image, then constraints are remade appropriately
-            ClubViewController.setupClubViewController(withTitle: self.eventData[0][indexPath.row]!,    // Club Title
-                description: self.eventData[1][(indexPath as NSIndexPath).row]!,  // Club Description
-                clubLeads: self.eventData[2][(indexPath as NSIndexPath).row]!,    // Club Leaders
-                clubImage: self.images[(indexPath as NSIndexPath).row],           // Club Image
-                andEvents: self.ref.child("clubs").child(self.clubKeys[indexPath.row]))   // Database reference to the club
+        if displayContent == 3 {
+            self.selectedCellIndex = indexPath.row
             // Segue into ClubViewController
-            self.performSegue(withIdentifier: "ClubSegue", sender: nil)
+            self.performSegue(withIdentifier: "ClubSegue", sender: self)
         } else {
-            (tableView.cellForRow(at: indexPath) as! ListExpandableCell).isExpanded = !(tableView.cellForRow(at: indexPath) as! ListExpandableCell).isExpanded
-            expandedCell = tableView.cellForRow(at: indexPath) as! ListExpandableCell!
+            let cell = tableView.cellForRow(at: indexPath) as! ListExpandableCell
+            if cell.isExpanded {
+                cell.collapseCell()
+                expandedCell = nil
+            } else {
+                cell.expandCell()
+                expandedCell = tableView.cellForRow(at: indexPath) as! ListExpandableCell!
+                expandedCell?.tag = indexPath.row
+            }
             tableView.beginUpdates()
             tableView.endUpdates()
         }

@@ -445,4 +445,8 @@ class CalendarView: UIView, UICollectionViewDataSource, UICollectionViewDelegate
             self.setDisplayDate((self.calendar as NSCalendar).date(byAdding: .month, value: 1, to: self.displayDate!, options: NSCalendar.Options.matchFirst)!, animated: true)
         }
     }
+    
+    func resetDate() {
+        self.setDisplayDate(Date(), animated: true)
+    }
 }

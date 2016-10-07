@@ -31,6 +31,9 @@ class PeopleList: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.navigationController?.navigationBar.tintColor = colorNavigationText
+        
         // Set the title of the list
         PeopleList.title = PeopleList.title
         // If the current user has permission to edit thi list, then display the edit button
