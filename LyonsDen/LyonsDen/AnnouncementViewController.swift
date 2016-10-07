@@ -361,6 +361,7 @@ class AnnouncementViewController: UIViewController, UIScrollViewDelegate {
         }
         
         ContactViewController.displayToast = true
+        // TODO: SEND NOTIFICATION TO SUBSCRIBED USERS//DEVICES
         performSegue(withIdentifier: "AnnouncementsUnwind", sender: self)
         print ("Submission: Success! Announcement Sumbitted!")
     }
