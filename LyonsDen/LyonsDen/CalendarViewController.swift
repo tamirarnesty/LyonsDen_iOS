@@ -61,8 +61,6 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         // Create a place holder for the calendar's height
         let calendarHeight = self.view.frame.size.width + 50.0
         
-//        createDivider(calendarHeight + 1)
-        
         // Setup the scrollView
         scrollView = UIScrollView(frame: CGRect(x: 0, y: calendarHeight + 2, width: self.view.frame.width, height: self.view.frame.height - calendarHeight))
         scrollView!.backgroundColor = colorBackground                           // Set the scrollView's background color
@@ -82,17 +80,9 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         self.loadEventsIntoCalendar()
     }
     
-    func createDivider (_ y:CGFloat) {
-        let path = UIBezierPath()
-        path.move(to: CGPoint(x: 0, y: y))
-        path.addLine(to: CGPoint(x: self.view.frame.width, y: y))
-        
-        let shapeLayer = CAShapeLayer()
-        shapeLayer.path = path.cgPath
-        shapeLayer.fillColor = colorEventViewBackground.withAlphaComponent(0.85).cgColor
-        shapeLayer.lineWidth = 1.0
-        
-        self.view.layer.addSublayer(shapeLayer)
+    func resetDate () {
+        print ("I've Been Summoned!")
+        self.calendarView.setDisplayDate(Date(), animated: true)
     }
     
     func changeLoadingLabel () {
@@ -147,12 +137,6 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
         }
     }
     
-    // Called after the view has appeared
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)   // Super call
-                                                             // Reload the calendar data
-    }
-    
 // MARK: DEBUGGING
     // Called whenever the events have been loaded
     func eventsDidLoad(loadSuccess:Bool) {
@@ -179,7 +163,6 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
             self.labelAnimator = nil
             self.loadingLabel.isHidden = true
 //            print ("Loading Label Hidden")
-            self.createDivider(self.view.frame.size.width + 51)
             
             if !loadSuccess {
                 var message = "Calendar Not Available"
@@ -190,7 +173,7 @@ class CalendarViewController: UIViewController, CalendarViewDataSource, Calendar
                 toast.initiate()
             }
             
-            self.calendarView.setDisplayDate(Date(), animated: true)                          // Set the current displayed date on the calendar, to the current date
+            self.resetDate()                          // Set the current displayed date on the calendar, to the current date
             self.calendarView.reloadData()
         }
     }

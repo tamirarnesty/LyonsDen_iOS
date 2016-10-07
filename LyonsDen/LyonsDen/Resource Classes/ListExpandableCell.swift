@@ -19,17 +19,17 @@ class ListExpandableCell: UITableViewCell {
     var infoButton:UIButton!
     let buttonHandler:(Int) -> Void
     
-    var isExpanded = true {
-        didSet (newValue) {
-            if newValue { print ("Cell is now colapsed") } else { print ("Cell is now expanded") }
-            UIView.animate(withDuration: 0.1) { 
-                self.descriptionLabel.alpha = (newValue) ? 1 : 0
-                self.dateLabel.alpha = (newValue) ? 1 : 0
-                self.infoButton.alpha = (newValue) ? 1 : 0
-            }
-            print (self.frame.height)
-        }
-    }
+    var isExpanded = false
+//        didSet (newValue) {
+//            if newValue { print ("Cell is now colapsed") } else { print ("Cell is now expanded") }
+//            UIView.animate(withDuration: 0.1) { 
+//                self.descriptionLabel.alpha = (newValue) ? 1 : 0
+//                self.dateLabel.alpha = (newValue) ? 1 : 0
+//                self.infoButton.alpha = (newValue) ? 1 : 0
+//            }
+//            print (self.frame.height)
+//        }
+//    }
     
     init(style: UITableViewCellStyle, reuseIdentifier: String?, index:Int, creatorWidth:CGFloat, buttonHandler:@escaping (Int) -> Void) {
         self.creatorWidth = creatorWidth
@@ -48,24 +48,22 @@ class ListExpandableCell: UITableViewCell {
         descriptionLabel.textColor = UIColor.black
         descriptionLabel.numberOfLines = 0
         descriptionLabel.font = descriptionLabel.font.withSize(14)
-        descriptionLabel.alpha = (!isExpanded) ? 1 : 0
+        descriptionLabel.alpha = (isExpanded) ? 1 : 0
         self.addSubview(descriptionLabel)
         
         dateLabel = UILabel(frame: CGRect(x: 8, y: 113, width: creatorWidth, height: 20))
         dateLabel.textColor = UIColor.black
-        dateLabel.alpha = (!isExpanded) ? 1 : 0
+        dateLabel.alpha = (isExpanded) ? 1 : 0
         self.addSubview(dateLabel)
         
         infoButton = UIButton(type: UIButtonType.infoLight)
         infoButton.frame = CGRect(x: creatorWidth - 38, y: 148/2, width: 30, height: 30)
         infoButton.tintColor = colorAccent
         infoButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-        infoButton.alpha = (!isExpanded) ? 1 : 0
+        infoButton.alpha = (isExpanded) ? 1 : 0
         self.addSubview(infoButton)
         print (self.frame.height)
     }
-    
-    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -73,5 +71,27 @@ class ListExpandableCell: UITableViewCell {
     
     func buttonTapped () {
         buttonHandler(self.tag)
+    }
+    
+    func expandCell () {
+        isExpanded = true
+        if self.descriptionLabel.alpha == 0 {
+            UIView.animate(withDuration: 0.1, delay: 0.3, options: .allowAnimatedContent, animations: {
+                self.descriptionLabel.alpha = 1
+                self.dateLabel.alpha = 1
+                self.infoButton.alpha = 1
+                }, completion: nil)
+        }
+    }
+    
+    func collapseCell () {
+        isExpanded = false
+        if self.descriptionLabel.alpha == 1 {
+            UIView.animate(withDuration: 0.1) {
+                self.descriptionLabel.alpha = 0
+                self.dateLabel.alpha = 0
+                self.infoButton.alpha = 0
+            }
+        }
     }
 }

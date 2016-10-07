@@ -12,6 +12,7 @@ import FirebaseAuth
 class MenuTable: UITableViewController {
     // An array containig the titles of the cell in [0]
     var titles = ["DEN", "Home", "Calendar", "Announcements", "Events", "Clubs", "Contact", "User"]
+    var listViewDisplayContent = 0
     
     @IBOutlet var sidebarTable: UITableView!
     
@@ -21,6 +22,12 @@ class MenuTable: UITableViewController {
         self.sidebarTable.tableFooterView = UIView()
         self.sidebarTable.frame.origin.y += self.view.frame.height/4
         self.sidebarTable.center.y = self.view.center.y
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "EventSegue" {
+            ((segue.destination as! UINavigationController).viewControllers.first as! ListViewController).displayContent = listViewDisplayContent
+        }
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -60,14 +67,13 @@ class MenuTable: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Announcements == 3, Events == 4, Clubs == 5
-        if ((indexPath as NSIndexPath).row < 6 && (indexPath as NSIndexPath).row > 2) {
-            ListViewController.displayContent = (indexPath as NSIndexPath).row - 2
+        if indexPath.row > 2 && indexPath.row < 6 {
+            listViewDisplayContent = indexPath.row - 2
+            performSegue(withIdentifier: "EventSegue", sender: nil)
+            return
         }
-        if (indexPath as NSIndexPath).row != 0 && (indexPath as NSIndexPath).row != (titles.count-1) {
+        if (indexPath as NSIndexPath).row != 0 {
             performSegue(withIdentifier: titles[(indexPath as NSIndexPath).row] + "Segue", sender: nil)
-        }
-        if (indexPath as NSIndexPath).row == (titles.count-1) {
-            performSegue(withIdentifier: "UserSegue", sender: nil)
         }
     }
 }
