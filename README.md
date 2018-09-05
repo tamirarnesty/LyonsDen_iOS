@@ -29,7 +29,7 @@ Our goal was to bring all of the information someone would need throughout the d
 * **Inal Gotov**
   
 ## Contributors
-* **Dewmi Seneviratna** - *Colours and Design  
+* **Dewmi Seneviratna** - *Colours and Design* 
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
